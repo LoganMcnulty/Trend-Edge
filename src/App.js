@@ -1,7 +1,6 @@
 // Out of house
 import React, { Component } from "react";
 import {withRouter} from 'react-router-dom';
-
 import { Route, Redirect, Switch } from "react-router-dom";
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -16,7 +15,7 @@ import SignUpForm from "./components/unique/signUpForm";
 import ProtectedRoute from './components/common/protectedRoute';
 import "./App.css";
 import Dashboard from './components/unique/dashboard'
-import ServeToDash from './components/common/serveToDash'
+import LandingContent from './components/unique/landing'
 
 class App extends Component {
   state = {
@@ -46,7 +45,6 @@ class App extends Component {
         <ToastContainer />
         <Dashboard
           curRoute={curRoute}
-        
         />
         <Container fluid style={{margin:0, padding:0}}>
           <Switch>
@@ -58,7 +56,7 @@ class App extends Component {
             <Route path="/Sign Up" component={SignUpForm} />
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
-            <Route path="/dash" component={ServeToDash} />
+            <Route path="/dash" component={LandingContent} />
 
 
             {/* <ProtectedRoute 

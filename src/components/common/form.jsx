@@ -1,11 +1,8 @@
-// Out of House
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import Button from '@material-ui/core/Button'
-
-// In House
 import Input from "./input";
 import Select from "./select";
+
 class Form extends Component {
   state = {
     data: {},
@@ -32,8 +29,10 @@ class Form extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const errors = this.validate();
+    // console.log(errors)
     this.setState({ errors: errors || {} });
     if (errors) return;
+
     this.doSubmit();
   };
 
@@ -45,7 +44,8 @@ class Form extends Component {
 
     const data = { ...this.state.data };
     data[input.name] = input.value;
-
+    console.log(input)
+    console.log(data)
     this.setState({ data, errors });
   };
 

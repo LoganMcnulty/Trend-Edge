@@ -4,8 +4,6 @@ import Joi from "joi-browser";
 import {Redirect} from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
 import { NavLink } from "react-router-dom";
-import Button from '@material-ui/core/Button'
-import CardHeader from '@material-ui/core/CardHeader';
 
 // in house
 import ServeToDash from '../common/serveToDash'
@@ -22,7 +20,7 @@ class SignInForm extends Form {
   schema = {
     username: Joi.string()
       .required()
-      .label("Username"),
+      .label("Email"),
     password: Joi.string()
       .required()
       .label("Password")
@@ -44,16 +42,19 @@ class SignInForm extends Form {
         this.setState ({errors})
       }
     }
-
   };
 
   render() {
     if (auth.getCurrentUser()) return <Redirect to="/"/>
     return (
-      <ServeToDash>
+      <ServeToDash
+        large={[3,0]}
+        med={[10,0]}
+        small={[10,2]}
+      >
           <Paper elevation={3} className='p-3 m-0'>
             <form onSubmit={this.handleSubmit}>
-              {this.renderInput("username", "Username")}
+              {this.renderInput("username", "Email")}
               {this.renderInput("password", "Password", "password")}
               {this.renderButton("Sign In")}
             </form>
@@ -63,9 +64,9 @@ class SignInForm extends Form {
             <div className="row">
               <div className="col">
                 <h5>New Here?</h5>
-                <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>
-                  <NavLink className="h7 p-0 text-white" to="/Sign Up">Get Started</NavLink>
-                </button>
+                <NavLink className="h7 p-0 text-white" to="/Sign Up">
+                  <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>Get Started</button>
+                </NavLink>
               </div>
             </div>
           </Paper>
