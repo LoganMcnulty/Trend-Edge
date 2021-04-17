@@ -1,10 +1,12 @@
 import React from "react";
 import Joi from "joi-browser";
-import Form from "./common/form";
-import * as userService from "../services/userService"
-import auth from '../services/authService'
+import Form from "../common/form";
+import * as userService from "../../services/userService"
+import auth from '../../services/authService'
+import ServeToDash from '../common/serveToDash'
+import Paper from '@material-ui/core/Paper'
 
-class RegisterForm extends Form {
+class SignUpForm extends Form {
   state = {
     data: { username: "", password: "", name: "" },
     errors: {}
@@ -42,17 +44,19 @@ class RegisterForm extends Form {
 
   render() {
     return (
-      <div>
-        <h1>Register</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username", "Username")}
-          {this.renderInput("password", "Password", "password")}
-          {this.renderInput("name", "Name")}
-          {this.renderButton("Register")}
-        </form>
-      </div>
+      <ServeToDash>
+          <Paper elevation={3} className='p-3 m-0'>
+            {/* <h1>Register</h1> */}
+            <form onSubmit={this.handleSubmit}>
+              {this.renderInput("username", "Username")}
+              {this.renderInput("password", "Password", "password")}
+              {this.renderInput("name", "Name")}
+              {this.renderButton("Register")}
+            </form>
+          </Paper>
+      </ServeToDash>
     );
   }
 }
 
-export default RegisterForm;
+export default SignUpForm;

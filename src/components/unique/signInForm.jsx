@@ -1,9 +1,16 @@
+// out of house
 import React from "react";
 import Joi from "joi-browser";
-import Form from "./common/form";
-import auth from '../services/authService'
 import {Redirect} from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
+import { NavLink } from "react-router-dom";
+import Button from '@material-ui/core/Button'
+import CardHeader from '@material-ui/core/CardHeader';
+
+// in house
+import ServeToDash from '../common/serveToDash'
+import Form from "../common/form";
+import auth from '../../services/authService'
 
 class SignInForm extends Form {
   state = {
@@ -27,7 +34,6 @@ class SignInForm extends Form {
       await auth.login(data.username, data.password)
     // causes a full reload of application, so that app component is mounted again and get the JWT 
 
-    console.log(this.props.location)
     const {state} = this.props.location
     window.location = state ? state.from.pathname : '/'
 
@@ -44,23 +50,26 @@ class SignInForm extends Form {
   render() {
     if (auth.getCurrentUser()) return <Redirect to="/"/>
     return (
-      <div>
-        <div className='row justify-content-center pt-3'>
-          <div className="col-sm-12 col-lg-6">
-            <h1>
-                <br />
-            </h1>
-          <Paper elevation={3} className='p-3'>
-          <p className="h4 text-center mb-3">Welcome</p>
+      <ServeToDash>
+          <Paper elevation={3} className='p-3 m-0'>
             <form onSubmit={this.handleSubmit}>
               {this.renderInput("username", "Username")}
               {this.renderInput("password", "Password", "password")}
-              {this.renderButton("Login")}
+              {this.renderButton("Sign In")}
             </form>
-            </Paper>
-          </div>
-        </div>
-      </div>
+          </Paper>
+
+          <Paper elevation={3} className='p-3 mt-3 justify-content-center text-center'>
+            <div className="row">
+              <div className="col">
+                <h5>New Here?</h5>
+                <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>
+                  <NavLink className="h7 p-0 text-white" to="/Sign Up">Get Started</NavLink>
+                </button>
+              </div>
+            </div>
+          </Paper>
+      </ServeToDash>
     );
   }
 }

@@ -9,29 +9,29 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button'
+
 
 // In House
 import  Logo  from '../common/Logo/logo';
 // import useStyles from '../../styles/styles'
 const drawerWidth = 200
 
-const NavBar = ({userLogged, handleDrawerOpen, open}) => {
-    let path = window.location.pathname
+const NavBar = ({userLogged, handleDrawerOpen, open, userPath}) => {
     const classes = useStyles()
-    console.log(classes)
-    
 
-    const renderTopRight = (userLogged, path) => {
+    const renderTopRight = (userLogged, userPath) => {
         return(
             <Grid item>
                 {
                     <Typography noWrap>
                         {
                             userLogged ? `👋 ${userLogged.name}` :
-                            path === '/Sign In' ? '' : 
-                            <NavLink className="nav-item nav-link text-white p-0 m-0" to="/Sign In">
-                                Sign In
-                            </NavLink>
+                            userPath === '/Sign In' ? 
+                            ''
+                              // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
+                            : 
+                              <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign In">Access</NavLink></Button>
                         }
                     </Typography>
                 }
@@ -73,13 +73,9 @@ const NavBar = ({userLogged, handleDrawerOpen, open}) => {
             </Grid>
             <Grid item >
             {!open ?
-                <Typography 
-                    variant='h6' 
-                    noWrap
-                >
-                    <a href="/" style={{color:"white", textDecoration:"none"}} >Trend Edge</a>
+                <Typography variant='h6' noWrap>
+                  <NavLink className="h7 nav-item nav-link text-light p-0" to="/dash">Trend Edge</NavLink>
                 </Typography>
-
                 :
                 <></>
             }
@@ -88,7 +84,7 @@ const NavBar = ({userLogged, handleDrawerOpen, open}) => {
         </Grid>
         
         <div className={classes.sectionMobile} style={{textAlign:'center'}}>
-            {renderTopRight(userLogged, path)}
+            {renderTopRight(userLogged, userPath)}
         </div>
 
     </Toolbar>

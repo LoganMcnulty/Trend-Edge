@@ -7,24 +7,22 @@ import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
 import InfoIcon from '@material-ui/icons/Info';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link, NavLink } from "react-router-dom";
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { NavLink } from "react-router-dom";
+
 // In house
-// import useStyles from '../styles/styles'
-import auth from '../services/authService';
-import NavBar from './common/navBar.jsx'
-import ItemLink from './common/itemLink'
+import auth from '../../services/authService';
+import NavBar from '../common/navBar.jsx'
+import ItemLink from '../common/itemLink'
 
 const drawerWidth = 200
 
-const Dashboard = ({ children }) => {
+const Dashboard = ({ children, curRoute}) => {
+  
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -32,10 +30,12 @@ const Dashboard = ({ children }) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [userLogged, setUserLogged] = useState();
 
+
   useEffect(() => {
     try {
       const userData = auth.getCurrentUser();
       setUserLogged(userData);
+      console.log('something')
     } catch (ex) {}
   }, []);
 
@@ -56,6 +56,7 @@ const Dashboard = ({ children }) => {
         userLogged={userLogged}
         handleDrawerOpen={handleDrawerOpen}
         open={open}
+        userPath={curRoute}
       />
       
       <Drawer
@@ -100,7 +101,7 @@ const Dashboard = ({ children }) => {
               </>
             ) : (
               <>
-              <ItemLink name={'Sign In'}>
+              <ItemLink name={'Access'}>
                 <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign In"><span className="material-icons">&#xea77;</span></NavLink>
               </ItemLink>
             </>
