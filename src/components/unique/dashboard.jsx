@@ -28,7 +28,6 @@ const Dashboard = ({ children, curRoute}) => {
     try {
       const userData = auth.getCurrentUser();
       setUserLogged(userData);
-      console.log('something')
     } catch (ex) {}
   }, []);
 
