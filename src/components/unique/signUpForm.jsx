@@ -51,7 +51,7 @@ class SignUpForm extends Form {
       <ServeToDash
         large={[3,0]}
         med={[10,0]}
-        small={[10,2]}
+        small={[12,0]}
       >
         <Paper elevation={3} className='p-3 m-0'>
             {/* <h1>Register</h1> */}

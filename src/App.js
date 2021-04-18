@@ -14,13 +14,13 @@ import SignInForm from "./components/unique/signInForm";
 import SignUpForm from "./components/unique/signUpForm";
 import ProtectedRoute from './components/common/protectedRoute';
 import "./App.css";
-import Dashboard from './components/unique/dashboard'
 import LandingContent from './components/unique/landing'
 import FooterPage  from './components/unique/footer'
 import UserSettings from './components/unique/userSettings'
 import Watchlist from './components/unique/watchlist'
 import Heatlist from './components/unique/heatlist'
 import About from './components/unique/about'
+import Dashboard from './components/unique/dashboard'
 
 class App extends Component {
   state = {
@@ -48,36 +48,17 @@ class App extends Component {
     return (
       <React.Fragment>
         <ToastContainer />
-        <Dashboard
-          curRoute={curRoute}
-        />
+        <Dashboard curRoute={curRoute}/>
         <Container fluid style={{margin:0, padding:0}}>
           <Switch>
-            {/* <Route 
-              path="/dash" 
-              render = {props => <Dashboard {...props} user={user}/>}
-            /> */}
-
             <Route path="/Sign Up" component={SignUpForm} />
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
             <Route path="/dash" component={LandingContent} />
-            <Route path="/settings" component={UserSettings} />
-            <Route path="/watchlist" component={Watchlist} />
+            <ProtectedRoute path="/settings" component={UserSettings} />
+            <ProtectedRoute path="/watchlist" component={Watchlist} />
             <Route path="/heatlist" component={Heatlist} />
             <Route path="/about" component={About} />
-
-          
-            {/* <ProtectedRoute 
-              path="/movies/:id" 
-              component={MovieForm}
-            />
-
-            <Route 
-              path="/movies"  
-              render={props => <Movies {...props} user={user}/>} 
-            /> */}
-
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/dash" />
             <Redirect to="/not-found" />

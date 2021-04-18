@@ -24,7 +24,7 @@ const DashList = ({userLogged}) => {
 
                 <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Heatlist">
                     <ItemLink name={'Heatlist'}>
-                        <span class="material-icons">&#xe80e;</span>
+                        <span className="material-icons">&#xe80e;</span>
                     </ItemLink>
                 </NavLink>
 
