@@ -1,6 +1,12 @@
 .App {
   text-align: center;
 }
+
+::selection {
+  color: none;
+  background: none;
+}
+
 html{
   background-color:#6c757d
 }

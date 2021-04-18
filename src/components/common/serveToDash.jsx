@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const ServeToDash = ({children, small, med, large}) => {
+const ServeToDash = ({children, small=[10,2], med=[9,0], large=[10,0]}) => {
      console.log(small, med, large)
      return ( 
          <>

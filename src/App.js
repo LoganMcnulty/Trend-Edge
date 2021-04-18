@@ -16,6 +16,11 @@ import ProtectedRoute from './components/common/protectedRoute';
 import "./App.css";
 import Dashboard from './components/unique/dashboard'
 import LandingContent from './components/unique/landing'
+import FooterPage  from './components/unique/footer'
+import UserSettings from './components/unique/userSettings'
+import Watchlist from './components/unique/watchlist'
+import Heatlist from './components/unique/heatlist'
+import About from './components/unique/about'
 
 class App extends Component {
   state = {
@@ -57,12 +62,17 @@ class App extends Component {
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
             <Route path="/dash" component={LandingContent} />
+            <Route path="/settings" component={UserSettings} />
+            <Route path="/watchlist" component={Watchlist} />
+            <Route path="/heatlist" component={Heatlist} />
+            <Route path="/about" component={About} />
 
-
+          
             {/* <ProtectedRoute 
               path="/movies/:id" 
               component={MovieForm}
             />
+
             <Route 
               path="/movies"  
               render={props => <Movies {...props} user={user}/>} 
@@ -73,6 +83,7 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </Container>
+        <FooterPage/>
       </React.Fragment>
     );
   }

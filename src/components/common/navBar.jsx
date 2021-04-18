@@ -13,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // In House
 import  Logo  from '../common/Logo/logo';
-// import useStyles from '../../styles/styles'
 const drawerWidth = 200
 
 const NavBar = ({userLogged, handleDrawerOpen, open, userPath}) => {
@@ -48,7 +47,6 @@ const NavBar = ({userLogged, handleDrawerOpen, open, userPath}) => {
         })}
         >
         <Toolbar>
-
 
         <IconButton
               color='inherit'
