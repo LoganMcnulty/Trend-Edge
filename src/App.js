@@ -1,7 +1,6 @@
 // Out of house
 import React, { Component } from "react";
 import {withRouter} from 'react-router-dom';
-
 import { Route, Redirect, Switch } from "react-router-dom";
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -16,7 +15,12 @@ import SignUpForm from "./components/unique/signUpForm";
 import ProtectedRoute from './components/common/protectedRoute';
 import "./App.css";
 import Dashboard from './components/unique/dashboard'
-import ServeToDash from './components/common/serveToDash'
+import LandingContent from './components/unique/landing'
+import FooterPage  from './components/unique/footer'
+import UserSettings from './components/unique/userSettings'
+import Watchlist from './components/unique/watchlist'
+import Heatlist from './components/unique/heatlist'
+import About from './components/unique/about'
 
 class App extends Component {
   state = {
@@ -46,7 +50,6 @@ class App extends Component {
         <ToastContainer />
         <Dashboard
           curRoute={curRoute}
-        
         />
         <Container fluid style={{margin:0, padding:0}}>
           <Switch>
@@ -58,13 +61,18 @@ class App extends Component {
             <Route path="/Sign Up" component={SignUpForm} />
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
-            <Route path="/dash" component={ServeToDash} />
+            <Route path="/dash" component={LandingContent} />
+            <Route path="/settings" component={UserSettings} />
+            <Route path="/watchlist" component={Watchlist} />
+            <Route path="/heatlist" component={Heatlist} />
+            <Route path="/about" component={About} />
 
-
+          
             {/* <ProtectedRoute 
               path="/movies/:id" 
               component={MovieForm}
             />
+
             <Route 
               path="/movies"  
               render={props => <Movies {...props} user={user}/>} 
@@ -75,6 +83,7 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </Container>
+        <FooterPage/>
       </React.Fragment>
     );
   }

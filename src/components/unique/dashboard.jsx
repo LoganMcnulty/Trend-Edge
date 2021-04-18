@@ -3,21 +3,17 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavLink } from "react-router-dom";
 
 // In house
 import auth from '../../services/authService';
 import NavBar from '../common/navBar.jsx'
-import ItemLink from '../common/itemLink'
+import DashList from './dashboardList'
 
 const drawerWidth = 200
 
@@ -26,10 +22,7 @@ const Dashboard = ({ children, curRoute}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [userLogged, setUserLogged] = useState();
-
 
   useEffect(() => {
     try {
@@ -72,7 +65,6 @@ const Dashboard = ({ children, curRoute}) => {
           }),
         }}
       >
-        
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
@@ -82,35 +74,8 @@ const Dashboard = ({ children, curRoute}) => {
             )}
           </IconButton>
         </div>
-
         <Divider />
-
-        <div>
-          <List>
-            {userLogged ? (
-              <>
-                <ItemLink name={'Settings'}>
-                  <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign In"><SettingsIcon /></NavLink>
-                </ItemLink>
-              <>
-                <ItemLink name={'Sign Out'}>
-                  <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign Out"><span className="material-icons">&#xe9BA;</span></NavLink>
-                </ItemLink>
-              </>
-                <Divider />
-              </>
-            ) : (
-              <>
-              <ItemLink name={'Access'}>
-                <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign In"><span className="material-icons">&#xea77;</span></NavLink>
-              </ItemLink>
-            </>
-            )}
-              <ItemLink name={'About'}>
-                <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign In"><InfoIcon /></NavLink>
-              </ItemLink>
-          </List>
-        </div>
+        <DashList userLogged={userLogged}/>
       </Drawer>
     </div>
   );
