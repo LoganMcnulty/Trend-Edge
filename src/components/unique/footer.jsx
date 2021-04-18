@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         position: 'fixed',
         bottom: 0,
         right:0,
-        fontSize:'10px',
+        fontSize:'8px',
         width: '100%',
         backgroundColor: 'none',
         color: 'lightgray',

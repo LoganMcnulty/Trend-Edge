@@ -29,7 +29,7 @@ class SignInForm extends Form {
   doSubmit = async () => {
     try {
       const {data} = this.state
-      await auth.login(data.username, data.password)
+      await auth.login(data.username.toLowerCase(), data.password)
     // causes a full reload of application, so that app component is mounted again and get the JWT 
 
     const {state} = this.props.location
@@ -50,7 +50,7 @@ class SignInForm extends Form {
       <ServeToDash
         large={[3,0]}
         med={[10,0]}
-        small={[10,2]}
+        small={[12,0]}
       >
           <Paper elevation={3} className='p-3 m-0'>
             <form onSubmit={this.handleSubmit}>
@@ -63,9 +63,8 @@ class SignInForm extends Form {
           <Paper elevation={3} className='p-3 mt-3 justify-content-center text-center'>
             <div className="row">
               <div className="col">
-                <h5>New Here?</h5>
                 <NavLink className="h7 p-0 text-white" to="/Sign Up">
-                  <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>Get Started</button>
+                  <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>Sign Up</button>
                 </NavLink>
               </div>
             </div>

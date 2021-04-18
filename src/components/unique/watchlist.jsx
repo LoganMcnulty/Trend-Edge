@@ -17,12 +17,12 @@ class Watchlist extends Component {
     render() { 
         return ( 
           <ServeToDash
-            large={[3,0]}
-            med={[10,0]}
-            small={[10,2]}
+            large={[6,0]}
+            med={[12,0]}
+            small={[12,0]}
           >
             <Paper elevation={3} className='p-3 m-0'>
-              <div className="jumbotron text-right bg-success">
+              <div className="jumbotron text-center bg-success">
                 <h5>Watchlist Coming Soon</h5>
               </div>
             </Paper>

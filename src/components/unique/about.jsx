@@ -4,26 +4,7 @@ import ImageZoom from './imageZoom'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import Iwm from './img/IWM.png'
-import Gme from './img/GME.png'
-import Qqq from './img/qqq.png'
 import ServeToDash from '../common/serveToDash'
-
-const useStyles = makeStyles(theme => ({
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '1200px',
-    height: '800px'
-  },
-  paper: {
-    position: 'absolute',
-    width: 1300,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
-  }
-}))
 
 const styles = {
   header: {
@@ -59,8 +40,10 @@ const About = () => {
   const zoom = React.useRef(mediumZoom())
 
   return (
-    <ServeToDash>
-      <div>hi there</div>
+    <ServeToDash
+    
+    
+    >
         <div className="container">
               <div className="co-lg-10">
                 <>
