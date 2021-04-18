@@ -26,6 +26,8 @@ object-assign
 
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 
+/*! medium-zoom 1.0.6 | MIT License | https://github.com/francoischalifour/medium-zoom */
+
 /**
  * A better abstraction over CSS.
  *
