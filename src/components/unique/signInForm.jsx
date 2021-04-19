@@ -48,8 +48,8 @@ class SignInForm extends Form {
     if (auth.getCurrentUser()) return <Redirect to="/"/>
     return (
       <ServeToDash
-        large={[3,0]}
-        med={[10,0]}
+        med={[8,4]}
+        large={[6,0]}
         small={[12,0]}
       >
           <Paper elevation={3} className='p-3 m-0'>
