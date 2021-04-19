@@ -5,13 +5,13 @@ import Paper from '@material-ui/core/Paper'
 // In House
 import ServeToDash from '../common/serveToDash'
 
-class Heatlist extends Component {
+class SectorOverview extends Component {
     state = { 
       user: {}
      }
 
      componentDidMount(){
-       console.log(' - - - Heatlist Mounted - - - ')
+       console.log(' - - - SectorOverview Mounted - - - ')
      }
 
     render() { 
@@ -23,7 +23,7 @@ class Heatlist extends Component {
           >
             <Paper elevation={3} className='p-3 m-0'>
               <div className="jumbotron text-center bg-danger">
-                <h5>Heatlist Coming Soon</h5>
+                <h5>SectorOverview Coming Soon</h5>
               </div>
             </Paper>
 
@@ -32,4 +32,4 @@ class Heatlist extends Component {
     }
 }
  
-export default Heatlist;
+export default SectorOverview;

@@ -8,7 +8,6 @@ import Container from 'react-bootstrap/Container'
 
 // In house
 import SignOut from './components/unique/signOut';
-import auth from './services/authService'
 import NotFound from "./components/unique/notFound";
 import SignInForm from "./components/unique/signInForm";
 import SignUpForm from "./components/unique/signUpForm";
@@ -16,15 +15,14 @@ import ProtectedRoute from './components/common/protectedRoute';
 import "./App.css";
 import LandingContent from './components/unique/landing'
 import FooterPage  from './components/unique/footer'
-import UserSettings from './components/unique/userSettings'
+import UserSettings from './components/unique/userSettings/userSettings'
 import Watchlist from './components/unique/watchlist'
-import Heatlist from './components/unique/heatlist'
+import SectorOverview from './components/unique/sectorOverview'
 import About from './components/unique/about'
 import Dashboard from './components/unique/dashboard'
 
 class App extends Component {
   state = {
-
   }
 
   componentDidMount() {
@@ -57,7 +55,7 @@ class App extends Component {
             <Route path="/dash" component={LandingContent} />
             <ProtectedRoute path="/settings" component={UserSettings} />
             <ProtectedRoute path="/watchlist" component={Watchlist} />
-            <Route path="/heatlist" component={Heatlist} />
+            <Route path="/SectorOverview" component={SectorOverview} />
             <Route path="/about" component={About} />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/dash" />

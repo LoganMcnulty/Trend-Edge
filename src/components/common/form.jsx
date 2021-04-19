@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
+import SliderInput from "./sliderInput";
 import Select from "./select";
 
 class Form extends Component {
@@ -37,16 +38,19 @@ class Form extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
+    console.log(input)
+    // const errors = { ...this.state.errors };
+    // const errorMessage = this.validateProperty(input);
+    // if (errorMessage) errors[input.name] = errorMessage;
+    // else delete errors[input.name];
 
     const data = { ...this.state.data };
     data[input.name] = input.value;
     console.log(input)
     console.log(data)
-    this.setState({ data, errors });
+    this.setState({ data});
+
+    // this.setState({ data, errors });
   };
 
   renderButton(label) {
@@ -86,6 +90,23 @@ class Form extends Component {
       />
     );
   }
+
+
+  renderSliderInput(name, label, type = "text") {
+    const { data, errors } = this.state;
+
+    return (
+      <SliderInput
+        type={type}
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  }
+
 }
 
 export default Form;

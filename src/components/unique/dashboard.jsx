@@ -67,7 +67,6 @@ const Dashboard = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [userLogged, setUserLogged] = useState();
 
-
   useEffect(() => {
     try {
       const userData = auth.getCurrentUser();

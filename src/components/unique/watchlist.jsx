@@ -17,8 +17,8 @@ class Watchlist extends Component {
     render() { 
         return ( 
           <ServeToDash
+            med={[8,4]}
             large={[6,0]}
-            med={[12,0]}
             small={[12,0]}
           >
             <Paper elevation={3} className='p-3 m-0'>
