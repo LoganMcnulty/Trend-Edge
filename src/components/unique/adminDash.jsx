@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper'
 // In House
 import ServeToDash from '../common/serveToDash'
 
-class SectorOverview extends Component {
+class AdminDash extends Component {
     state = { 
       user: {}
      }
@@ -32,4 +32,4 @@ class SectorOverview extends Component {
     }
 }
  
-export default SectorOverview;
+export default AdminDash;

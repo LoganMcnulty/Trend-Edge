@@ -30,11 +30,18 @@ const DashList = ({userLogged}) => {
 
                 <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Settings">
                     <ItemLink name={'Settings'}>
-                    <SettingsIcon />
-                </ItemLink>
-
+                        <SettingsIcon />
+                    </ItemLink>
                 </NavLink>
             <>
+                { userLogged.isAdmin && 
+                <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Admin">
+                    <ItemLink name={'Admin Dash'}>
+                            <span className="material-icons">&#xe9BA;</span>
+                    </ItemLink>
+                </NavLink>
+                }
+
                 <NavLink className="nav-item nav-link text-dark p-0 m-0" to="/Sign Out">
                     <ItemLink name={'Sign Out'}>
                             <span className="material-icons">&#xe9BA;</span>
