@@ -23,7 +23,7 @@ class SectorOverview extends Component {
           >
             <Paper elevation={3} className='p-3 m-0'>
               <div className="jumbotron text-center bg-danger">
-                <h5>SectorOverview Coming Soon</h5>
+                <h5>Admin Dashboard</h5>
               </div>
             </Paper>
 

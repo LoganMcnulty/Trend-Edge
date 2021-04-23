@@ -53,8 +53,10 @@ class App extends Component {
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
             <Route path="/dash" component={LandingContent} />
+            
             <ProtectedRoute path="/settings" component={UserSettings} />
             <ProtectedRoute path="/watchlist" component={Watchlist} />
+
             <Route path="/SectorOverview" component={SectorOverview} />
             <Route path="/about" component={About} />
             <Route path="/not-found" component={NotFound} />

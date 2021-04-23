@@ -31,8 +31,9 @@ class SignUpForm extends Form {
 
   doSubmit = async () => {
     // Call the server
-    console.log(this.state.user)
     try{
+      console.log(this.state)
+    
       const response = await userService.register(this.state.data)
       auth.loginWithJwt(response.headers["x-auth-token"])
       window.location = '/'

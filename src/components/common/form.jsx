@@ -38,7 +38,6 @@ class Form extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
-    console.log(input)
     // const errors = { ...this.state.errors };
     // const errorMessage = this.validateProperty(input);
     // if (errorMessage) errors[input.name] = errorMessage;
@@ -46,8 +45,6 @@ class Form extends Component {
 
     const data = { ...this.state.data };
     data[input.name] = input.value;
-    console.log(input)
-    console.log(data)
     this.setState({ data});
 
     // this.setState({ data, errors });
