@@ -90,7 +90,6 @@ const Dashboard = (props) => {
 
 
   const renderTopRight = (userLogged, curRoute) => {
-    console.log(curRoute)
     return(
         <Grid item>
             {

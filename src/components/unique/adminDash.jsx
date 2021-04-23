@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper'
 // In House
 import ServeToDash from '../common/serveToDash'
 
-class SectorOverview extends Component {
+class AdminDash extends Component {
     state = { 
       user: {}
      }
@@ -23,7 +23,7 @@ class SectorOverview extends Component {
           >
             <Paper elevation={3} className='p-3 m-0'>
               <div className="jumbotron text-center bg-danger">
-                <h5>SectorOverview Coming Soon</h5>
+                <h5>Admin Dashboard</h5>
               </div>
             </Paper>
 
@@ -32,4 +32,4 @@ class SectorOverview extends Component {
     }
 }
  
-export default SectorOverview;
+export default AdminDash;

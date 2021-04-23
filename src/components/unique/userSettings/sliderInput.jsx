@@ -9,33 +9,27 @@ const useStyles = makeStyles({
   },
 });
 
-const SliderInput = ({icon, fieldName, label, updateSettingsState, startingValue, min=1, max=100}) => {
+const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1, max=100}) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(5);
+  const [thisValue, setValue] = React.useState();
 
   useEffect(() => {
     try {
-      if(startingValue )setValue(startingValue)
+      if(!thisValue)setValue(value)
     } catch (ex) { }
-  }, [])
+  })
 
-  const handleChangeSlider = (event, newValue) => {
-    if(newValue<min) newValue = min
-    if(newValue>max) newValue = max
-    console.log(newValue)
-    setValue(newValue);
-    updateSettingsState(fieldName, parseInt(newValue));
-  };
-
-  const handleChangeInput = (event, newValue) => {
-    let value = event.target.value
-    if(value<min) {
-      console.log('true')
-      value = min}
-    if(value>max) value = max
-    setValue(value);
-    updateSettingsState(fieldName, parseInt(value));
-  };
+  const handleChange = (event, newValue) => {
+    let eventValue = event.target.value
+    if(eventValue){
+      setValue(eventValue);
+      updateSettingsState(fieldName, parseInt(eventValue));
+    }
+    else{
+      setValue(newValue);
+      updateSettingsState(fieldName, parseInt(newValue));
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -50,18 +44,19 @@ const SliderInput = ({icon, fieldName, label, updateSettingsState, startingValue
           <Slider
           min={min}
           max={max}
-          value={value} 
-          onChange={handleChangeSlider}
+          value={thisValue ? thisValue : 10} 
+          onChange={handleChange}
           ria-labelledby="continuous-slider" />
         </Grid>
         <Grid item>
           <Input
-              value={value}
+              value={thisValue ? thisValue : 10}
               margin="dense"
-              onChange={handleChangeInput}
+              onChange={handleChange}
               style={{ width: 50 }}
+              // onBlur={() => handleBlur}
               inputProps={{
-                step: 2,
+                step: 1,
                 min: min,
                 max: max,
                 type: 'number',

@@ -20,6 +20,7 @@ import Watchlist from './components/unique/watchlist'
 import SectorOverview from './components/unique/sectorOverview'
 import About from './components/unique/about'
 import Dashboard from './components/unique/dashboard'
+import AdminDash from './components/unique/adminDash'
 
 class App extends Component {
   state = {
@@ -53,8 +54,11 @@ class App extends Component {
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
             <Route path="/dash" component={LandingContent} />
+            
             <ProtectedRoute path="/settings" component={UserSettings} />
             <ProtectedRoute path="/watchlist" component={Watchlist} />
+            <ProtectedRoute path="/admin" adminTrue={true} component={AdminDash} />
+
             <Route path="/SectorOverview" component={SectorOverview} />
             <Route path="/about" component={About} />
             <Route path="/not-found" component={NotFound} />
