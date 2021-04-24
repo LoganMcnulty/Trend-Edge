@@ -1,10 +1,14 @@
+// Out of House
 import React from 'react'
 import mediumZoom from 'medium-zoom'
-import ImageZoom from './imageZoom'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
+
+// In House
 import Iwm from './img/IWM.png'
 import ServeToDash from '../common/serveToDash'
+import ImageZoom from './imageZoom'
+// import HighLighter from '../common/highlightText'
 
 const styles = {
   header: {

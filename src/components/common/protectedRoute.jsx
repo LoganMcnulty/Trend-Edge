@@ -8,7 +8,6 @@ const ProtectedRoute = ({path, adminTrue=false, component:Component, render, ...
         {...rest}
         render={props => {
             const user = auth.getCurrentUser()
-            console.log(user)
             if (!user) return (
                     <Redirect to={{
                         pathname:'/Sign in',
