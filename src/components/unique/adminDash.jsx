@@ -9,12 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import ServeToDash from '../common/serveToDash'
 import {updateStocks, removeUsers} from '../../services/adminService'
 import auth from '../../services/authService'
+import  TickerInput  from "./submitTickerData";
 
 const AdminDash = () => {
   const [updatingStocks, setUpdatingStocks] = useState(false);
   const [removingUsers, setUpdatingUsers] = useState(false);
 
-  const handleUpdate = (type) =>{
+  const handleUpdate = (type, identifier=false) =>{
     if (type === 'updateStocks') {
       setUpdatingStocks(true)
       // updatingStocks = true
@@ -39,6 +40,9 @@ const AdminDash = () => {
           setUpdatingUsers('complete')
         })
       }
+    }
+    else if (type === 'assetData' && identifier){
+      console.log(identifier)
     }
   }
 
@@ -90,6 +94,18 @@ const AdminDash = () => {
             </Typography>
           </Col>
         </Row>
+      </Paper>
+
+      <Paper elevation={3} className='p-3 mt-3 mx-0'>
+        <Row className="align-items-center justify-content-center text-center ht-3 ">
+          <Col className="col-12">
+            <Typography variant="h5" >Update Asset Data</Typography>
+          </Col>
+        </Row>
+        <TickerInput
+          onChange={() => handleUpdate('assetData', 'TSLA')}
+        
+        />
       </Paper>
     </ServeToDash>
    );
