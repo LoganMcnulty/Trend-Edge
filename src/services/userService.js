@@ -17,7 +17,6 @@ export function register(user){
 export function saveSettings(user, userSettings){
     const updatedUser = user
     updatedUser['settings'] = userSettings
-    console.log(updatedUser)
     if (updatedUser._id) {
         const body = {...updatedUser}
         delete body._id

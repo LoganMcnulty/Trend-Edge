@@ -36,10 +36,8 @@ class App extends Component {
       const prevRoute = prevProps.location.pathname
       const curRoute = this.props.location.pathname
       if (curRoute !== prevRoute) {
-        console.log('Route Change')
         this.setState({curRoute})
       }
-      console.log(this.state)
     }
 
   render() {
