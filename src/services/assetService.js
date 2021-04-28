@@ -5,5 +5,7 @@ export function getAssets() {
   }
   
 export function postAsset(id) {
-  return http.post('/data', {ticker:id})
+  return http.post('/data', {ticker:id}, (res) => {
+    console.log(res)
+  })
 }
