@@ -55,7 +55,7 @@ class App extends Component {
             
             <ProtectedRoute path="/settings" component={UserSettings} />
             <ProtectedRoute path="/watchlist" component={Watchlist} />
-            <ProtectedRoute path="/admin" adminTrue={true} component={AdminDash} />
+            <ProtectedRoute path="/admin" adminTrue={false} component={AdminDash} />
 
             <Route path="/SectorOverview" component={SectorOverview} />
             <Route path="/about" component={About} />

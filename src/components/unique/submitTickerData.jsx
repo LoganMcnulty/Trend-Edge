@@ -1,14 +1,21 @@
+// out of house
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+// in house
 import {postAsset, getAsset} from '../../services/assetService';
 import InputField from '../common/inputField';
+import CircularIntegration from '../common/loadingInteractive'
 
 class TickerInput extends Component {
     state = { 
         identifier:'',
-        errors:''
+        status:{
+          busy:false,
+          dataRetrieved:false,
+          errors:false
+        },
      }
 
      validateAssetIdentifier(id){
@@ -20,6 +27,7 @@ class TickerInput extends Component {
         if(recentInput === '') return ''
         if(!alphabet.includes(recentInput) && !alphabetUpper.includes(recentInput)) {
             this.setState({errors:'Only US equity/alphabet oriented tickers at this time'})
+            if (this.state.identifier.length === 1) return inputFieldRef.value = ''
             return inputFieldRef.value = this.state.identifier
         }
         else{
@@ -35,19 +43,46 @@ class TickerInput extends Component {
         await this.setState({ identifier });
       };
 
-    handleSubmit = (e) => {
-        const identifier = this.state.identifier
-        console.log('Submission request for: ' + identifier)
-        postAsset(identifier)
+    handleSubmit = async (e) => {
+      console.log(this.state)
+    // set state to busy
+      const {status, errors} = this.state
+      status['busy'] = true
+
+    // get identifier and submit to backend for API data request
+      const identifier = this.state.identifier
+      this.setState({identifier:'', status})
+      console.log('Submission request for: ' + identifier)
+
+    // set statuses based on response
+      await postAsset(identifier).then(res => {
+        if (res.status === 201) {
+          (console.log("Asset Update Successful"))
+          status['busy'] = false
+          status['dataRetrieved'] = true
+          status['errors'] = false
+          this.setState({status})
+          console.log(this.state)
+        }
+      }).catch(err => {
+        if (err.response.status === 400) {
+          (console.log("Invalid Asset Identifier"))
+          status['busy'] = false
+          status['dataRetrieved'] = false
+          status['errors'] = true
+          this.setState({status})
+          console.log(this.state)
+        }
+      })
     };
 
     render() { 
-        const { identifier, errors } = this.state;
+        const { identifier, errors, status } = this.state;
 
         return (
             <>
-            <Row className="align-items-center justify-content-end text-center mt-3 ">
-              <Col className="col-6 text-left">
+            <Row className="align-items-center justify-content-center text-center mt-3 ">
+              <Col className="col-12">
                 <InputField
                     onChange={this.handleChange}
                     inputID='tickerInput'
@@ -56,13 +91,15 @@ class TickerInput extends Component {
                     value={identifier}
                 />
               </Col>
-              <Col className="col-6 text-left">
-                <button
+            </Row>
+            <Row className="align-items-center justify-content-center text-center">
+              <Col className="col-12">
+                <CircularIntegration
+                  title={'Submit'}
                   onClick = {this.handleSubmit}
-                  className="btn btn-primary btn-block " 
-                  style={{ border: '4px solid #6c757d'}}
-                >Submit
-                </button>
+                  type = {'fullButton'}
+                  status={status}
+                />
               </Col>
             </Row>
             {errors ? <p className={'pb-0 mb-0'}>{errors}</p>: ''}
