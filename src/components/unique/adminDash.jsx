@@ -7,49 +7,40 @@ import Typography from '@material-ui/core/Typography';
 
 // In House
 import ServeToDash from '../common/serveToDash'
-import {updateStocks, removeUsers} from '../../services/adminService'
+import {removeUsers} from '../../services/adminService'
+import {getAssets, updateAssets} from '../../services/assetService'
 import auth from '../../services/authService'
 import  TickerInput  from "./submitTickerData";
 
 const AdminDash = () => {
-  const [updatingStocks, setUpdatingStocks] = useState(false);
+  const [updatingAssets, setUpdatingAssets] = useState(false);
   const [removingUsers, setUpdatingUsers] = useState(false);
 
-  const handleUpdate = (type, identifier=false) =>{
-    if (type === 'updateStocks') {
-      setUpdatingStocks(true)
-      // updatingStocks = true
-      const update = [updateStocks(auth.getCurrentUser())]
-      Promise.all(update)
-      .then( async (response) => {
-        const res = response[0]
-        console.log(res)
-        setUpdatingStocks('complete')
-      })
+  const handleUpdate = async type =>{
+    if (type === 'updateAssets') {
+      setUpdatingAssets(true)
+      await Promise.all([updateAssets()])
+      setUpdatingAssets('complete')
     }
     else if (type === 'removeUsers'){
-      let confirm = alert('Are you sure?')
-      if (confirm){
+      let yes = window.confirm('Are you sure?')
+      if (yes){
         setUpdatingUsers(true)
         // updatingStocks = true
         const update = [removeUsers(auth.getCurrentUser())]
         Promise.all(update)
-        .then( async (response) => {
-          const res = response[0]
+        .then(async res => {
           console.log(res)
           setUpdatingUsers('complete')
         })
       }
     }
-    else if (type === 'assetData' && identifier){
-      console.log(identifier)
-    }
   }
 
   return ( 
       <ServeToDash
-      large={[6,0]}
-      med={[12,0]}
+      large={[8,1]}
+      med={[8,4]}
       small={[12,0]}
     >
       <Paper elevation={3} className='p-3 m-0'>
@@ -60,27 +51,7 @@ const AdminDash = () => {
             </Typography>
           </Col>
         </Row>
-        <Row className="align-items-center justify-content-around text-center ht-3 ">
-          <Col className="col-6">
-            <Typography variant="h4" gutterBottom>
-              <button 
-                onClick = {() => handleUpdate('updateStocks')}
-                className="btn btn-warning btn-block " 
-                style={{ border: '4px solid #6c757d'}}>Update DB Stock Data
-                </button>
-            </Typography>
-          </Col>
-          <Col className="col-6">
-            <Typography variant="h4" gutterBottom>
-              <button
-                onClick = {() => handleUpdate('removeUsers')}
-                className="btn btn-danger btn-block " 
-                style={{ border: '4px solid #6c757d'}}
-              >Remove All Users
-              </button>
-            </Typography>
-          </Col>
-        </Row>
+        
         <Row className="align-items-center justify-content-end text-center ht-3 ">
           <Col className="col-2">
             <Typography variant="h5" >
@@ -89,7 +60,7 @@ const AdminDash = () => {
           </Col>
           <Col className="col-10 text-left">
             <Typography variant="h6" >
-              {!updatingStocks ? '' : (updatingStocks === 'complete') ? 'Stocks Updated. ' : 'Stocks Updating. '}
+              {!updatingAssets ? '' : (updatingAssets === 'complete') ? 'Stocks Updated. ' : 'Stocks Updating. '}
               {!removingUsers ? '' : (removingUsers === 'complete') ? 'Users Removed. ' : 'Removing Users. '}
             </Typography>
           </Col>
@@ -97,15 +68,40 @@ const AdminDash = () => {
       </Paper>
 
       <Paper elevation={3} className='p-3 mt-3 mx-0'>
-        <Row className="align-items-center justify-content-center text-center ht-3 ">
-          <Col className="col-12">
-            <Typography variant="h5" >Update Asset Data</Typography>
+        <Row className="align-items-center justify-content-center text-center">
+          <Col className="col-sm-12 col-lg-6 col-md-6 mt-0">
+            <Typography variant="h5" >Update An Asset</Typography>
+            <TickerInput
+            />
+          </Col>
+          <Col className="col-6 mt-2">
+            <Typography variant="h5" >DB Functions</Typography>
+            <Row className="align-items-center justify-content-around text-center mt-3">
+              <Col className="col-sm-12 col-lg-6 col-md-8 mt-0">
+                <Typography variant="h4" gutterBottom>
+                  <button 
+                    onClick = {() => handleUpdate('updateAssets')}
+                    className="btn btn-warning btn-block " 
+                    style={{ border: '4px solid #6c757d'}}>Update DB Stock Data
+                  </button>
+                </Typography>
+              </Col>
+            </Row>
+            <Row className="align-items-center justify-content-around text-center">
+              <Col className="col-sm-12 col-lg-6 col-md-8 mt-0">
+                <Typography variant="h4" gutterBottom>
+                  <button
+                    onClick = {() => handleUpdate('removeUsers')}
+                    className="btn btn-danger btn-block " 
+                    style={{ border: '4px solid #6c757d'}}
+                  >Remove All Users
+                  </button>
+                </Typography>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <TickerInput
-          onChange={() => handleUpdate('assetData', 'TSLA')}
-        
-        />
+
       </Paper>
     </ServeToDash>
    );
