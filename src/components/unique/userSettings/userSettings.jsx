@@ -6,13 +6,58 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { lightBlue, green, purple } from '@material-ui/core/colors';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 
 // In house
 import ServeToDash from '../../common/serveToDash'
 import auth from '../../../services/authService'
 import SliderInput from './sliderInput'
 import {saveSettings} from '../../../services/userService'
-import {getSettings} from '../../../services/userService'
+import {getUser} from '../../../services/userService'
+
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  fabProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: lightBlue[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+    // style={{backgroundColor: '#4682B4', border: '4px solid #6c757d'}}
+  },
+}));
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      // Purple and green play nicely together.
+      main: purple[500],
+    },
+    secondary: {
+      // This is green.A700 as hex.
+      main: '#4682B4',
+    },
+  },
+});
+
+
 
 const UserSettings = () => {
   const [key, setKey] = useState('AveragePeriod');
@@ -20,22 +65,23 @@ const UserSettings = () => {
   const [user, setUser] = useState()
   const [smaError, setSMAError] = useState();
   const [weightError, setWeightError] = useState();
+  const [loading, setLoading] = React.useState(false);
+  const classes = useStyles();
 
-
-  const handleSave = () => {
-    saveSettings(user, currentUserSettings)
+  const handleSave = async () => {
+    setLoading(true)
+    await saveSettings(user, currentUserSettings, 'settings')
+    setLoading(false)
   }
 
   useEffect(() => {
     try{
-      let request = [auth.getCurrentUser()]
-      Promise.all(request)
-      .then( async (response) => {
-        const user = response[0]
-        setUser(user)
+      Promise.all([auth.getCurrentUser()])
+      .then( async response => {
+        const userID = response[0]._id
+        setUser(userID)
         console.log('getting user settings')
-        const settings = await getSettings(user._id)
-        delete settings._id
+        const {settings} = await getUser(userID)
         setcurrentUserSettings(settings);
       })
     }
@@ -47,16 +93,16 @@ const UserSettings = () => {
 
 
   const validate = () => {
-    const {fastSMA, slowSMA, fastWeight, slowWeight, fastToSlowWeight, macdWeight, adxWeight} = currentUserSettings
+    const {fastSMA, slowSMA, fastWeight, slowWeight, fastOverSlowWeight, macdWeight, adxWeight} = currentUserSettings
     const fastOverSlow = fastSMA > slowSMA
-    const weight100 = fastWeight + slowWeight + fastToSlowWeight + macdWeight + adxWeight
+    const weight100 = fastWeight + slowWeight + fastOverSlowWeight + macdWeight + adxWeight
   
     if (fastOverSlow) {
       const error = 'Fast SMA Cannot be Greater than Slow SMA'
       setSMAError(error)
     }
     else{setSMAError(false)}
-    if (weight100 != 100){
+    if (weight100 !== 100){
       const error = 'Weights Must Add up to 100%'
       setWeightError(error)
     }
@@ -86,8 +132,22 @@ const UserSettings = () => {
             </Col>
 
             <Col className='col-6'>
-              {!smaError && !weightError && < button className="btn btn-secondary btn-block" onClick={handleSave} style={{backgroundColor: '#4682B4', border: '4px solid #6c757d'}}>Apply</button>}
-              {(smaError || weightError) && <button className="btn btn-danger btn-block " disabled={true} style={{ border: '4px solid #6c757d'}}>Apply</button>}
+                <div className={classes.wrapper}>
+                  <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        disabled={loading || smaError || weightError}
+                        onClick={handleSave}
+                        startIcon={<SaveIcon />}
+                        style={{width:'100%'}}
+                      >
+                        Apply
+                      </Button>
+                  </ThemeProvider>
+                  {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+              
             </Col>
           </Row>
 
@@ -154,9 +214,9 @@ const UserSettings = () => {
 
               <Row className="align-items-center justify-content-around text-center">
                 <SliderInput
-                  value={currentUserSettings ? currentUserSettings['fastToSlowWeight'] : null}
+                  value={currentUserSettings ? currentUserSettings['fastOverSlowWeight'] : null}
                     icon={<i className="fas fa-balance-scale"></i>} 
-                    fieldName='fastToSlowWeight' 
+                    fieldName='fastOverSlowWeight' 
                     label='Fast Over Slow' 
                     updateSettingsState={updateSettingsState}
                   />
@@ -187,7 +247,7 @@ const UserSettings = () => {
               {(smaError || weightError) &&
                 <div className="card text-white bg-danger mb-3 w-80">
                   <div className="card-body">
-                    {smaError && <p className="card-text">{"Fast SMA must be > slow SMA ⚠️"}</p>}
+                    {smaError && <p className="card-text">{'Fast SMA must be > Slow SMA ⚠️'}</p>}
                     {weightError && <p className="card-text">Weights must add up to 100% ⚠️</p>}
                   </div>
                 </div>

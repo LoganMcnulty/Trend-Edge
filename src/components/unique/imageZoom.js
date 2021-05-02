@@ -15,5 +15,5 @@ export default ImageZoom
 const styles = {
   textAlign: 'center',
   cursor: 'pointer',
-  width: 600
+  width: '80%'
 }

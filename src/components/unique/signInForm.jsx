@@ -75,9 +75,3 @@ class SignInForm extends Form {
 }
 
 export default SignInForm;
-
-const styles = {
-  btn: {
-    width: 300,
-  },
-};

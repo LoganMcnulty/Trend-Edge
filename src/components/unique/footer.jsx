@@ -5,8 +5,8 @@ const FooterPage = () => {
     const classes = useStyles()
   return (
     <div className={classes.footer}>
-        <p className='p-0 m-0'>©️Copyright 2021</p>
-        <p  className='p-0 m-0'>All Rights Reserved</p>
+        <p className='p-0 m-0'>Copyright 2021</p>
+        <p  className='p-0 m-0'>Trend Edge</p>
     </div>
   );
 }
