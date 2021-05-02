@@ -61,9 +61,6 @@ export default function CircularIntegration({title, status, type, onClick}) {
     if (!busy) setLoading(false);
     if (dataRetrieved) setSuccess(true)
   
-    return () => {
-      clearTimeout(timer.current);
-    };
   });
 
   return (
@@ -75,7 +72,6 @@ export default function CircularIntegration({title, status, type, onClick}) {
           <Button
             variant="contained"
             color="secondary"
-            // className={buttonClassname}
             disabled={loading}
             onClick={onClick}
           >

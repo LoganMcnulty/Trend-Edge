@@ -51,8 +51,8 @@ class TickerInput extends Component {
 
     // get identifier and submit to backend for API data request
       const identifier = this.state.identifier
-      this.setState({identifier:'', status})
       console.log('Submission request for: ' + identifier)
+      this.setState({identifier:'', status})
 
     // set statuses based on response
       await postAsset(identifier).then(res => {
@@ -70,7 +70,15 @@ class TickerInput extends Component {
           status['busy'] = false
           status['dataRetrieved'] = false
           status['errors'] = true
-          this.setState({status})
+          this.setState({status, identifier:''})
+          console.log(this.state)
+        }
+        else if (err.response.status === 500) {
+          (console.log("Something went wrong internally"))
+          status['busy'] = false
+          status['dataRetrieved'] = false
+          status['errors'] = true
+          this.setState({status, identifier:''})
           console.log(this.state)
         }
       })

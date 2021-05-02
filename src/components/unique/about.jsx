@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Iwm from './img/IWM.png'
 import ServeToDash from '../common/serveToDash'
 import ImageZoom from './imageZoom'
+import aTag from '../common/aTagInline'
+import { Divider } from '@material-ui/core'
 // import HighLighter from '../common/highlightText'
 
 const styles = {
@@ -39,8 +41,9 @@ const styles = {
     fontStyle: 'italic'
   },
   link:{
-    color:"#fc5a3d",
-    textDecoration:'none'
+    color:"#1569C7",
+    textDecoration:'none',
+    fontWeight: 'bold',
   },
   example:{
     paddingTop:"1%",
@@ -93,25 +96,36 @@ const About = () => {
                                 <h4 className="text-center ">
                                   Input
                                 </h4>
-                                <div className="text-center">
-                                 'Fast' & 'Slow' weekly SMAs, slope lookbacks, & score weightings to be applied to asset data
+                                <div className="text-left">
+                                  {'1) '} Settings: 'Fast' & 'Slow' weekly{' '}                 
+                                    <a
+                                      href='https://www.investopedia.com/terms/t/technicalindicator.asp#:~:text=Technical%20indicators%20are%20heuristic%20or,to%20predict%20future%20price%20movements.'
+                                      target='_blank'
+                                      style={styles.link}
+                                    >
+                                     SMAs,
+                                    </a>
+                                  {' '}slope lookbacks, & score weightings.
+                                </div>
+                                <div className="text-left">
+                                {'2) '} Asset Data
                                 </div>
                               </li>
                             {/* Body */}
                               {/* Example Asset & Settings*/}
                               <li className="list-group-item" >
                                 <div className="row justify-content-around">
-                                  <div className="col-lg-3 col-sm-12">
-                                    <h6 className=" ">
-                                      Ex. Asset
+                                  <div className="col-lg-4 col-sm-12">
+                                    <h6 className="mb-0">
+                                      Example Asset
                                     </h6>
-                                    <div style={{color:'red'}}>
+                                    <div style={{color:'red'}} className='mb-2'>
                                       $EDGE
                                     </div>
                                   </div>
                                   <div className="col-lg-5 col-sm-12">
-                                    <h6 className="">
-                                      Ex. Settings
+                                    <h6 className="mb-0">
+                                      Example (Default) Settings
                                     </h6>
                                     <div style={{color:'red'}}>
                                       Fast SMA: 10 wk
@@ -133,7 +147,7 @@ const About = () => {
 
 
                               {/* Processing  */}
-                              <li className="list-group-item list-group-item-secondary justify-content-center">
+                              <li className="list-group-item list-group-item-success justify-content-center">
                                 <h4 className="text-center ">
                                   Processing
                                 </h4>
@@ -141,64 +155,74 @@ const About = () => {
                               {/* Fast and Slow Explain */}
                               <li className="list-group-item pb-0">Apply lookback to Fast & Slow SMAs. 
                               <div>If: Positive Slope → 1 Else: → 0</div>
-                                <p className='text-left' style={styles.example}>
-                                  <div>- Fast SMA t(0): $140</div>
-                                  <div>- Fast SMA t(-5): $155</div>
-                                  <div>(140 - 155) {`<`} 0 → 0.00 </div>
+                                <div className='text-left' style={styles.example}>
+                                  <div>- Fast SMA t(0) = $140</div>
+                                  <div>- Fast SMA t(-5) = $155</div>
+                                  <div>(140 - 155) {`<`} 0 → 0.00</div>
+                                  <div>- Weight: .20</div>
+                                  <div>(0.00 * .20) = 0.00</div>
+
+
                                   <br></br>
-                                  <div>- Slow SMA t(0): $140</div>
-                                  <div>- Slow SMA t(-5): $108</div>
+                                  <div>- Slow SMA t(0) = $140</div>
+                                  <div>- Slow SMA t(-5) = $108</div>
                                   <div>(140 - 155) {`>`} 0 → 1.00 </div>
-                                </p>
+                                  <div>- Weight: .20</div>
+                                  <div>(1.00 * .20) = 0.20</div>
+                                </div>
                               </li>
                               <br></br>
 
                               {/* Fast Over Slow Explain */}
                               <li className="list-group-item pb-0">If: Fast SMA {'>'} Slow SMA → 1 Else: → 0
-                                <p  className='text-left' style={styles.example}>
-                                  <div>- Fast SMA t(0): $140</div>
-                                  <div>- Slow SMA t(0): $120</div>
-                                  <div>- (140 - 120) {`>`} 0 → 1.00 </div>
-                                </p>
+                                <div  className='text-left' style={styles.example}>
+                                  <div>- Fast SMA t(0) = $140</div>
+                                  <div>- Slow SMA t(0) = $120</div>
+                                  <div>(140 - 120) {`>`} 0 → 1.00 </div>
+                                  <div>- Weight: .20</div>
+                                  <div>(1.00 * .20) = 0.20</div>
+                                </div>
                               </li>
                               <br></br>
 
                               {/* MACD Explain */}
-                              <li className="list-group-item pb-0">Apply lookback to Weekly MACD-12. 
+                              <li className="list-group-item pb-0">Apply lookback to Weekly{' '}                 
+                                  <a
+                                    href='https://www.investopedia.com/terms/t/technicalindicator.asp#:~:text=Technical%20indicators%20are%20heuristic%20or,to%20predict%20future%20price%20movements.'
+                                    target='_blank'
+                                    style={styles.link}
+                                  >
+                                    MACD-12.
+                                  </a>{' '}
                               <div>If: Positive Slope → 1 Else: → 0</div>
-                                <p style={styles.example}>
-                                  <div>- MACD t(0): 16.00</div>
-                                  <div>- MACD t(-5): 21.00</div>
-                                  <div>- (16 - 21) {`<`} 0 → 0.00 </div>
-                                </p>
+                                <div style={styles.example}>
+                                  <div>- MACD t(0) = 16.00</div>
+                                  <div>- MACD t(-5) = 21.00</div>
+                                  <div>(16 - 21) {`<`} 0 → 0.00 </div>
+                                  <div>- Weight: .20</div>
+                                  <div>(0.00 * .20) = 0.00</div>
+                                </div>
                               </li>
                               <br></br>
 
                               {/* ADX Explain */}
-                              <li className="list-group-item pb-0">Apply lookback to Fast SMA. Fast SMA slope positive? T = 1, F = 0.
-                                <p style={styles.example}>
-                                  <div>- Lookback: 5 (wks)</div>
-                                  <div>- 10 Wk SMA t(0): 21.00</div>
-                                  <div>- 10 Wk SMA t(-5): 16.00</div>
-                                  <div>- (150 - 140) {`<`} 0 → 0.00 </div>
-                                </p>
+                              <li className="list-group-item pb-0">If Slow SMA has a positive slope, apply ADX
+                                <div style={styles.example}>
+                                  <div>*check prev. step* → True </div>
+                                  <div>- ADX t(0): 28.50</div>
+                                  <div>- Weight: .20</div>
+                                  <div>((28.50/100) * .20) = 0.057</div>
+                                </div>
                               </li>
-                              <br></br>
-
-
-                              <li className="list-group-item">Weekly MACD positive slope? T = 1, F = 0.</li>
-                              <li className="list-group-item">If Slow SMA </li>
-                              <li className="list-group-item">TrendEdge = (fastPositive.Slope * weight) + (slowPositive.Slope * weight) + (fastGreaterSlow * weight) + (macdPositiveSlope * weight) + (adx/100 * weight)</li>
-                              <li className="list-group-item">Example, $Go with user settings: FastSMA = 10, SlowSMA = 40, Lookback = 5, All Weightings = 20% </li>
                               <span className="material-icons text-center my-2">&#xf1e3;</span>
-                              
+                          
                             {/* Output  */}
                               <li className="list-group-item list-group-item-primary">
-                                <h4 className="text-center ">
+                                <h4 className="text-center text-dark">
                                   Output
                                 </h4>
-                                <div className="d-flex flex-row">
-                                  (0.00*.20) + (1.00*.20) + (1.00*.20) + (0.00*.20) + (.2698*.20) = <p style={{fontWeight:"bold", paddingLeft:"1%"}}> 45.40% Trend Edge</p>
+                                <div className="text-center">
+                                  .20 + .00 + .20 + .20 + .057 = <p style={{fontWeight:"bold", paddingLeft:"1%"}}> 45.57% Trend Edge</p>
                                 </div>
                               </li>
                             </ul>
@@ -245,11 +269,8 @@ const About = () => {
                           , to name two.
                         </p>
                         <p style={styles.paragraph}>
-                          Figure 1 is a price history chart of the IWM Small Cap (Cap =
-                          Market Capitalization. The value of a stock or index, calculated
-                          by multiplying the number of shares outstanding by the share
-                          price) index, ranging from Q’1 2014 to Q’1 2020. Each bar on the
-                          chart represents one week of price movement. The blue line is
+                          Figure 1 is a price history chart of the IWM Small Cap index, ranging from Q’1 2014 to Q’1 2020. Each bar on the
+                          chart represents one week's worth of price movement. The blue line is
                           the 10 period moving average (MA), and the red is the 40 period
                           MA. The indicator in the middle pane represents MACD, and the
                           bottom pane represents ADX (Average Directional Index, discussed
