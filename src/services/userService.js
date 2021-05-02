@@ -2,8 +2,8 @@ import http from './httpService'
 
 const apiEndpoint = '/users'
 
-function userURL(id){
-    return `${apiEndpoint}/${id}`
+function userURL(_id){
+    return `${apiEndpoint}/${_id}`
 }
 
 export function register(user){
@@ -14,19 +14,14 @@ export function register(user){
     })
 }
 
-export function saveSettings(user, userSettings){
-    const updatedUser = user
-    updatedUser['settings'] = userSettings
-    if (updatedUser._id) {
-        const body = {...updatedUser}
-        delete body._id
-        return http.put(userURL(updatedUser._id), body);
-    }
-    else return (console.log('Something went wrong when saving settings.'))
+export function saveSettings(_id, update, type){
+    const url = `${userURL(_id)}/${type}`
+    console.log(url)
+    return http.put(url, update);
 }
 
-export async function getSettings(_id) {
-    const url = apiEndpoint + "/getUserSettings/" + _id
+export async function getUser(_id) {
+    const url = apiEndpoint + "/getUser/" + _id
     const getUserSettings = await http.get(url);
     if (getUserSettings.data.error) {
         return getUserSettings.data.error;

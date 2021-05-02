@@ -41,7 +41,7 @@ class App extends Component {
     }
 
   render() {
-    const {user, curRoute} = this.state
+    const {curRoute} = this.state
     return (
       <React.Fragment>
         <ToastContainer />

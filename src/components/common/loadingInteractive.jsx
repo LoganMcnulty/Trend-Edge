@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { lightBlue, green, blueGrey, purple } from '@material-ui/core/colors';
+import { lightBlue, green, purple } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
+    // style={{backgroundColor: '#4682B4', border: '4px solid #6c757d'}}
   },
 }));
 
@@ -40,17 +41,16 @@ const theme = createMuiTheme({
     },
     secondary: {
       // This is green.A700 as hex.
-      main: '#fc5a3d',
+      main: '#4682B4',
     },
   },
 });
 
-export default function CircularIntegration({title, status, type, onClick}) {
+export default function CircularIntegration({title, status, type, onClick, icon=''}) {
   const {busy, dataRetrieved, errors} = status
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const timer = React.useRef();
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
@@ -60,8 +60,8 @@ export default function CircularIntegration({title, status, type, onClick}) {
     if (busy) setLoading(true);
     if (!busy) setLoading(false);
     if (dataRetrieved) setSuccess(true)
-  
-  });
+  })
+  // },[busy, dataRetrieved]);
 
   return (
     <div className={classes.root}>
@@ -74,6 +74,7 @@ export default function CircularIntegration({title, status, type, onClick}) {
             color="secondary"
             disabled={loading}
             onClick={onClick}
+            startIcon={icon === 'save' ? <SaveIcon /> : ''}
           >
           {errors ? 'Try Again' : title}
         </Button>
