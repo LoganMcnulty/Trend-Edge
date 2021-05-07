@@ -7,26 +7,16 @@ import Col from 'react-bootstrap/Col';
 import {postAsset} from '../../services/assetService';
 import InputField from '../common/inputField';
 import CircularIntegration from '../common/loadingInteractive'
-import {saveSettings} from '../../services/userService'
 
 class TickerInput extends Component {
   state = { 
       identifier:'',
       type:'',
-      userID:'',
-      watchlist: '',
       status:{
         busy:false,
         dataRetrieved:false,
         errors:false
       },
-    }
-
-    componentDidMount(){
-      const {type, userID, watchlist} = this.props
-      if (userID && type && watchlist) this.setState({userID, type, watchlist})
-      console.log(" --- Mounted Ticker Submission State ---")
-      console.log(this.state)
     }
 
     validateAssetIdentifier(id){
@@ -58,28 +48,13 @@ class TickerInput extends Component {
       console.log(' --- Ticker Submission State ---')
       console.log(this.state)
 
-      // const {onTry} = this.props
-      // onTry()
-
-
     // get identifier and submit to backend for API data request
       const {status, type, identifier} = this.state
       status['busy'] = true
         console.log('Submission request for: ' + identifier)
       this.setState({identifier:'', status})
 
-      if (type === 'userWLUpdate'){
-        const {watchlist, userID:_id, status} = this.state
-        status['busy'] = true
-        console.log(watchlist)
-        watchlist.push(identifier)
-        console.log('Watchlist going in: ')
-        console.log(watchlist)
-        this.setState({status})
-        await saveSettings(_id, watchlist, 'watchlist')
-        status['busy'] = false
-        this.setState({status})
-      }
+
 
     // set statuses based on response
       await postAsset(identifier).then(res => {

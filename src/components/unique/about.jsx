@@ -280,7 +280,7 @@ const About = () => {
                     , to name two.
                   </p>
                   <p style={styles.paragraph}>
-                    The top pain of this figure is a price history chart of the IWM Small Cap index, ranging from Q’1 2014 to Q’1 2020. Each bar on the
+                    The top pain of this figure is a price history chart of the IWM Small Cap index, ranging from 2014 to 2021. Each bar on the
                     chart represents one week's worth of price movement. The blue line is
                     the 10 period SMA, and the red is the 40. The indicator in the middle pane represents MACD, and the
                     bottom pane represents{' '}

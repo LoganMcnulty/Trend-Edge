@@ -66,12 +66,15 @@ const UserSettings = () => {
   const [smaError, setSMAError] = useState();
   const [weightError, setWeightError] = useState();
   const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState(false);
+
   const classes = useStyles();
 
   const handleSave = async () => {
     setLoading(true)
     await saveSettings(user, currentUserSettings, 'settings')
     setLoading(false)
+    setMessage("Saved Successfully")
   }
 
   useEffect(() => {
@@ -113,6 +116,7 @@ const UserSettings = () => {
   const updateSettingsState = (field, value) => {
     const newUserSettings = currentUserSettings
     newUserSettings[field] = value
+    setMessage("")
     setcurrentUserSettings(newUserSettings);
     validate()
   }
@@ -238,20 +242,27 @@ const UserSettings = () => {
                     updateSettingsState={updateSettingsState}
                   />
               </Row>
-
             </Tab>
           </Tabs>
           <Row className='justify-content-center text-center'>
             <Col className='col-12 text-align-center mb-0 mt-3'>
 
               {(smaError || weightError) &&
-                <div className="card text-white bg-danger mb-3 w-80">
+                <div className="card text-white bg-danger w-80">
                   <div className="card-body">
                     {smaError && <p className="card-text">{'Fast SMA must be > Slow SMA ⚠️'}</p>}
                     {weightError && <p className="card-text">Weights must add up to 100% ⚠️</p>}
                   </div>
                 </div>
               }
+              {(message) &&
+                <div className="card text-white bg-success w-80">
+                  <div className="card-body">
+                    <p className="card-text">{message}</p>
+                  </div>
+                </div>
+              }
+              
             </Col>
           </Row>
       </Paper>

@@ -1,18 +1,27 @@
 // out of house
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Paper'
+import MaterialTable from 'material-table'
 
 // In House
 import ServeToDash from '../common/serveToDash'
 import auth from '../../services/authService'
 import {getTrendEdge} from '../../services/assetService';
 import {getUser} from '../../services/userService'
-import TickerInput from './submitTickerData'
+import TickerInputNew from './tickerInputNew';
+import {saveSettings} from '../../services/userService'
+import DataTable from '../common/dataTable'
 
 class Watchlist extends Component {
-    state = { 
+    state = {
+      assetData:[],
+      columns:[
+        { title: 'Ticker', field: 'name' },
+        { title: 'Price', field: 'priceCurr', type: 'numeric' },
+        { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' }
+        ],
       status:{
         busy:false,
         dataRetrieved:false,
@@ -20,78 +29,149 @@ class Watchlist extends Component {
       },
       userID:'',
       watchlist:[],
-      settings: ''
-  }
-
-  tryUpdate = (stuff) => {
-    console.log(stuff)
+      settings: '',
+      currentInput: ''
   }
 
   async componentDidMount() {
-      try{
-        Promise.all([auth.getCurrentUser()])
-        .then( async response => {
-          const userID = response[0]._id
-          console.log('Mounting User...')
-          const {settings, watchlist} = await getUser(userID)
-          this.setState({watchlist, settings, userID})
-          console.log(this.state)
-        })
-      }
-      catch(er){
-        console.log('something went wrong')
-      }
+    try{
+      Promise.all([auth.getCurrentUser()])
+      .then( async response => {
+        const userID = response[0]._id
+        console.log('Mounting User to watchlist...')
+        const {settings, watchlist} = await getUser(userID)
+        this.setState({watchlist, settings, userID})
+        console.log(this.state)
+        Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
+          {
+            const assetData = res[0]['data']
+            this.setState({assetData})
+          })
+      })
     }
+    catch(er){
+      console.log('something went wrong')
+    }
+  }
+
+  handleWLAdd = async (e) => {
+    e.preventDefault()
+    const {currentInput: newAsset, watchlist, status, userID:_id, settings} = this.state
+
+    if (watchlist.includes(newAsset.toUpperCase())) {
+      status['errors'] = `${newAsset} already exists in your watchlist`
+      this.setState({status})
+      return
+    }
+    status['busy'] = true
+    this.setState({status})
+
+    watchlist.push(newAsset)
+    console.log('Watchlist going in: ')
+    console.log(watchlist)
+    document.getElementById('tickerInput').value =''
+
+    try {
+      await saveSettings(_id, watchlist, 'watchlist')
+    }
+    catch (err) {
+      status['busy'] = false
+      status['errors'] = 'Could find data for provided ticker'
+      this.setState({status, currentInput:''})
+      return
+    }
+    
+    status['busy'] = false
+    this.setState({status, currentInput:''})
+
+    console.log("Fetching data from user WL and settings...")
+    console.log(watchlist)
+    console.log(settings)
+    Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
+      {
+        const assetData = res[0]['data']
+        this.setState({assetData})
+      })
+    console.log('... complete')
+  }
+
+  validateAssetIdentifier(id){
+    let inputFieldRef = document.getElementById('tickerInput')
+    let inputLength = inputFieldRef.value.length
+    const recentInput = id.charAt(id.length-1)
+    const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    const alphabetUpper = alphabet.map(letter => letter.toUpperCase())
+    if(recentInput === '') return ''
+    const {status, currentInput} = this.state
+    if(!alphabet.includes(recentInput) && !alphabetUpper.includes(recentInput)) {
+        status['errors'] = 'Only US equity/alphabet oriented tickers at this time ⚠️'
+        this.setState({status})
+        console.log(this.state.status.errors)
+        if (currentInput.length === 1) return inputFieldRef.value = ''
+        return inputFieldRef.value = currentInput
+    }
+    else{
+      status['errors'] = ''
+      this.setState({status})
+    }
+    if(inputLength > 5) return inputFieldRef.value =  currentInput
+    return id.toUpperCase()
+  }
+
+  handleChange = async ({ currentTarget: input }) => {
+    const currentInput = this.validateAssetIdentifier(input.value)
+    if(!currentInput) return
+    await this.setState({ currentInput });
+  };
 
     render() {
-      const {userID:_id, settings, watchlist} = this.state
+      const {userID:_id, settings, watchlist, currentInput, status} = this.state
         return ( 
           <ServeToDash
             med={[8,4]}
             large={[8,2]}
             small={[12,0]}
           >
-            <div className="row justify-content-around mb-3">
-              <div className="col-lg-6 col-sm-12 col-md-12">
-                <Card>
-                  <CardContent>
+            <Paper  className='p-0'>
+              <div className="row justify-content-center">
+                <div className="col-lg-6 col-sm-12 col-md-12">
+                  <CardContent className='p-2'>
                     <div className="row">
                       <div className="col-sm-12">
-                        <Typography variant="h5" className='text-center'>Add To Watchlist</Typography>
+                        <Typography variant="h5" className='text-center mb-1'>Add To Watchlist</Typography>
                       </div>
                     </div>
                     
                     <div className="row">
                       <div className="col-sm-12">
-                        <TickerInput
-                          type={'userWLUpdate'}
-                          userID={_id}
-                          orientation={'x'}
+                        <TickerInputNew
+                          status={status}
+                          handleChange={this.handleChange}
+                          handleSubmit={this.handleWLAdd}
+                          currentInput={currentInput}
                           icon={'save'}
-                          watchlist={watchlist}
-                          onTry={() => this.tryUpdate}
                         />
                       </div>
                     </div>
-
+                    {status.errors &&
+                      <div className="card text-white text-center bg-danger w-80 mt-2">
+                        <div className="card-body">
+                          <p className="card-text">{status.errors}</p>
+                        </div>
+                      </div>
+                    }
                   </CardContent>
-                </Card>
+                </div>
               </div>
+            </Paper>
 
-              {/* <div className="col-6 jumbotron">
-                Fuck
-              </div> */}
-            </div>
-
-            {/* <div className="row justify-content-around">
-              <div className="col-12">
-                <Card>
-                  <CardContent>
-
-                  </CardContent>
-                </Card>
-              </div>
-            </div> */}
+            <Paper className='p-0 mt-2'>
+              <DataTable 
+                title=''
+                columns={this.state.columns}
+                data={this.state.assetData ? this.state.assetData : []}
+              />
+            </Paper>
           </ServeToDash>
         );
     }
