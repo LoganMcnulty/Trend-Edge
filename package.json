@@ -25,10 +25,16 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
+    "react-charts": "^2.0.0-beta.7",
     "react-dom": "^17.0.2",
+    "react-loader": "^2.4.7",
+    "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^7.0.3",
+    "recharts": "^2.0.9",
+    "tachyons-components": "^1.0.1",
+    "typescript": "^4.2.4",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
@@ -54,5 +60,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.169"
   }
 }

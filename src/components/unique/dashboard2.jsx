@@ -1,5 +1,4 @@
-// Out of house
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,17 +6,16 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { NavLink } from "react-router-dom";
-import Grid from '@material-ui/core/Grid';
-
-// In house
-import auth from '../../services/authService';
-import DashList from './dashboardList'
-import  Logo  from '../common/Logo/logo';
 
 const drawerWidth = 240;
 
@@ -26,21 +24,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   drawer: {
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xs')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   appBar: {
-    backgroundColor: '#4682B4',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xs')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xs')]: {
       display: 'none',
     },
   },
@@ -53,26 +50,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  logo: {
-    width: 40,
-    marginRight: 5,
-  },
 }));
 
-const Dashboard = (props) => {
-  const curRoute = props.curRoute
+function Dashboard2(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [userLogged, setUserLogged] = useState();
-
-  useEffect(() => {
-    try {
-      const userData = auth.getCurrentUser();
-      setUserLogged(userData);
-    } catch (ex) {}
-  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -82,33 +66,27 @@ const Dashboard = (props) => {
     <div>
       <div className={classes.toolbar} />
       <Divider />
-      <DashList userLogged={userLogged}/>
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
-
-  const renderTopRight = (userLogged, curRoute) => {
-    return(
-        <Grid item>
-            {
-                <Typography noWrap>
-                    {
-                        userLogged ? `👋 ${userLogged.name}` :
-                        curRoute === '/Sign In' ? 
-                        ''
-                          // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
-                        : 
-                          <NavLink className="h7 p-0 text-white" to="/Sign In">
-                            <button className="btn" style={{backgroundColor:'#fc5a3d', border:'none', color:'white'}}>Access</button>
-                          </NavLink>
-                    }
-                </Typography>
-            }
-        </Grid>
-    )
-}
 
   return (
     <div className={classes.root}>
@@ -124,25 +102,9 @@ const Dashboard = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Grid
-            container
-            direction='row'
-            justify='flex-start'
-            alignItems='center'
-          >
-            <Grid item className={classes.logo}>
-                <Logo />
-            </Grid>
-            <Grid item >
-                <Typography variant='h6' noWrap>
-                  <NavLink className="h7 nav-item nav-link text-light p-0" to="/dash">Trend Edge</NavLink>
-                </Typography>
-            </Grid>
-        </Grid>
-
-        <div className={classes.sectionMobile} style={{textAlign:'center'}}>
-            {renderTopRight(userLogged, curRoute)}
-        </div>
+          <Typography variant="h6" noWrap>
+            Responsive drawer
+          </Typography>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -180,7 +142,7 @@ const Dashboard = (props) => {
   );
 }
 
-Dashboard.propTypes = {
+Dashboard2.propTypes = {
   /**
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
@@ -188,4 +150,4 @@ Dashboard.propTypes = {
   window: PropTypes.func,
 };
 
-export default Dashboard
+export default Dashboard2;

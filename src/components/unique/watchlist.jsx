@@ -13,6 +13,7 @@ import {getUser} from '../../services/userService'
 import TickerInputNew from './tickerInputNew';
 import {saveSettings} from '../../services/userService'
 import DataTable from '../common/dataTable'
+import Loading from "../common/loading/loading";
 
 class Watchlist extends Component {
     state = {
@@ -35,6 +36,9 @@ class Watchlist extends Component {
 
   async componentDidMount() {
     try{
+      const {status} = this.state
+      status['busy'] = true
+      this.setState({status})
       Promise.all([auth.getCurrentUser()])
       .then( async response => {
         const userID = response[0]._id
@@ -42,10 +46,16 @@ class Watchlist extends Component {
         const {settings, watchlist} = await getUser(userID)
         this.setState({watchlist, settings, userID})
         console.log(this.state)
+        if (watchlist.length === 0) {
+            status['busy'] = false
+            this.setState({status})
+            return
+        }
         Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
           {
             const assetData = res[0]['data']
-            this.setState({assetData})
+            status['busy'] = false
+            this.setState({assetData, status})
           })
       })
     }
@@ -72,11 +82,11 @@ class Watchlist extends Component {
     document.getElementById('tickerInput').value =''
 
     try {
-      await saveSettings(_id, watchlist, 'watchlist')
+      await saveSettings(_id, watchlist, 'watchlistAdd')
     }
     catch (err) {
       status['busy'] = false
-      status['errors'] = 'Could find data for provided ticker'
+      status['errors'] = 'Could not find data for provided ticker'
       this.setState({status, currentInput:''})
       return
     }
@@ -94,6 +104,7 @@ class Watchlist extends Component {
       })
     console.log('... complete')
   }
+
 
   validateAssetIdentifier(id){
     let inputFieldRef = document.getElementById('tickerInput')
@@ -124,8 +135,41 @@ class Watchlist extends Component {
     await this.setState({ currentInput });
   };
 
+  handleSeeMore = (e) => {
+
+  }
+
+  handleDelete = async (e) => {
+    console.log(e)
+
+    const {watchlist, status, userID:_id, assetData} = this.state
+    status['busy'] = true
+    this.setState({status})
+
+    const updatedWL = watchlist.filter(asset => {
+      if (asset !== e.name) return asset
+    })
+
+    const updatedAssetData = assetData.filter(asset => {
+      if (asset.name !== e.name) return asset
+    })
+    this.setState({watchlist: updatedWL, assetData:updatedAssetData})
+
+    try {
+      await saveSettings(_id, updatedWL, 'watchlistRemove')
+      status['busy'] = false
+      this.setState({status})
+    }
+    catch (err) {
+      status['busy'] = false
+      status['errors'] = 'Could not delete item'
+      this.setState({status})
+      return
+    }
+    }
+
     render() {
-      const {userID:_id, settings, watchlist, currentInput, status} = this.state
+      const {userID:_id, settings, watchlist, currentInput, status, assetData} = this.state
         return ( 
           <ServeToDash
             med={[8,4]}
@@ -166,11 +210,21 @@ class Watchlist extends Component {
             </Paper>
 
             <Paper className='p-0 mt-2'>
+              {assetData.length > 0 ?                
               <DataTable 
-                title=''
-                columns={this.state.columns}
-                data={this.state.assetData ? this.state.assetData : []}
-              />
+                  title=''
+                  columns={this.state.columns}
+                  data={this.state.assetData ? this.state.assetData : []}
+                  handleDelete={this.handleDelete}
+                  handleSeeMore={this.handleSeeMore}
+                /> :
+
+                
+                watchlist ? 
+                watchlist.length > 0 ? 
+                  <Loading style={'bars'}/> : 
+                  <div className='card card-body text-center'>Add to your watchlist to get started</div> : ''
+              }
             </Paper>
           </ServeToDash>
         );
