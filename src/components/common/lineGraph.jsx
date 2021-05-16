@@ -31,23 +31,23 @@ const LineGraph = () => {
     const [pseudoPriceData, setPseudoPriceData] = useState(randomPriceSeries());
 
 
-    useEffect( () => {
-      // setInterval(() => {
-      //   console.log("update")
-      //   const newData =  randomPriceSeries()
-      //   console.log(newData)
-      //   setPseudoPriceData(newData)
-      //   console.log(pseudoPriceData)
-      // }, 7000);
-      // return () => clearInterval(interval);
-    }, []);
+    // useEffect( () => {
+    //   // setInterval(() => {
+    //   //   console.log("update")
+    //   //   const newData =  randomPriceSeries()
+    //   //   console.log(newData)
+    //   //   setPseudoPriceData(newData)
+    //   //   console.log(pseudoPriceData)
+    //   // }, 7000);
+    //   // return () => clearInterval(interval);
+    // }, []);
 
-    const handleClick = () => {
-      const newData =  randomPriceSeries()
-      console.log(newData)
-      setPseudoPriceData(newData)
-      console.log(pseudoPriceData)
-    }
+    // const handleClick = () => {
+    //   const newData =  randomPriceSeries()
+    //   console.log(newData)
+    //   setPseudoPriceData(newData)
+    //   console.log(pseudoPriceData)
+    // }
 
     // useEffect(() => {
     //   setTime()

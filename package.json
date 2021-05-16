@@ -16,7 +16,6 @@
     "joi": "^17.4.0",
     "joi-browser": "^13.4.0",
     "jwt-decode": "^3.1.2",
-    "lodash": "^4.17.21",
     "material-design-icons": "^3.0.1",
     "material-table": "^1.69.2",
     "mdbootstrap": "^4.19.2",
@@ -34,7 +33,6 @@
     "react-toastify": "^7.0.3",
     "recharts": "^2.0.9",
     "tachyons-components": "^1.0.1",
-    "typescript": "^4.2.4",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
@@ -61,7 +59,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/lodash": "^4.14.169"
-  }
+  "devDependencies": {}
 }
