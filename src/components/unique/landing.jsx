@@ -28,7 +28,7 @@ const LandingContent = () => {
                 </Row>
             </Paper>
 
-            <Paper className='px-5 py-2 mt-2'>
+            {/* <Paper className='px-5 py-2 mt-2'>
                 <div
                     style={{position:'absolute', left:'0', 
                     top: '50%'
@@ -46,7 +46,7 @@ const LandingContent = () => {
                 <Row className="align-items-center justify-content-center text-center">
                     <div className = 'card-text'>t (weeks)</div>
                 </Row>
-            </Paper>
+            </Paper> */}
             {/* <Paper className='px-5 py-2 mt-2'>
                 <Demo 
                     dimensions={dimensions}
