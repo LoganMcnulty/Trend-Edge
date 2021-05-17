@@ -45,7 +45,6 @@ class Watchlist extends Component {
         console.log('Mounting User to watchlist...')
         const {settings, watchlist} = await getUser(userID)
         this.setState({watchlist, settings, userID})
-        console.log(this.state)
         if (watchlist.length === 0) {
             status['busy'] = false
             this.setState({status})
@@ -53,6 +52,7 @@ class Watchlist extends Component {
         }
         Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
           {
+            console.log(res)
             const assetData = res[0]['data']
             status['busy'] = false
             this.setState({assetData, status})
