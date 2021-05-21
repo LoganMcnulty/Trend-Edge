@@ -57,8 +57,6 @@ const theme = createMuiTheme({
   },
 });
 
-
-
 const UserSettings = () => {
   const [key, setKey] = useState('AveragePeriod');
   const [currentUserSettings, setcurrentUserSettings] = useState();
