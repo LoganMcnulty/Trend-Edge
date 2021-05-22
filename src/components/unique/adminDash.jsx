@@ -92,7 +92,7 @@ const AdminDash = () => {
                       <button 
                         onClick = {() => handleUpdate('updateAssets')}
                         className="btn btn-warning btn-block" 
-                        style={{ border: '4px solid #6c757d'}}>Update DB Stock Data
+                        >Update DB Stock Data
                       </button>
                     </Typography>
                   </Col>
@@ -103,7 +103,7 @@ const AdminDash = () => {
                       <button
                         onClick = {() => handleUpdate('removeUsers')}
                         className="btn btn-danger btn-block" 
-                        style={{ border: '4px solid #6c757d'}}
+                        
                       >Remove All Users
                       </button>
                     </Typography>

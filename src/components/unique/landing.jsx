@@ -106,11 +106,9 @@ const LandingContent = () => {
         >
             <Paper className='p-3 m-0'>
                 <Row className="align-items-center justify-content-center text-center">
-                    {/* <Col className="col-6 p-0"> */}
                     <Typography variant="h4" gutterBottom>
                         Welcome To Trend Edge 📈
                     </Typography>
-                    {/* </Col> */}
                 </Row>
             </Paper>
 
@@ -122,7 +120,19 @@ const LandingContent = () => {
                         className={`${isActive ? 'active' : 'inactive'}`}
                         onClick={toggle}
                     >
-                        {isActive ? 'Pause Graph' : 'Start'}
+                        <div  className='row px-2'>
+                            {isActive ? 
+                            <>
+                                Pause
+                                <span className="material-icons ml-1">&#xe034;</span>
+                            </>
+                            :
+                            <>
+                                Start
+                                <span className="material-icons ml-1">&#xe037;</span>
+                            </>
+                            }
+                        </div> 
                     </Button>
                     <Modal2 
                         buttonContent={
@@ -143,14 +153,12 @@ const LandingContent = () => {
                                         'You may "recognize" a pattern that is similar to an asset in your watchlist.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
-                                    footer={"Trend Edge provides impartial trend statistics so that your actions in the market are not random."}
-
-                                    
+                                    footer={"Trend Edge provides impartial trend statistics so that your actions in the market are less random."}
                                     linkTo = {user ? '' : '/Sign In'}
                                     linkTitle = {user ? '' : 'Access'}
+                                    icon={<span className="material-icons ml-1">&#xe0da;</span>}
                                 />
                             </>
-
                             }
                     />
                 </Row>
