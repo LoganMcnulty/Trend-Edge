@@ -5,19 +5,17 @@ import Row from 'react-bootstrap/Row'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
 
 // In House
 import ServeToDash from '../common/serveToDash'
 import LineGraph from '../common/lineGraph'
-import SimpleModal from '../common/modal'
 import InfoList from '../common/infoList'
 import Modal2 from '../common/scrollDialogue'
-// import Demo from '../common/newCharts'
-
+import auth from '../../services/authService';
 
 const LandingContent = () => {
     const [isActive, setIsActive] = useState(true);
+    const [user, setUser] = useState(auth.getCurrentUser())
 
     function toggle() {
       if (!isActive)setPseudoPriceData(randomPriceSeries())
@@ -29,7 +27,7 @@ const LandingContent = () => {
       if (isActive) {
         interval = setInterval(() => {
           setPseudoPriceData(randomPriceSeries())
-        }, 5000);
+        }, 3000);
       } else if (!isActive) {
         clearInterval(interval);
       }
@@ -101,7 +99,6 @@ const LandingContent = () => {
         ],
         []
     )
-  
     return ( 
         <ServeToDash
         med={[8,4]}
@@ -146,7 +143,11 @@ const LandingContent = () => {
                                         'You may "recognize" a pattern that is similar to an asset in your watchlist.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
-                                    footer={"Trend Edge provides impartial trend statistics so that your actions, unlike the market, aren't random."}
+                                    footer={"Trend Edge provides impartial trend statistics so that your actions in the market are not random."}
+
+                                    
+                                    linkTo = {user ? '' : '/Sign In'}
+                                    linkTitle = {user ? '' : 'Access'}
                                 />
                             </>
 
