@@ -60,8 +60,8 @@ export default function CircularIntegration({title, status, type, onClick, icon=
     if (busy) setLoading(true);
     if (!busy) setLoading(false);
     if (dataRetrieved) setSuccess(true)
-  })
-  // },[busy, dataRetrieved]);
+  // })
+  },[busy, dataRetrieved]);
 
   return (
     <div className={classes.root}>

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper'
-import MaterialTable from 'material-table'
 
 // In House
 import ServeToDash from '../common/serveToDash'
@@ -20,8 +19,9 @@ class Watchlist extends Component {
       assetData:[],
       columns:[
         { title: 'Ticker', field: 'name' },
-        { title: 'Price', field: 'priceCurr', type: 'numeric' },
-        { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' }
+        { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
+        { title: 'Price', field: 'priceCurr', type: 'numeric' }
+
         ],
       status:{
         busy:false,
@@ -140,8 +140,6 @@ class Watchlist extends Component {
   }
 
   handleDelete = async (e) => {
-    console.log(e)
-
     const {watchlist, status, userID:_id, assetData} = this.state
     status['busy'] = true
     this.setState({status})

@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-//In House
-import Modal2 from './scrollDialogue'
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;

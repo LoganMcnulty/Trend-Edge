@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 // In house
 import auth from '../../services/authService';
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = (props) => {
+
   const curRoute = props.curRoute
   const { window } = props;
   const classes = useStyles();
@@ -95,14 +97,21 @@ const Dashboard = (props) => {
             {
                 <Typography noWrap>
                     {
-                        userLogged ? `👋 ${userLogged.name}` :
-                        curRoute === '/Sign In' ? 
-                        ''
-                          // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
-                        : 
-                          <NavLink className="h7 p-0 text-white" to="/Sign In">
-                            <button className="btn" style={{backgroundColor:'#fc5a3d', border:'none', color:'white'}}>Access</button>
-                          </NavLink>
+                      userLogged ? `👋 ${userLogged.name}` :
+                      curRoute === '/Sign In' ? 
+                      ''
+                        // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
+                      :
+                        <NavLink className="h7 p-0 text-white" to='/Sign In'>
+                          <Button
+                            variant="contained"
+                            className='active'
+                            style={{backgroundColor:'#fc5a3d', color:'white'}}
+                          >
+                            Access
+                            <span className="material-icons ml-1">&#xe0da;</span>
+                          </Button>
+                        </NavLink>
                     }
                 </Typography>
             }

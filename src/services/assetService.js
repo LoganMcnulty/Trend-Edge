@@ -16,9 +16,7 @@ export function getTrendEdge(assetNameList, settings){
   assetNameList.forEach(asset => {
     assetString += `${asset},`
   })
-  console.log(assetString)
   const url = `${apiEndpoint}/aggregatedData/${assetString}/${fastSMA}/${slowSMA}/${lookback}/${fastWeight}/${slowWeight}/${fastOverSlowWeight}/${macdWeight}/${adxWeight}`
-  console.log(url)
   return http.get(url).then(res => res)
 }
 
