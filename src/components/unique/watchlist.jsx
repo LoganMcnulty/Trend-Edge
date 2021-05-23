@@ -14,6 +14,8 @@ import {saveSettings} from '../../services/userService'
 import DataTable from '../common/dataTable'
 import Loading from "../common/loading/loading";
 
+
+
 class Watchlist extends Component {
     state = {
       assetData:[],
@@ -33,6 +35,12 @@ class Watchlist extends Component {
       settings: '',
       currentInput: ''
   }
+
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleCSVSubmit.bind(this);
+    this.fileInput = React.createRef();
+    }
 
   async componentDidMount() {
     try{
@@ -63,6 +71,54 @@ class Watchlist extends Component {
       console.log('something went wrong')
     }
   }
+
+  listCompare = (newList, oldList) => {
+    const finalList = oldList
+    console.log(oldList)
+    console.log("Length old list" + oldList.length)
+    for(let i=0; i < newList.length; i++){
+      let item = String(newList[i].toUpperCase()).trim()
+      console.log(item)
+      if (!oldList.includes(item)) finalList.push(item)
+    }
+    console.log("Length final list" + finalList.length)
+    return finalList
+  }
+
+  handleCSVSubmit = async e => {
+    e.preventDefault();
+    const {watchlist, status, userID:_id, settings} = this.state
+    const input = this.fileInput.current.files
+    console.log(input)
+    console.log(input[0])
+
+    var obj_csv = {
+        size:0,
+        dataFile:[]
+    };
+
+    const parseData = data => {
+      let csvData = [];
+      let lbreak = data.split("\n");
+      lbreak.forEach(res => {
+          csvData.push(res.split(","));
+      });
+      console.table(csvData[0]);
+      const csvList = csvData.map(d => {return d[0]})
+      saveSettings(_id, this.listCompare(csvList, watchlist), 'watchlistAdd', 'list')
+    }
+
+    if (input && input[0]) {
+        let reader = new FileReader();
+        reader.readAsBinaryString(input[0]);
+        reader.onload = function (e) {
+          obj_csv.size = e.total;
+          obj_csv.dataFile = e.target.result
+          console.log(obj_csv.dataFile)
+          parseData(obj_csv.dataFile)
+        }
+    }
+    }
 
   handleWLAdd = async (e) => {
     e.preventDefault()
@@ -194,7 +250,16 @@ class Watchlist extends Component {
                           icon={'save'}
                         />
                       </div>
+                      <form onSubmit={this.handleCSVSubmit}>
+                        <label>
+                          Upload file:
+                          <input type="file" ref={this.fileInput} />
+                        </label>
+                        <br />
+                        <button type="submit">Submit</button>
+                      </form>
                     </div>
+                    
                     {status.errors &&
                       <div className="card text-white text-center bg-danger w-80 mt-2">
                         <div className="card-body">

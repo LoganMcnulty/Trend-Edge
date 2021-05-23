@@ -14,11 +14,12 @@ export function register(user){
     })
 }
 
-export async function saveSettings(_id, update, type){
+export async function saveSettings(_id, update, type, dataType=''){
     if (type === 'watchlistAdd'){
-        const ticker = update[update.length -1]
-        console.log('watchlist update: ' + ticker)
-        await http.post(`/data/`, {ticker})
+        var data = update
+        if (!dataType) data = update[update.length -1]
+        console.log('watchlist update: ' + data)
+        await http.post(`/data/`, {data, type, dataType})
     }
 
     const url = `${userURL(_id)}/${type}`
