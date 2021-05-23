@@ -57,7 +57,7 @@ class TickerInput extends Component {
 
 
     // set statuses based on response
-      await postAsset(identifier).then(res => {
+      await postAsset(identifier, 'test').then(res => {
         if (res.status === 201) {
           (console.log("Asset Update Successful"))
           status['busy'] = false

@@ -1,6 +1,6 @@
 {
-  "name": "practice-react",
-  "version": "0.1.0",
+  "name": "trend-edge-backend",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
