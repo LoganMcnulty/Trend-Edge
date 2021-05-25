@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 // import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function Modal2({buttonContent, title, content}) {
+export default function Modal2({buttonContent='', title, content, provideButton}) {
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
 
@@ -15,11 +15,10 @@ export default function Modal2({buttonContent, title, content}) {
     setScroll(scrollType);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const handleClose = () => setOpen(false);
+    
   const descriptionElementRef = React.useRef(null);
+  
   React.useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -31,20 +30,26 @@ export default function Modal2({buttonContent, title, content}) {
 
   return (
     <div>
-        <Button 
-            variant="contained" 
-            // color="primary"
-            style={{backgroundColor:'#4682B4', color:'white'}}
-            onClick={handleClickOpen('paper')}
-        >
-            {buttonContent}
-        </Button>
+        <>
+          {provideButton ?
+            provideButton :
+            <Button 
+                variant="contained" 
+                // color="primary"
+                style={{backgroundColor:'#4682B4', color:'white'}}
+                onClick={handleClickOpen('paper')}
+                
+            >
+                {buttonContent}
+            </Button>
+          }
+        </>
         <Dialog
-            open={open}
-            onClose={handleClose}
-            scroll={scroll}
-            aria-labelledby="scroll-dialog-title"
-            aria-describedby="scroll-dialog-description"
+          open={open}
+          onClose={handleClose}
+          scroll={scroll}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
         >
             {/* <DialogTitle id="scroll-dialog-title" style={{backgroundColor:"#4682B4"}}>{title}</DialogTitle> */}
             <DialogContent dividers={scroll === 'paper'}>

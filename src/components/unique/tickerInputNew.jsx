@@ -16,11 +16,13 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}
           />
           <div className="input-group-append">
             <CircularIntegration
-              title={'Submit'}
+              title={'Add'}
               onClick = {handleSubmit}
               type = {'fullButton'}
               status={status}
-              icon={icon}
+              span={
+                <span className="material-icons ml-1">&#xea20;</span>
+              }
             />
           </div>
         </div>

@@ -33,20 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      // Purple and green play nicely together.
-      main: purple[500],
-    },
-    secondary: {
-      // This is green.A700 as hex.
-      main: '#4682B4',
-    },
-  },
-});
-
-export default function CircularIntegration({title, status, type, onClick, icon=''}) {
+export default function CircularIntegration({title, status, type='', onClick, icon='', span=''}) {
   const {busy, dataRetrieved, errors} = status
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
@@ -68,17 +55,19 @@ export default function CircularIntegration({title, status, type, onClick, icon=
 
     {type==='fullButton' ? 
       <div className={classes.wrapper}>
-        <ThemeProvider theme={theme}>
           <Button
             variant="contained"
-            color="secondary"
+            style={{backgroundColor: '#4682B4'}}
+            className='text-light'
             disabled={loading}
             onClick={onClick}
-            startIcon={icon === 'save' ? <SaveIcon /> : ''}
+            startIcon={
+              icon === 'save' ? <SaveIcon /> : 
+              span ? span : ''
+          }
           >
-          {errors ? 'Try Again' : title}
-        </Button>
-        </ThemeProvider>
+            {errors ? 'Try Again' : title}
+          </Button>
         {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
     : 
