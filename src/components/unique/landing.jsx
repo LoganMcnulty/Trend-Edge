@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import ServeToDash from '../common/serveToDash'
 import LineGraph from '../common/lineGraph'
 import InfoList from '../common/infoList'
-import Modal2 from '../common/scrollDialogue'
+import Modal2 from '../common/infoModal'
 import auth from '../../services/authService';
 
 const LandingContent = () => {

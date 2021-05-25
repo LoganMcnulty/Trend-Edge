@@ -19,12 +19,12 @@ export async function saveSettings(_id, update, type, dataType=''){
         var data = update
         if (!dataType) data = update[update.length -1]
         console.log('watchlist update: ' + data)
-        await http.post(`/data/`, {data, type, dataType})
+        await http.post(`/data/`, {data, type, dataType}).then(res => console.log(res))
     }
 
     const url = `${userURL(_id)}/${type}`
     console.log(url)
-    return http.put(url, update);
+    return http.put(url, update).then(res => console.log(res));
 }
 
 export async function getUser(_id) {
