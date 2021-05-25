@@ -30,7 +30,6 @@ class Watchlist extends Component {
       { title: 'Ticker', field: 'name' },
       { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
       { title: 'Price', field: 'priceCurr', type: 'numeric' }
-
       ],
     status:{
       busy:false,
@@ -132,7 +131,6 @@ class Watchlist extends Component {
           reader.onload = async (e) => {
             obj_csv.size = e.total;
             obj_csv.dataFile = e.target.result
-            console.log(obj_csv.dataFile)
             await saveSettings(_id, this.listCompare(parseData(obj_csv.dataFile), watchlist), 'watchlistAdd', 'list')
             Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
               {
@@ -144,7 +142,7 @@ class Watchlist extends Component {
           }
         }
         catch (err) {
-          console.log("CSV Likely incorrect format")
+          console.log("Error: CSV Likely incorrect format")
           document.getElementById("fileInputForm").reset();
           return this.setState({csvErrors:true})}
     }
@@ -179,16 +177,16 @@ class Watchlist extends Component {
       this.setState({status, currentInput:''})
       return
     }
-    status['busy'] = false
-    this.setState({status, currentInput:''})
+
     Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
       {
+        status['busy'] = false
+        status['dataRetrieved'] = true
         const assetData = res[0]['data']
-        this.setState({assetData})
+        this.setState({assetData, status, currentInput:''})
       })
     console.log('... complete')
   }
-
 
   validateAssetIdentifier(id){
     let inputFieldRef = document.getElementById('tickerInput')
@@ -300,7 +298,6 @@ class Watchlist extends Component {
                       buttonContent={
                         <span className="material-icons">&#xe88e;</span>
                       }
-                      title={'How To:'}
                       iconButton={true}
                       content={
                       <>
@@ -320,19 +317,21 @@ class Watchlist extends Component {
                     >
                       <input
                         type="file"
-                        ref={this.fileInput} 
+                        ref={this.fileInput}
                         onChange={this.onFileChange}
+                        className='w-80'
                       />
                     </form>
                       {
                         csvFile &&
                         <div className="row">
                           <Button 
-                            variant="contained" 
+                            variant="contained"
+                            size='small'
                             style={{backgroundColor:'#4682B4', color:'white'}}
                             onClick={(e) => this.handleCSVSubmit(e)}
                             >
-                              <span className="material-icons ml-1">&#xe2c6;</span>
+                              <span className="material-icons m-0 p-0">&#xe2c6;</span>
                           </Button>
                           <Dialog
                             open={modal}

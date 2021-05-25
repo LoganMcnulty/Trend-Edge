@@ -1,7 +1,7 @@
 import React from 'react'
 
 import InputField from '../common/inputField';
-import CircularIntegration from '../common/loadingInteractive'
+import FunctionButton from '../common/loadingInteractive2'
 
 const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}) => {
     return (
@@ -15,13 +15,12 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}
             value={currentInput}
           />
           <div className="input-group-append">
-            <CircularIntegration
+            <FunctionButton
               title={'Add'}
-              onClick = {handleSubmit}
-              type = {'fullButton'}
+              btnFunction = {handleSubmit}
               status={status}
-              span={
-                <span className="material-icons ml-1">&#xea20;</span>
+              btnContent={
+                <span className="material-icons">&#xea20;</span>
               }
             />
           </div>
