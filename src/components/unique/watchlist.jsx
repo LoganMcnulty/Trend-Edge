@@ -398,13 +398,13 @@ class Watchlist extends Component {
               }
               content={
                 <>
-                    <InfoList
-                        title={'Trend Edge is in Beta'}
-                        listContent={[
-                          'Assets with less than ~1 yr of price history may not have correct Trend Edge calculations.', 
-                          'A solution is in the works for recently listed assets.'
-                        ]}
-                    />
+                  <InfoList
+                      title={'Trend Edge is in Beta'}
+                      listContent={[
+                        'Assets with less than ~1 yr of price history may not have correct Trend Edge calculations.', 
+                        'A solution is in the works for recently listed assets.'
+                      ]}
+                  />
                 </>
               }
             />
