@@ -1,5 +1,7 @@
 // out of house
 import React, { Component } from 'react';
+import {Img} from 'react-image'
+
 import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper'
@@ -17,29 +19,31 @@ import TickerInputNew from './tickerInputNew';
 import {saveSettings} from '../../services/userService'
 import DataTable from '../common/dataTable'
 import Loading from "../common/loading/loading";
-import Modal2 from '../common/infoModal'
+import InfoModal from '../common/infoModal'
 import InfoList from '../common/infoList'
+import csvExample from '../images/csvExample.png'
 
 class Watchlist extends Component {
-    state = {
-      assetData:[],
-      columns:[
-        { title: 'Ticker', field: 'name' },
-        { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
-        { title: 'Price', field: 'priceCurr', type: 'numeric' }
+  state = {
+    assetData:[],
+    columns:[
+      { title: 'Ticker', field: 'name' },
+      { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
+      { title: 'Price', field: 'priceCurr', type: 'numeric' }
 
-        ],
-      status:{
-        busy:false,
-        dataRetrieved:false,
-        errors:false
-      },
-      userID:'',
-      watchlist:[],
-      settings: '',
-      currentInput: '',
-      csvFile: '',
-      modal: false
+      ],
+    status:{
+      busy:false,
+      dataRetrieved:false,
+      errors:false,
+      csvErrors:false
+    },
+    userID:'',
+    watchlist:[],
+    settings: '',
+    currentInput: '',
+    csvFile: '',
+    modal: false
   }
 
   constructor(props) {
@@ -67,7 +71,6 @@ class Watchlist extends Component {
         }
         Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
           {
-            console.log(res)
             const assetData = res[0]['data']
             status['busy'] = false
             this.setState({assetData, status})
@@ -79,14 +82,24 @@ class Watchlist extends Component {
     }
   }
 
+  validateTicker = (ticker) => {
+    if (!ticker) return false
+    const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    for (let string in ticker){
+      if (!alphabet.includes(ticker[string])) return false
+    }
+    if (ticker.length >5) return false
+    return true
+  }
+
   listCompare = (newList, oldList) => {
     const finalList = oldList
-    console.log(oldList)
     console.log("Length old list" + oldList.length)
     for(let i=0; i < newList.length; i++){
       let item = String(newList[i].toUpperCase()).trim()
-      console.log(item)
-      if (!oldList.includes(item)) finalList.push(item)
+      if (!oldList.includes(item)) {
+        if (this.validateTicker(item)) finalList.push(item)
+      }
     }
     console.log("Length final list" + finalList.length)
     return finalList
@@ -95,7 +108,6 @@ class Watchlist extends Component {
   handleCSVSubmit = e => {
     e.preventDefault();
     this.setState({modal:true})
-
     const {watchlist, status, userID:_id, settings, csvFile} = this.state
     const input = csvFile
     var obj_csv = {
@@ -109,23 +121,32 @@ class Watchlist extends Component {
       lbreak.forEach(res => {
           csvData.push(res.split(","));
       });
-      const csvList = csvData.map(d => {return d[0]})
-      saveSettings(_id, this.listCompare(csvList, watchlist), 'watchlistAdd', 'list')
-      status['busy'] = false
-      this.setState({status})
+      return csvData.map(d => {return d[0]})
     }
 
     if (input && input[0]) {
         console.log('csv received')
         let reader = new FileReader();
         reader.readAsBinaryString(input[0]);
-        reader.onload = function (e) {
-          obj_csv.size = e.total;
-          obj_csv.dataFile = e.target.result
-          console.log(obj_csv.dataFile)
-          parseData(obj_csv.dataFile)
-          return document.getElementById("fileInputForm").reset();
+        try{
+          reader.onload = async (e) => {
+            obj_csv.size = e.total;
+            obj_csv.dataFile = e.target.result
+            console.log(obj_csv.dataFile)
+            await saveSettings(_id, this.listCompare(parseData(obj_csv.dataFile), watchlist), 'watchlistAdd', 'list')
+            Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
+              {
+                const assetData = res[0]['data']
+                status['busy'] = false
+                this.setState({assetData, status})
+              })
+            return document.getElementById("fileInputForm").reset();
+          }
         }
+        catch (err) {
+          console.log("CSV Likely incorrect format")
+          document.getElementById("fileInputForm").reset();
+          return this.setState({csvErrors:true})}
     }
     else{
       document.getElementById("fileInputForm").reset();
@@ -236,142 +257,160 @@ class Watchlist extends Component {
     this.setState({csvFile})
   }
 
-    render() {
-      const {userID:_id, settings, watchlist, currentInput, status, assetData, csvFile, modal} = this.state
-        return (
-          <ServeToDash
-            med={[8,4]}
-            large={[8,2]}
-            small={[12,0]}
-          >
-            <Paper  className='p-1 m-0'>
-              <div className="row justify-content-center">
-                <div className="col-lg-6 col-sm-12 col-md-12">
-                  <CardContent className='p-2'>
-                    <div className="row">
-                      <div className="col-sm-12">
-                        <form onSubmit={this.handleWLAdd}>
-                          <TickerInputNew
-                            status={status}
-                            handleChange={this.handleChange}
-                            handleSubmit={this.handleWLAdd}
-                            currentInput={currentInput}
-                          />
-                        </form>
-                      </div>
-                    </div>
-
-                    {status.errors &&
-                      <div className="card text-white text-center bg-danger w-80 mt-2">
-                        <div className="card-body">
-                          <p className="card-text">{status.errors}</p>
-                        </div>
-                      </div>
-                    }
-                  </CardContent>
-                </div>
-
-                <div className="col-lg-6 col-sm-12 col-md-12">
-                  <CardContent  className='p-2'>
-                    <div className="row">
-                      <div className="col-sm-12">
-                        <Typography variant="h5" className='text-center mb-1'>Import .CSV</Typography>
-                      </div>
-                    </div>
-                    <div className='row justify-content-center'>
-                      <form
-                        id='fileInputForm'
-                        ref={this.form}
-                      >
-                        <input
-                          type="file"
-                          ref={this.fileInput} 
-                          onChange={this.onFileChange}
+  render() {
+    const {userID:_id, settings, watchlist, currentInput, status, assetData, csvFile, modal} = this.state
+      return (
+        <ServeToDash
+          med={[8,4]}
+          large={[8,2]}
+          small={[12,0]}
+        >
+          <Paper  className='p-1 m-0'>
+            <div className="row justify-content-center">
+              <div className="col-lg-6 col-sm-12 col-md-12">
+                <CardContent className='p-2'>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <form onSubmit={this.handleWLAdd}>
+                        <TickerInputNew
+                          status={status}
+                          handleChange={this.handleChange}
+                          handleSubmit={this.handleWLAdd}
+                          currentInput={currentInput}
                         />
                       </form>
-
-                        {
-                          csvFile &&
-                          <div className="row">
-                            <Button 
-                              variant="contained" 
-                              // color="primary"
-                              style={{backgroundColor:'#4682B4', color:'white'}}
-                              onClick={(e) => this.handleCSVSubmit(e)}
-                              >
-                                <span className="material-icons ml-1">&#xe2c6;</span>
-                            </Button>
-                            <Dialog
-                              open={modal}
-                              onClose={this.handleClose}
-                              scroll={'paper'}
-                              aria-labelledby="scroll-dialog-title"
-                              aria-describedby="scroll-dialog-description"
-                            >
-                                <DialogContent >
-                                  <div className="row">
-                                    Some assets may take longer than others to appear in your watchlist.
-                                  </div>
-                                  <div className="row">
-                                    Check back in a few minutes as data becomes available.
-                                  </div>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
-                                      <span className="material-icons ml-1">&#xe5cd;</span>
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                          </div>  
-                        }
                     </div>
-                  </CardContent>
-                </div>
-              </div>
-            </Paper>
+                  </div>
 
-            <Paper className='p-1 mt-2'>
-              {assetData.length > 0 ?                
-              <DataTable 
-                  title=''
-                  columns={this.state.columns}
-                  data={this.state.assetData ? this.state.assetData : []}
-                  handleDelete={this.handleDelete}
-                  handleSeeMore={this.handleSeeMore}
-                /> :
-                watchlist ? 
-                watchlist.length > 0 ? 
-                  <Loading style={'bars'}/> : 
-                  <div className='card card-body text-center'>Add to your watchlist to get started</div> : ''
-              }
-            </Paper>
-
-            <div className='container my-2'>
-              <Modal2 
-                buttonContent={
-                  <>
-                      <div className='row px-2'>
-                        Limitations
-                        <span className="material-icons ml-1">&#xe8fd;</span>
+                  {status.errors &&
+                    <div className="card text-white text-center bg-danger w-80 mt-2">
+                      <div className="card-body">
+                        <p className="card-text">{status.errors}</p>
                       </div>
-                  </>
-                }
-                title={'Randomly Generated Price Action'}
-                content={
-                  <>
-                      <InfoList
-                          title={'Trend Edge is still in Beta'}
-                          listContent={[
-                            'Assets with less than ~50 weeks of price history may not have correct Trend Edge calculations.', 
-                            'A solution is in the works.'
-                          ]}
+                    </div>
+                  }
+                </CardContent>
+              </div>
+
+              <div className="col-lg-6 col-sm-12 col-md-12">
+                <CardContent  className='p-2'>
+                  <div className="row m-0 p-0 justify-content-center align-items-center">
+                    <Typography variant="h5" className='text-center mb-1 mr-2'>Import .csv</Typography>
+                    <InfoModal
+                      buttonContent={
+                        <span className="material-icons">&#xe88e;</span>
+                      }
+                      title={'How To:'}
+                      iconButton={true}
+                      content={
+                      <>
+                        <InfoList
+                            title={'Correct Format'}
+                            listContent={[]}
+                        />
+                        <Img src={csvExample} logo='csv example'/>
+                      </> 
+                      }
+                    />
+                  </div>
+                  <div className='row justify-content-center'>
+                    <form
+                      id='fileInputForm'
+                      ref={this.form}
+                    >
+                      <input
+                        type="file"
+                        ref={this.fileInput} 
+                        onChange={this.onFileChange}
                       />
-                  </>
-                }
-              />
+                    </form>
+                      {
+                        csvFile &&
+                        <div className="row">
+                          <Button 
+                            variant="contained" 
+                            style={{backgroundColor:'#4682B4', color:'white'}}
+                            onClick={(e) => this.handleCSVSubmit(e)}
+                            >
+                              <span className="material-icons ml-1">&#xe2c6;</span>
+                          </Button>
+                          <Dialog
+                            open={modal}
+                            onClose={this.handleClose}
+                            scroll={'paper'}
+                            aria-labelledby="scroll-dialog-title"
+                            aria-describedby="scroll-dialog-description"
+                          >
+                            <DialogContent >
+                              <div className="row">
+                                Some assets may take longer than others to appear in your watchlist.
+                              </div>
+                              <div className="row">
+                                Check back in a few minutes as data becomes available.
+                              </div>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                                  <span className="material-icons ml-1">&#xe5cd;</span>
+                                </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </div>  
+                      }
+                  </div>
+                  {status.csvErrors &&
+                    <div className="card text-white text-center bg-danger w-80 mt-2">
+                      <div className="card-body">
+                        <p className="card-text">.csv format error, double check the tool-tip for proper format</p>
+                      </div>
+                    </div>
+                  }
+                </CardContent>
+              </div>
             </div>
-          </ServeToDash>
-        );
+          </Paper>
+
+          <Paper className='p-1 mt-2'>
+            {assetData.length > 0 ?                
+            <DataTable 
+                title=''
+                columns={this.state.columns}
+                data={this.state.assetData ? this.state.assetData : []}
+                handleDelete={this.handleDelete}
+                handleSeeMore={this.handleSeeMore}
+              /> :
+              watchlist ? 
+              watchlist.length > 0 ? 
+                <Loading style={'bars'}/> : 
+                <div className='card card-body text-center'>Add to your watchlist to get started</div> : ''
+            }
+          </Paper>
+
+          <div className='container my-2'>
+            <InfoModal 
+              buttonContent={
+                <>
+                    <div className='row px-2'>
+                      Limitations
+                      <span className="material-icons ml-1">&#xe88e;</span>
+                    </div>
+                </>
+              }
+              content={
+                <>
+                  <InfoList
+                      title={'Trend Edge is in Beta'}
+                      listContent={[
+                        'Assets with less than ~1 yr of price history may not have correct Trend Edge calculations.', 
+                        'A solution is in the works for recently listed assets.'
+                      ]}
+                  />
+                </>
+              }
+            />
+          </div>
+        </ServeToDash>
+      );
     }
 }
  

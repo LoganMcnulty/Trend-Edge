@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import ServeToDash from '../common/serveToDash'
 import LineGraph from '../common/lineGraph'
 import InfoList from '../common/infoList'
-import Modal2 from '../common/infoModal'
+import InfoModal from '../common/infoModal'
 import auth from '../../services/authService';
 
 const LandingContent = () => {
@@ -134,7 +134,7 @@ const LandingContent = () => {
                             }
                         </div> 
                     </Button>
-                    <Modal2 
+                    <InfoModal 
                         buttonContent={
                             <>
                                 <div className='row px-2'>
