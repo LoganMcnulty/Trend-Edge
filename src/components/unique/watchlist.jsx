@@ -23,6 +23,16 @@ import InfoModal from '../common/infoModal'
 import InfoList from '../common/infoList'
 import csvExample from '../images/csvExample.png'
 
+function checkEnoughData(data){
+  return data.map(asset => {
+    if (asset.enoughData) return asset
+    else {
+      asset['name'] += ' ⚠️'
+      return asset
+    }
+  })
+}
+
 class Watchlist extends Component {
   state = {
     assetData:[],
@@ -38,7 +48,7 @@ class Watchlist extends Component {
       csvErrors:false
     },
     userID:'',
-    watchlist:[],
+    watchlist: false,
     settings: '',
     currentInput: '',
     csvFile: '',
@@ -70,8 +80,11 @@ class Watchlist extends Component {
         }
         Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
           {
-            const assetData = res[0]['data']
+            const assetData = checkEnoughData(res[0]['data'])
             status['busy'] = false
+
+            console.log(assetData)
+
             this.setState({assetData, status})
           })
       })
@@ -134,7 +147,7 @@ class Watchlist extends Component {
             await saveSettings(_id, this.listCompare(parseData(obj_csv.dataFile), watchlist), 'watchlistAdd', 'list')
             Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
               {
-                const assetData = res[0]['data']
+                const assetData = checkEnoughData(res[0]['data'])
                 status['busy'] = false
                 this.setState({assetData, status})
               })
@@ -182,7 +195,7 @@ class Watchlist extends Component {
       {
         status['busy'] = false
         status['dataRetrieved'] = true
-        const assetData = res[0]['data']
+        const assetData = checkEnoughData(res[0]['data'])
         this.setState({assetData, status, currentInput:''})
       })
     console.log('... complete')
@@ -218,7 +231,22 @@ class Watchlist extends Component {
   };
 
   handleSeeMore = (e) => {
+    console.log(e)
 
+  }
+
+  clearWatchlist = async () => {
+    const {userID:_id} = this.state
+    if (window.confirm('Are you sure?')){
+      try{
+        await saveSettings(_id, [], 'watchlistRemove')
+        this.setState({watchlist:[], assetData:[]})
+      }
+      catch{
+        console.log('something went wrong saving empty watchlist')
+      }
+    }
+    else return
   }
 
   handleDelete = async (e) => {
@@ -233,6 +261,7 @@ class Watchlist extends Component {
     const updatedAssetData = assetData.filter(asset => {
       if (asset.name !== e.name) return asset
     })
+
     this.setState({watchlist: updatedWL, assetData:updatedAssetData})
 
     try {
@@ -256,7 +285,7 @@ class Watchlist extends Component {
   }
 
   render() {
-    const {userID:_id, settings, watchlist, currentInput, status, assetData, csvFile, modal} = this.state
+    const {watchlist, currentInput, status, assetData, csvFile, modal} = this.state
       return (
         <ServeToDash
           med={[8,4]}
@@ -384,29 +413,39 @@ class Watchlist extends Component {
                 <div className='card card-body text-center'>Add to your watchlist to get started</div> : ''
             }
           </Paper>
-
           <div className='container my-2'>
-            <InfoModal 
-              buttonContent={
-                <>
-                    <div className='row px-2'>
-                      Limitations
-                      <span className="material-icons ml-1">&#xe88e;</span>
-                    </div>
-                </>
-              }
-              content={
-                <>
-                  <InfoList
-                      title={'Trend Edge is in Beta'}
-                      listContent={[
-                        'Assets with less than ~1 yr of price history may not have correct Trend Edge calculations.', 
-                        'A solution is in the works for recently listed assets.'
-                      ]}
-                  />
-                </>
-              }
-            />
+            <div className="row justify-content-around">
+              <InfoModal
+                  buttonContent={
+                    <>
+                      <div className='row px-2'>
+                        Limitations
+                        <span className="material-icons ml-1">&#xe88e;</span>
+                      </div>
+                    </>
+                  }
+                  content={
+                    <>
+                      <InfoList
+                          title={'Trend Edge is in Beta'}
+                          listContent={[
+                            'Assets with less than ~1 yr of price history may not have correct Trend Edge stats.', 
+                            '⚠️ signifies this'
+                          ]}
+                      />
+                    </>
+                  }
+                />
+              <Button 
+                variant="contained"
+                size='small'
+                style={{backgroundColor:'red', color:'white'}}
+                onClick={() => this.clearWatchlist()}
+                >
+                  Clear Watchlist
+                  <span className="material-icons ml-1">&#xe16c;</span>
+              </Button>
+            </div>
           </div>
         </ServeToDash>
       );

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import InputField from '../common/inputField';
-import FunctionButton from '../common/loadingInteractive2'
+import FunctionButton from '../common/functionButton'
 
 const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}) => {
     return (
@@ -16,7 +16,6 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}
           />
           <div className="input-group-append">
             <FunctionButton
-              title={'Add'}
               btnFunction = {handleSubmit}
               status={status}
               btnContent={
@@ -25,8 +24,8 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon}
             />
           </div>
         </div>
-     </div>
-     );
+      </div>
+    );
 }
  
 export default TickerInputNew;
