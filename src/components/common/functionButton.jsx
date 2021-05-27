@@ -1,8 +1,6 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles,  withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { green } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +32,7 @@ const StyledButton = withStyles({
   },
 })(Button);
 
-const FunctionButton = ({btnContent, status, btnFunction}) => {
+const FunctionButton = ({btnContent, status, btnFunction, size=''}) => {
   const {busy, dataRetrieved} = status
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);

@@ -93,29 +93,29 @@ const Dashboard = (props) => {
 
   const renderTopRight = (userLogged, curRoute) => {
     return(
-        <Grid item>
-            {
-                <Typography noWrap>
-                    {
-                      userLogged ? `👋 ${userLogged.name}` :
-                      curRoute === '/Sign In' ? 
-                      ''
-                        // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
-                      :
-                        <NavLink className="h7 p-0 text-white" to='/Sign In'>
-                          <Button
-                            variant="contained"
-                            className='active'
-                            style={{backgroundColor:'#fc5a3d', color:'white'}}
-                          >
-                            Access
-                            <span className="material-icons ml-1">&#xe0da;</span>
-                          </Button>
-                        </NavLink>
-                    }
-                </Typography>
-            }
-        </Grid>
+      <Grid item>
+        {
+          <Typography noWrap>
+              {
+                userLogged ? `👋 ${userLogged.name}` :
+                curRoute === '/Sign In' ? 
+                ''
+                  // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
+                :
+                  <NavLink to='/Sign In' style={{ textDecoration: 'none' }}>
+                    <Button
+                      variant="contained"
+                      className='active'
+                      style={{backgroundColor:'#fc5a3d', color:'white'}}
+                    >
+                      Access
+                      <span className="material-icons ml-1">&#xe0da;</span>
+                    </Button>
+                  </NavLink>
+              }
+          </Typography>
+        }
+      </Grid>
     )
 }
 

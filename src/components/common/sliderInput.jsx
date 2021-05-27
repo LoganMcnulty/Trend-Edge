@@ -8,11 +8,6 @@ const useStyles = makeStyles({
         width: 300,
     },
     });
-    
-function valuetext(value) {
-    return `${value}°C`;
-}
-
 
 const SliderInput = ({ name, label, error, ...rest }) => {
     console.log({...rest})

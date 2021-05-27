@@ -25,7 +25,7 @@ export function updateAssets() {
 }
   
 export function postAsset(id) {
-  return http.post(`${apiEndpoint}/`, {ticker:id}).then(res => res)
+  return http.post(`${apiEndpoint}/`, {data:id}).then(res => res)
 }
 
 // export async function updateAssets(user){

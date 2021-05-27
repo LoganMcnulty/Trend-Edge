@@ -4,13 +4,14 @@ import Paper from '@material-ui/core/Paper'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Typography from '@material-ui/core/Typography';
+import CardContent from '@material-ui/core/CardContent';
 
 // In House
 import ServeToDash from '../common/serveToDash'
 import {removeUsers} from '../../services/adminService'
 import {updateAssets} from '../../services/assetService'
 import auth from '../../services/authService'
-import  TickerInput  from "./submitTickerData";
+import AddUpdateTicker  from "./adminTickerTesting";
 import TEAPITesting from './teAPITesting';
 
 const AdminDash = () => {
@@ -24,15 +25,13 @@ const AdminDash = () => {
       setUpdatingAssets('complete')
     }
     else if (type === 'removeUsers'){
-      let yes = window.confirm('Are you sure?')
-      if (yes){
+      if (window.confirm('Are you sure?')){
         setUpdatingUsers(true)
-        // updatingStocks = true
         const update = [removeUsers(auth.getCurrentUser())]
         Promise.all(update)
         .then(async res => {
           console.log(res)
-          setUpdatingUsers('complete')
+          setUpdatingUsers('Running')
         })
       }
     }
@@ -69,48 +68,64 @@ const AdminDash = () => {
       </Paper>
 
       <Paper elevation={3} className='p-3 mt-3 mx-0'>
-          <Row className="align-items-top justify-content-around text-center mt-3">
-            <Col className="col-sm-12 col-lg-4 col-md-12 mt-0">
-              <Typography variant="h5" >Update An Asset</Typography>
-              <TickerInput
-                orientation={'x'}
-                icon={'save'}
-              />
-            </Col>
-            <Col className="col-sm-12 col-lg-4 col-md-12 mt-0">
-              <Typography variant="h5" >Test Trend Edge API</Typography>
-              <TEAPITesting/>
-            </Col>
-          </Row>
+        <div className="row justify-content-center">
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <Typography variant="h5" className='text-center mb-1 mr-2'>Update/Add Ticker</Typography>
+              </div>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <AddUpdateTicker/>
+              </div>
+            </CardContent>
+          </div>
 
-          <Row className="align-items-center justify-content-around text-center mt-3">
-            <Col className="col-sm-12 col-lg-4 col-md-12 mt-2">
-                <Typography variant="h5" >DB Functions</Typography>
-                <Row className="align-items-center justify-content-around text-center mt-3">
-                  <Col className="col mt-0">
-                    <Typography variant="h4" gutterBottom>
-                      <button 
-                        onClick = {() => handleUpdate('updateAssets')}
-                        className="btn btn-warning btn-block" 
-                        >Update DB Stock Data
-                      </button>
-                    </Typography>
-                  </Col>
-                </Row>
-                <Row className="align-items-center justify-content-around text-center">
-                  <Col className="col-sm-12 col-lg-6 col-md-8 mt-0">
-                    <Typography variant="h4" gutterBottom>
-                      <button
-                        onClick = {() => handleUpdate('removeUsers')}
-                        className="btn btn-danger btn-block" 
-                        
-                      >Remove All Users
-                      </button>
-                    </Typography>
-                  </Col>
-                </Row>
-              </Col>
-          </Row>
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent  className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <Typography variant="h5" className='text-center mb-1 mr-2'>Test TE API</Typography>
+              </div>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <TEAPITesting />
+              </div>
+            </CardContent>
+          </div>
+        </div>
+
+
+        <div className="row justify-content-center">
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <div className="row m-0 p-0 justify-content-center align-items-center">
+                  <Typography variant="h5" className='text-center mb-1 mr-2'>Remove All Users</Typography>
+                </div>
+
+
+                <button
+                  onClick = {() => handleUpdate('removeUsers')}
+                  className="btn btn-danger btn-block" 
+                >Remove All Users
+                </button>
+              </div>
+            </CardContent>
+          </div>
+
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent  className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <Typography variant="h5" className='text-center mb-1 mr-2'>Update All Stocks in DB</Typography>
+              </div>
+                <button 
+                  onClick = {() => handleUpdate('updateAssets')}
+                  className="btn btn-warning btn-block" 
+                  >Update DB Stock Data
+                </button>
+              </div>
+            </CardContent>
+          </div>
+        </div>
 
       </Paper>
     </ServeToDash>

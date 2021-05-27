@@ -128,7 +128,7 @@ const LandingContent = () => {
                             </>
                             :
                             <>
-                                Start
+                                Play
                                 <span className="material-icons ml-1">&#xe037;</span>
                             </>
                             }

@@ -25,7 +25,7 @@ const InfoList = ({title, listContent, footer='', linkTo='', linkTitle='', icon=
                     {
                         linkTo && linkTitle && icon ?
                         <div className="row justify-content-center">
-                            <NavLink className="h7 p-0 text-white" to={linkTo}>
+                            <NavLink to={linkTo}  style={{ textDecoration: 'none' }}>
                                 <Button 
                                     variant="contained" 
                                     style={{backgroundColor:'#fc5a3d', color:'white'}}
