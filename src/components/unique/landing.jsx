@@ -101,8 +101,9 @@ const LandingContent = () => {
     )
     return ( 
         <ServeToDash
-        med={[8,4]}
-        large={[6,0]}
+            med={[8,4]}
+            large={[8,2]}
+            small={[12,0]}
         >
             <Paper className='p-3 m-0'>
                 <Row className="align-items-center justify-content-center text-center">
@@ -153,7 +154,7 @@ const LandingContent = () => {
                                         'You may "recognize" a pattern that is similar to an asset in your watchlist.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
-                                    footer={"Trend Edge provides impartial trend statistics so that your actions in the market are less random."}
+                                    footer={"Trend Edge provides trend statistics."}
                                     linkTo = {user ? '' : '/Sign In'}
                                     linkTitle = {user ? '' : 'Access'}
                                     icon={<span className="material-icons ml-1">&#xe0da;</span>}

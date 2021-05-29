@@ -13,7 +13,6 @@ const FooterPage = () => {
 
 export default FooterPage;
 
-
 const useStyles = makeStyles(theme => ({
     footer: {
         position: 'fixed',
