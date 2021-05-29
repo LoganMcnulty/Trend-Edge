@@ -8,21 +8,25 @@ import CardContent from '@material-ui/core/CardContent';
 
 // In House
 import ServeToDash from '../common/serveToDash'
-import {removeUsers} from '../../services/adminService'
+import {removeUsers, emptyAssetDB, populateDatabase} from '../../services/adminService'
 import {updateAssets} from '../../services/assetService'
 import auth from '../../services/authService'
 import AddUpdateTicker  from "./adminTickerTesting";
 import TEAPITesting from './teAPITesting';
+import PopulateDBcsv from './populateDBcsv'
 
 const AdminDash = () => {
   const [updatingAssets, setUpdatingAssets] = useState(false);
   const [removingUsers, setUpdatingUsers] = useState(false);
+  const [removingAssets, setRemovingAssets] = useState(false);
+  const [populatingDatabase, setPopulatingDatabase] = useState(false);
+
 
   const handleUpdate = async type =>{
     if (type === 'updateAssets') {
       setUpdatingAssets(true)
       await Promise.all([updateAssets()])
-      setUpdatingAssets('complete')
+      setUpdatingAssets(false)
     }
     else if (type === 'removeUsers'){
       if (window.confirm('Are you sure?')){
@@ -31,9 +35,23 @@ const AdminDash = () => {
         Promise.all(update)
         .then(async res => {
           console.log(res)
-          setUpdatingUsers('Running')
+          setUpdatingUsers(false)
         })
       }
+    }
+    else if (type === 'emptyDatabase'){
+      if (window.confirm('Are you sure?')){
+        setRemovingAssets(true)
+        await emptyAssetDB()
+        setRemovingAssets(false)
+      }
+    }
+    else if (type === 'populateDatabase'){
+      // if (window.confirm('Are you sure?')){
+        setPopulatingDatabase(true)
+        await populateDatabase()
+        setPopulatingDatabase(false)
+      // }
     }
   }
 
@@ -60,8 +78,10 @@ const AdminDash = () => {
           </Col>
           <Col>
             <Typography variant="h6" >
-              {!updatingAssets ? '' : (updatingAssets === 'complete') ? 'Stocks Updated. ' : 'Stocks Updating. '}
-              {!removingUsers ? '' : (removingUsers === 'complete') ? 'Users Removed. ' : 'Removing Users. '}
+              {!updatingAssets ? '' : (updatingAssets === 'complete') ? 'Stocks update send, will take time. ' : 'Stocks Updating... '}
+              {!removingUsers ? '' : (removingUsers === 'complete') ? 'Users Removed. ' : 'Removing Users... '}
+              {!removingAssets ? '' : (removingAssets === 'complete') ? 'Assets Removed. ' : 'Removing Assets... '}
+
             </Typography>
           </Col>
         </Row>
@@ -94,6 +114,61 @@ const AdminDash = () => {
 
 
         <div className="row justify-content-center">
+
+        <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <div className="row m-0 p-0 justify-content-center align-items-center">
+                  <Typography variant="h5" className='text-center mb-1 mr-2'>Empty Asset Database</Typography>
+                </div>
+                <button
+                  onClick = {() => handleUpdate('emptyDatabase')}
+                  className="btn btn-danger btn-block" 
+                >
+                  Clear Assets
+                  <span className="material-icons ml-1 p-0">&#xe16c;</span>
+                </button>
+              </div>
+            </CardContent>
+          </div>
+
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <div className="row m-0 p-0 justify-content-center align-items-center">
+                  <Typography variant="h5" className='text-center mb-1 mr-2'>Populate all listed tickers, not with PerfData (for now)</Typography>
+                </div>
+                <PopulateDBcsv/>
+                {/* <button
+                  onClick = {() => handleUpdate('populateDatabase')}
+                  className="btn btn-info btn-block" 
+                >
+                  Populate DB
+                  <span className="material-icons ml-1 p-0">&#xe97a;</span>
+                </button> */}
+              </div>
+            </CardContent>
+          </div>
+        </div>
+
+        <div className="row justify-content-center">
+
+
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent  className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <Typography variant="h5" className='text-center mb-1 mr-2'>Update All Stocks in DB</Typography>
+              </div>
+                <button 
+                  onClick = {() => handleUpdate('updateAssets')}
+                  className="btn btn-info btn-block" 
+                  >Update DB Stock Data
+                </button>
+              </div>
+            </CardContent>
+          </div>
+
           <div className="col-lg-6 col-sm-12 col-md-12">
             <CardContent className='p-2'>
               <div className="row m-0 p-0 justify-content-center align-items-center">
@@ -111,21 +186,9 @@ const AdminDash = () => {
             </CardContent>
           </div>
 
-          <div className="col-lg-6 col-sm-12 col-md-12">
-            <CardContent  className='p-2'>
-              <div className="row m-0 p-0 justify-content-center align-items-center">
-              <div className="row m-0 p-0 justify-content-center align-items-center">
-                <Typography variant="h5" className='text-center mb-1 mr-2'>Update All Stocks in DB</Typography>
-              </div>
-                <button 
-                  onClick = {() => handleUpdate('updateAssets')}
-                  className="btn btn-warning btn-block" 
-                  >Update DB Stock Data
-                </button>
-              </div>
-            </CardContent>
-          </div>
         </div>
+
+
 
       </Paper>
     </ServeToDash>

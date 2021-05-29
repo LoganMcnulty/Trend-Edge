@@ -23,9 +23,13 @@ import InfoModal from '../common/infoModal'
 import InfoList from '../common/infoList'
 import csvExample from '../images/csvExample.png'
 
-function checkEnoughData(data){
+function cleanData(data){
   return data.map(asset => {
     if (asset.enoughData) return asset
+    if (asset.priceSeries.length <= 0){
+      asset['name'] += ' ⌛'
+      return asset
+    }
     else {
       asset['name'] += ' ⚠️'
       return asset
@@ -80,11 +84,8 @@ class Watchlist extends Component {
         }
         Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
           {
-            const assetData = checkEnoughData(res[0]['data'])
+            const assetData = cleanData(res[0]['data'])
             status['busy'] = false
-
-            console.log(assetData)
-
             this.setState({assetData, status})
           })
       })
@@ -147,7 +148,7 @@ class Watchlist extends Component {
             await saveSettings(_id, this.listCompare(parseData(obj_csv.dataFile), watchlist), 'watchlistAdd', 'list')
             Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
               {
-                const assetData = checkEnoughData(res[0]['data'])
+                const assetData = cleanData(res[0]['data'])
                 status['busy'] = false
                 this.setState({assetData, status})
               })
@@ -195,7 +196,7 @@ class Watchlist extends Component {
       {
         status['busy'] = false
         status['dataRetrieved'] = true
-        const assetData = checkEnoughData(res[0]['data'])
+        const assetData = cleanData(res[0]['data'])
         this.setState({assetData, status, currentInput:''})
       })
     console.log('... complete')
@@ -349,6 +350,7 @@ class Watchlist extends Component {
                         ref={this.fileInput}
                         onChange={this.onFileChange}
                         className='w-80'
+                        style={{border:'1px solid lightgray', width:'80%'}}
                       />
                     </form>
                       {
@@ -413,14 +415,13 @@ class Watchlist extends Component {
                 <div className='card card-body text-center'>Add to your watchlist to get started</div> : ''
             }
           </Paper>
-          <div className='container my-2'>
+          <div className='container mt-2 mb-5'>
             <div className="row justify-content-around">
               <InfoModal
                   buttonContent={
                     <>
                       <div className='row px-2'>
-                        Limitations
-                        <span className="material-icons ml-1">&#xe88e;</span>
+                        Limitations ⚠️
                       </div>
                     </>
                   }
