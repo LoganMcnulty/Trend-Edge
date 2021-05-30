@@ -2,12 +2,20 @@ import http from './httpService'
 
 const apiEndpoint = '/data'
 
-export function getAssets() {
-    return http.get(`${apiEndpoint}/`).then(res => res)
-  }
+// export function getAssets() {
+//     return http.get(`${apiEndpoint}/`).then(res => res)
+//   }
 
-export function getAssetNames() {
-  return http.get(`${apiEndpoint}/assetNames`).then(res => res)
+  // export function getWLAssets() {
+  //   return http.get(`${apiEndpoint}/wlAssetObjects`).then(res => res)
+  // }
+
+// export function getAssetNames() {
+//   return http.get(`${apiEndpoint}/assetNames`).then(res => res)
+// }
+
+export function getWLAssetNames() {
+  return http.get(`${apiEndpoint}/wlAssetNames`).then(res => res)
 }
 
 export function getTrendEdge(assetNameList, settings){

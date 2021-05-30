@@ -58,7 +58,7 @@ class AddUpdateTicker extends Component {
 
   // set statuses based on response
     await postAsset(identifier, 'test').then(res => {
-      if (res.status === 201) {
+      if (res.status === 200) {
         (console.log("Asset Update Successful"))
         status['busy'] = false
         status['dataRetrieved'] = true
