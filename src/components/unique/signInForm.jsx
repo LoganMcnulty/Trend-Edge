@@ -33,7 +33,7 @@ class SignInForm extends Form {
     // causes a full reload of application, so that app component is mounted again and get the JWT 
 
     const {state} = this.props.location
-    window.location = state ? state.from.pathname : '/'
+    window.location = state ? state.from.pathname : '/watchlist'
 
     } catch (err) {
       if (err.response && err.response.status === 400){

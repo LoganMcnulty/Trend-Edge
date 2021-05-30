@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 // in house
 import auth from '../../services/authService'
-import {getAssetNames, getTrendEdge} from '../../services/assetService';
+import {getTrendEdge, getWLAssetNames} from '../../services/assetService';
 import FunctionButton from '../common/functionButton'
 import {getUser} from '../../services/userService'
 
@@ -37,14 +37,12 @@ class TEAPITesting extends Component {
     status['busy'] = true
     this.setState({status})
 
-    await getAssetNames().then(async res => {
+    await getWLAssetNames().then(async res => {
       const identifiers = res.data
-      console.log(identifiers)
-      console.log(settings)
       const data = await getTrendEdge(identifiers, settings)
-      console.log(data)
       status['busy'] = false
       this.setState({status})
+      console.log(data)
     })
   };
 
