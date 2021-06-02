@@ -7,25 +7,30 @@ const DataTable = ({title, columns, data, handleDelete='', handleSeeMore=''}) =>
             columns={columns}
             data={data}
             actions={[
-            {
-                icon: 'insights',
-                tooltip: 'Insights',
-                onClick: (event, rowData) => handleSeeMore(rowData)
-            },
+                {
+                    icon: 'insights',
+                    tooltip: 'Technical Insights',
+                    onClick: (event, rowData) => handleSeeMore(rowData, 'technical')
+                },
+                {
+                    icon: 'account_balance',
+                    tooltip: 'Fundamental Insights',
+                    onClick:(event, rowData) => handleSeeMore(rowData, 'fundamental')
+                },
                 {
                     icon: 'delete',
                     tooltip: 'Delete',
                     onClick:(event, rowData) => handleDelete(rowData)
                 }
-            ]}
-            title={title}
-            options={{
-                headerStyle: {
-                    backgroundColor: '#4682B4',
-                    color: '#FFF'
-                  },
-                actionsColumnIndex: -1,
-            }}
+                ]}
+                title={title}
+                options={{
+                    headerStyle: {
+                        backgroundColor: '#4682B4',
+                        color: '#FFF'
+                      },
+                    actionsColumnIndex: -1,
+                }}
         /> 
     );
 }
