@@ -56,7 +56,13 @@ class Watchlist extends Component {
     settings: '',
     currentInput: '',
     csvFile: '',
-    modal: false
+    modal: false,
+    fundamentalModal: {
+      open:false
+    },
+    technicalModal:{
+      open:false
+    }
   }
 
   constructor(props) {
@@ -231,8 +237,35 @@ class Watchlist extends Component {
     await this.setState({ currentInput });
   };
 
-  handleSeeMore = (e) => {
-    console.log(e)
+  handleSeeMore = (e, action='') => {
+    const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
+    macdPosSlope, name, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge} = e
+    
+    if (action === 'technical'){
+      const {technicalModal} = this.state
+      technicalModal['open'] = true
+      technicalModal['longName'] = longName
+      technicalModal['priceCurr'] = priceCurr
+      technicalModal['fastPosSlope'] = fastPosSlope
+      technicalModal['slowPosSlope'] = slowPosSlope
+      technicalModal['fastOverSlow'] = fastOverSlow
+      technicalModal['daysSinceIPO'] = daysSinceIPO
+      technicalModal['enoughData'] = enoughData
+      technicalModal['fastSMA'] = fastSMA
+      technicalModal['slowSMA'] = slowSMA
+      technicalModal['macdPosSlope'] = macdPosSlope
+      technicalModal['adx'] = adx
+      technicalModal['volumeAvg'] = volumeAvg
+      technicalModal['volumeCurr'] = volumeCurr
+      technicalModal['trendEdge'] = trendEdge
+      this.setState({technicalModal})
+    }
+    else if (action === 'fundamental'){
+      const {fundamentalModal} = this.state
+      fundamentalModal['open'] = true
+      fundamentalModal['longName'] = longName
+      this.setState({fundamentalModal})
+    }
 
   }
 
@@ -278,7 +311,12 @@ class Watchlist extends Component {
     }
     }
 
-  handleClose = () => this.setState({modal:false, csvFile:''})
+  handleClose = () => {
+    const {technicalModal, fundamentalModal} = this.state
+    technicalModal['open'] = false
+    fundamentalModal['open'] = false
+    this.setState({modal:false, csvFile:'', fundamentalModal, technicalModal})
+  }
 
   onFileChange = () => {
     const csvFile = this.fileInput.current.files
@@ -286,7 +324,7 @@ class Watchlist extends Component {
   }
 
   render() {
-    const {watchlist, currentInput, status, assetData, csvFile, modal} = this.state
+    const {watchlist, currentInput, status, assetData, csvFile, modal, technicalModal, fundamentalModal, settings} = this.state
       return (
         <ServeToDash
           med={[8,4]}
@@ -446,11 +484,91 @@ class Watchlist extends Component {
                   Clear Watchlist
                   <span className="material-icons ml-1">&#xe16c;</span>
               </Button>
+
+            {/* Technical Modal */}
+              <Dialog
+                open={technicalModal.open}
+                onClose={this.handleClose}
+                scroll={'paper'}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+              >
+                <DialogContent >
+                  <ul className="list-group list-group-flush">
+                    <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{technicalModal.longName}</h4>
+                    <li className="list-group-item m-0 p-0">
+
+                      <div className="d-flex flex-row justify-content-center allign-items-center p-0 m-0">
+                        <p className='text font-weight-bold mr-1'>Trend Edge: </p>{technicalModal.trendEdge}
+                        <p className='text font-weight-bold mr-1 ml-3'>Price: </p>{technicalModal.priceCurr}
+                      </div>
+
+                      <div className={buildClass(technicalModal.fastPosSlope)}>
+                        <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
+                        {technicalModal.fastPosSlope === 1 ? `Trending Up at $${technicalModal.fastSMA}` : `Trending Dn at $${technicalModal.fastSMA}`}
+                      </div> 
+                      <div className={buildClass(technicalModal.slowPosSlope)}>
+                        <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>{technicalModal.slowPosSlope  === 1 ? `Trending Up at $${technicalModal.slowSMA}` : `Trending Dn at $${technicalModal.slowSMA}`}
+                      </div>
+                      <div className={buildClass(technicalModal.macdPosSlope)}>
+                        <p className='text font-weight-bold mr-1'>MACD: </p>{technicalModal.macdPosSlope  === 1 ? `Trending Up` : `Trending Dn`}
+                      </div>
+                      <div className={buildClass(technicalModal.slowPosSlope)}>
+                        <p className='text font-weight-bold mr-1'>ADX: </p>{technicalModal.slowPosSlope  === 1 ? `${technicalModal.adx}` : `Not Applied`}
+                      </div>
+                    </li>
+                    <li className="list-group-item m-0 mt-1 p-0">
+                      <div className="d-flex flex-row justify-content-left allign-items-center p-0 m-0">
+                        <p className='text font-weight-bold mr-1'>Months Since IPO: </p>{Math.round(technicalModal.daysSinceIPO / 30.417)}
+                      </div>
+                    </li>
+                  </ul>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                      <span className="material-icons ml-1">&#xe5cd;</span>
+                    </Button>
+                </DialogActions>
+              </Dialog>
+                  
+            {/* Fundamental Modal */}
+              <Dialog
+                open={fundamentalModal.open}
+                onClose={this.handleClose}
+                scroll={'paper'}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+              >
+                  <DialogContent >
+                    <ul className="list-group list-group-flush">
+                      <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{fundamentalModal.longName}</h4>
+                      <li className="list-group-item">
+                        <div className="d-flex flex-row justify-content-around align-items-center">
+                            <h6 className="text text-dark">
+                                things
+                            </h6>
+                        </div>
+                      </li>
+                    </ul>
+                    </DialogContent>
+                  <DialogActions>
+                      <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                        <span className="material-icons ml-1">&#xe5cd;</span>
+                      </Button>
+                  </DialogActions>
+                </Dialog>
+
             </div>
           </div>
         </ServeToDash>
       );
     }
+}
+
+const buildClass = (code) => {
+  let base = "d-flex flex-row justify-content-center allign-items-center p-0 m-0"
+  if (code===1) return base += ' text-success'
+  return base += ' text-danger'
 }
  
 export default Watchlist;
