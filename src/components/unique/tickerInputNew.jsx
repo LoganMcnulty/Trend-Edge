@@ -15,7 +15,6 @@ const filterOptions = (options, state) => {
 };
 
 const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon, listData=''}) => {
-  console.log(listData)
     return (
       <>
       <div className="form-group align-items-center  m-0 p-0">
