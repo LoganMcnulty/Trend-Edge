@@ -5,7 +5,15 @@ import { Chart } from 'react-charts'
 // In house
 import useWindowDimensions from './../common/windowDimensions';
 
-const LineGraph = ({data, axes}) => {
+const LineGraph = ({data}) => {
+
+  const axes = React.useMemo(
+    () => [
+    { primary: true, type: 'linear', position: 'bottom' },
+    { type: 'linear', position: 'left' }
+    ],
+    []
+)
 
   const {height, width} = useWindowDimensions()
     

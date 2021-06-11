@@ -13,7 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 // In House
 import ServeToDash from '../common/serveToDash'
 import auth from '../../services/authService'
-import {getTrendEdge} from '../../services/assetService';
+import {getTrendEdge, getAssetNames} from '../../services/assetService';
 import {getUser} from '../../services/userService'
 import TickerInputNew from './tickerInputNew';
 import {saveSettings} from '../../services/userService'
@@ -25,8 +25,9 @@ import csvExample from '../images/csvExample.png'
 
 function cleanData(data){
   return data.map(asset => {
-    if (asset.enoughData) return asset
-    if (asset.priceSeries.length <= 0){
+    const {enoughSlowData, enoughFastData, priceSeries} = asset
+    if (enoughSlowData && enoughFastData) return asset
+    if (priceSeries.length <= 0){
       asset['name'] += ' ⌛'
       return asset
     }
@@ -40,6 +41,7 @@ function cleanData(data){
 class Watchlist extends Component {
   state = {
     assetData:[],
+    allAssetNames:['cat','dog','mouse','cheese'],
     columns:[
       { title: 'Ticker', field: 'name' },
       { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
@@ -77,12 +79,15 @@ class Watchlist extends Component {
       const {status} = this.state
       status['busy'] = true
       this.setState({status})
+
       Promise.all([auth.getCurrentUser()])
       .then( async response => {
         const userID = response[0]._id
+        const assetRetrieve = await getAssetNames()
+        const allAssetNames = assetRetrieve['data']
         console.log('Mounting User to watchlist...')
         const {settings, watchlist} = await getUser(userID)
-        this.setState({watchlist, settings, userID})
+        this.setState({watchlist, settings, userID, allAssetNames})
         if (watchlist.length === 0) {
             status['busy'] = false
             this.setState({status})
@@ -237,11 +242,35 @@ class Watchlist extends Component {
     await this.setState({ currentInput });
   };
 
+  movingAvgs = (priceSeries, sma) => {
+    const dataPoints = []
+    for (let i=priceSeries.length; i > sma; i--){
+        let dataPoint = []
+        const thisSMASeries = priceSeries.slice( i-1-sma, i-1)
+        let seriesSum = 0
+        for (let i =0; i < thisSMASeries.length; i++){
+            seriesSum += thisSMASeries[i]
+        }
+        dataPoint.push(i-1)
+        dataPoint.push(seriesSum/sma)
+        dataPoints.push(dataPoint)
+    }
+    return dataPoints.slice(-100)
+  } 
+
   handleSeeMore = (e, action='') => {
     const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
-    macdPosSlope, name, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge} = e
-    
+    macdPosSlope, name, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, priceSeries} = e
+    const {fastSMA:fastSMASettings, slowSMA:slowSMASettings} = this.state.settings
+
     if (action === 'technical'){
+
+      // let priceIndexed = []
+      // for (let i = priceSeries.length; i >= 0; i--){
+      //   priceIndexed.push([i, priceSeries[i]])
+      // }
+      // priceIndexed = priceIndexed.slice(-100).reverse()
+
       const {technicalModal} = this.state
       technicalModal['open'] = true
       technicalModal['longName'] = longName
@@ -258,12 +287,35 @@ class Watchlist extends Component {
       technicalModal['volumeAvg'] = volumeAvg
       technicalModal['volumeCurr'] = volumeCurr
       technicalModal['trendEdge'] = trendEdge
+
+
+      // technicalModal['priceSeries'] = priceSeries
+      // technicalModal['fastSMASeries'] = this.movingAvgs(priceSeries, fastSMASettings)
+      // technicalModal['slowSMASeries'] = this.movingAvgs(priceSeries, slowSMASettings)
+    
+      // technicalModal['data'] = [
+      //     {
+      //         label: 'Px (t)',
+      //         data: priceSeries ? priceIndexed : []
+      //     },
+      //     {
+      //         label: `${fastSMASettings} wk SMA`,
+      //         data: priceSeries ? technicalModal['fastSMASeries'] : []
+      //     },
+      //     {
+      //         label: `${slowSMASettings} wk SMA`,
+      //         data: priceSeries ? technicalModal['slowSMASeries'] : []
+      //     }
+      // ]
+
       this.setState({technicalModal})
+      console.log(this.state.technicalModal)
     }
     else if (action === 'fundamental'){
       const {fundamentalModal} = this.state
       fundamentalModal['open'] = true
       fundamentalModal['longName'] = longName
+      fundamentalModal['daysSinceIPO'] = daysSinceIPO
       this.setState({fundamentalModal})
     }
 
@@ -324,7 +376,7 @@ class Watchlist extends Component {
   }
 
   render() {
-    const {watchlist, currentInput, status, assetData, csvFile, modal, technicalModal, fundamentalModal, settings} = this.state
+    const {watchlist, currentInput, status, assetData, csvFile, modal, technicalModal, fundamentalModal, settings, allAssetNames} = this.state
       return (
         <ServeToDash
           med={[8,4]}
@@ -343,6 +395,7 @@ class Watchlist extends Component {
                           handleChange={this.handleChange}
                           handleSubmit={this.handleWLAdd}
                           currentInput={currentInput}
+                          listData={allAssetNames}
                         />
                       </form>
                     </div>
@@ -517,11 +570,14 @@ class Watchlist extends Component {
                         <p className='text font-weight-bold mr-1'>ADX: </p>{technicalModal.slowPosSlope  === 1 ? `${technicalModal.adx}` : `Not Applied`}
                       </div>
                     </li>
-                    <li className="list-group-item m-0 mt-1 p-0">
+
+                    {/* <li className="list-group-item m-0 mt-1 p-0">
+                      <LineGraph data={technicalModal.data} />
                       <div className="d-flex flex-row justify-content-left allign-items-center p-0 m-0">
                         <p className='text font-weight-bold mr-1'>Months Since IPO: </p>{Math.round(technicalModal.daysSinceIPO / 30.417)}
                       </div>
-                    </li>
+                    </li> */}
+                
                   </ul>
                 </DialogContent>
                 <DialogActions>
