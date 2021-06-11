@@ -25,8 +25,8 @@ import csvExample from '../images/csvExample.png'
 
 function cleanData(data){
   return data.map(asset => {
-    const {enoughSlowData, enoughFastData, priceSeries} = asset
-    if (enoughSlowData && enoughFastData) return asset
+    const {fastSMA, slowSMA, priceSeries} = asset
+    if (slowSMA && fastSMA) return asset
     if (priceSeries.length <= 0){
       asset['name'] += ' ⌛'
       return asset
@@ -260,7 +260,8 @@ class Watchlist extends Component {
 
   handleSeeMore = (e, action='') => {
     const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
-    macdPosSlope, name, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, priceSeries} = e
+    macdPosSlope, name, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd} = e
+
     const {fastSMA:fastSMASettings, slowSMA:slowSMASettings} = this.state.settings
 
     if (action === 'technical'){
@@ -287,6 +288,8 @@ class Watchlist extends Component {
       technicalModal['volumeAvg'] = volumeAvg
       technicalModal['volumeCurr'] = volumeCurr
       technicalModal['trendEdge'] = trendEdge
+      technicalModal['macd'] = macd
+    
 
 
       // technicalModal['priceSeries'] = priceSeries
@@ -564,11 +567,18 @@ class Watchlist extends Component {
                         <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>{technicalModal.slowPosSlope  === 1 ? `Trending Up at $${technicalModal.slowSMA}` : `Trending Dn at $${technicalModal.slowSMA}`}
                       </div>
                       <div className={buildClass(technicalModal.macdPosSlope)}>
-                        <p className='text font-weight-bold mr-1'>MACD: </p>{technicalModal.macdPosSlope  === 1 ? `Trending Up` : `Trending Dn`}
+                        <p className='text font-weight-bold mr-1'>MACD: </p>{technicalModal.macd ? technicalModal.macdPosSlope  === 1 ? `Trending Up` : `Trending Dn` : 'Unavailable'}
                       </div>
                       <div className={buildClass(technicalModal.slowPosSlope)}>
-                        <p className='text font-weight-bold mr-1'>ADX: </p>{technicalModal.slowPosSlope  === 1 ? `${technicalModal.adx}` : `Not Applied`}
+                        <p className='text font-weight-bold mr-1'>ADX: </p>{technicalModal.adx ? technicalModal.slowPosSlope  === 1 ? `${technicalModal.adx}%` : `Not Applied` : 'Unavailable'}
                       </div>
+
+                      <br></br>
+
+                      <div className= "d-flex flex-row justify-content-center allign-items-center p-0 m-0 text-info">
+                        <p className='text font-weight-bold mr-1'>This Week's Volume is {Math.round(technicalModal.volumeCurr / technicalModal.volumeAvg *100)} % of the 10 Week Average </p>
+                      </div>
+
                     </li>
 
                     {/* <li className="list-group-item m-0 mt-1 p-0">
