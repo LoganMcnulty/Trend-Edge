@@ -10,9 +10,9 @@ const apiEndpoint = '/data'
   //   return http.get(`${apiEndpoint}/wlAssetObjects`).then(res => res)
   // }
 
-// export function getAssetNames() {
-//   return http.get(`${apiEndpoint}/assetNames`).then(res => res)
-// }
+export function getAssetNames() {
+  return http.get(`${apiEndpoint}/assetNames`).then(res => res)
+}
 
 export function getWLAssetNames() {
   return http.get(`${apiEndpoint}/wlAssetNames`).then(res => res)
@@ -31,15 +31,11 @@ export function getTrendEdge(assetNameList, settings){
 export function updateAssets() {
   return http.get(`${apiEndpoint}/updateAssets`).then(res => console.log(res))
 }
+
+export function updateETFs() {
+  return http.get(`${apiEndpoint}/updateETFs`).then(res => console.log(res))
+}
   
 export function postAsset(id) {
   return http.post(`${apiEndpoint}/`, {data:id}).then(res => res)
 }
-
-// export async function updateAssets(user){
-//   const url = apiEndpoint + "/updateAssets"
-//   const res = await http.post(url,  {
-//       user: user
-//   })
-//   return res
-// }

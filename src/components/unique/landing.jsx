@@ -91,14 +91,6 @@ const LandingContent = () => {
         }
     ]
   
-       
-    const axes = React.useMemo(
-        () => [
-        { primary: true, type: 'linear', position: 'bottom' },
-        { type: 'linear', position: 'left' }
-        ],
-        []
-    )
     return ( 
         <ServeToDash
             med={[8,4]}
@@ -107,14 +99,12 @@ const LandingContent = () => {
         >
             <Paper className='p-3 m-0'>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h4" gutterBottom>
-                        Welcome To Trend Edge 📈
-                    </Typography>
+                    <Typography variant="h4">Welcome 📈</Typography>
                 </Row>
             </Paper>
 
             <Paper className='px-5 py-2 mt-2'>
-                <Row className='justify-content-around'>
+                <Row className='justify-content-around mb-2'>
                     <Button 
                         variant="contained" 
                         style={{backgroundColor:'#fc5a3d', color:'white'}}
@@ -154,7 +144,7 @@ const LandingContent = () => {
                                         'You may "recognize" a pattern that is similar to an asset in your watchlist.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
-                                    footer={"Trend Edge provides trend statistics."}
+                                    footer={"Trend Edge provides trend statistics that iron out the short-term randomness of markets."}
                                     linkTo = {user ? '' : '/Sign In'}
                                     linkTitle = {user ? '' : 'Access'}
                                     icon={<span className="material-icons ml-1">&#xe0da;</span>}
@@ -163,9 +153,7 @@ const LandingContent = () => {
                             }
                     />
                 </Row>
-            </Paper>
 
-            <Paper className='px-5 py-2 mt-2'>
                 <div
                     style={{position:'absolute', left:'0', 
                     top: '50%'
@@ -179,21 +167,12 @@ const LandingContent = () => {
                 </Row>
                 
                 <Row className="align-items-center justify-content-center text-center">
-                    <LineGraph data={data} axes={axes}/>
+                    <LineGraph data={data}/>
                 </Row>
                 <Row className="align-items-center justify-content-center text-center">
                     <div className = 'card-text'>t (weeks)</div>
                 </Row>
             </Paper>
-
-
-
-            {/* <Paper className='px-5 py-2 mt-2'>
-                <Demo 
-                    dimensions={dimensions}
-                />
-            </Paper> */}
-
         </ServeToDash>
 
      );

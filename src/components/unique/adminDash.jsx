@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 // In House
 import ServeToDash from '../common/serveToDash'
 import {removeUsers, emptyAssetDB, populateDatabase} from '../../services/adminService'
-import {updateAssets} from '../../services/assetService'
+import {updateAssets, updateETFs} from '../../services/assetService'
 import auth from '../../services/authService'
 import AddUpdateTicker  from "./adminTickerTesting";
 import TEAPITesting from './teAPITesting';
@@ -26,6 +26,12 @@ const AdminDash = () => {
     if (type === 'updateAssets') {
       setUpdatingAssets(true)
       await Promise.all([updateAssets()])
+      setUpdatingAssets(false)
+    }
+    else if (type === 'updateETFs') {
+      console.log("Update ETFs")
+      setUpdatingAssets(true)
+      await Promise.all([updateETFs()])
       setUpdatingAssets(false)
     }
     else if (type === 'removeUsers'){
@@ -136,7 +142,7 @@ const AdminDash = () => {
             <CardContent className='p-2'>
               <div className="row m-0 p-0 justify-content-center align-items-center">
                 <div className="row m-0 p-0 justify-content-center align-items-center">
-                  <Typography variant="h5" className='text-center mb-1 mr-2'>Populate all listed tickers, not with PerfData (for now)</Typography>
+                  <Typography variant="h5" className='text-center mb-1 mr-2'>Populate all listed tickers (no performance data)</Typography>
                 </div>
                 <PopulateDBcsv/>
                 {/* <button
@@ -152,13 +158,11 @@ const AdminDash = () => {
         </div>
 
         <div className="row justify-content-center">
-
-
           <div className="col-lg-6 col-sm-12 col-md-12">
             <CardContent  className='p-2'>
               <div className="row m-0 p-0 justify-content-center align-items-center">
               <div className="row m-0 p-0 justify-content-center align-items-center">
-                <Typography variant="h5" className='text-center mb-1 mr-2'>Update All Stocks in DB</Typography>
+                <Typography variant="h5" className='text-center mb-1 mr-2'>Update All Stocks in Watchlists</Typography>
               </div>
                 <button 
                   onClick = {() => handleUpdate('updateAssets')}
@@ -185,10 +189,24 @@ const AdminDash = () => {
               </div>
             </CardContent>
           </div>
-
         </div>
 
-
+        <div className="row justify-content-center">
+          <div className="col-lg-6 col-sm-12 col-md-12">
+            <CardContent  className='p-2'>
+              <div className="row m-0 p-0 justify-content-center align-items-center">
+                <div className="row m-0 p-0 justify-content-center align-items-center">
+                  <Typography variant="h5" className='text-center mb-1 mr-2'>Update All ETFs</Typography>
+                </div>
+                <button 
+                  onClick = {() => handleUpdate('updateETFs')}
+                  className="btn btn-info btn-block" 
+                  >Update Data
+                </button>
+              </div>
+            </CardContent>
+          </div>
+        </div>
 
       </Paper>
     </ServeToDash>

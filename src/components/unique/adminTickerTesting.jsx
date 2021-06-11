@@ -58,8 +58,8 @@ class AddUpdateTicker extends Component {
 
   // set statuses based on response
     await postAsset(identifier, 'test').then(res => {
-      if (res.status === 200) {
-        (console.log("Asset Update Successful"))
+      if (res.status === 200 || res.status === 201) {
+        console.log("Asset Update Successful")
         status['busy'] = false
         status['dataRetrieved'] = true
         status['errors'] = false
@@ -67,14 +67,14 @@ class AddUpdateTicker extends Component {
       }
     }).catch(err => {
       if (err.response.status === 400) {
-        (console.log("Invalid Asset Identifier"))
+        console.log("Invalid Asset Identifier")
         status['busy'] = false
         status['dataRetrieved'] = false
         status['errors'] = true
         this.setState({status, identifier:''})
       }
       else if (err.response.status === 500) {
-        (console.log("Something went wrong internally"))
+        console.log("Something went wrong internally")
         status['busy'] = false
         status['dataRetrieved'] = false
         status['errors'] = true
