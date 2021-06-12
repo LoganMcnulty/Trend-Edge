@@ -5,6 +5,9 @@ import Row from 'react-bootstrap/Row'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 // In House
 import ServeToDash from '../common/serveToDash'
@@ -12,10 +15,13 @@ import LineGraph from '../common/lineGraph'
 import InfoList from '../common/infoList'
 import InfoModal from '../common/infoModal'
 import auth from '../../services/authService';
+import SearchTickerModal from './searchTickerModal'
 
 const LandingContent = () => {
     const [isActive, setIsActive] = useState(true);
     const [user, setUser] = useState(auth.getCurrentUser())
+    const [modal, setModal] = useState(false)
+
 
     function toggle() {
       if (!isActive)setPseudoPriceData(randomPriceSeries())
@@ -102,6 +108,10 @@ const LandingContent = () => {
                     <Typography variant="h4">Welcome 📈</Typography>
                 </Row>
             </Paper>
+
+            {/* <Paper className='p-3 m-0'>
+                <SearchTickerModal/>
+            </Paper> */}
 
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>
