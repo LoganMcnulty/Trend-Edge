@@ -24,7 +24,7 @@ const settings = {
 
 const AssetPage = () => {
     const [assetData, setAssetData] = useState('')
-    const [dataRefresh, setDataRefresh] = useState(false)
+    const [loading, setLoading] = useState(true)
     const { name } = useParams()
     useEffect(() => {
         try{
@@ -34,17 +34,18 @@ const AssetPage = () => {
                 const today = new Date().getTime()
                 const lastUpdate = new Date(resData['lastUpdated']).getTime()
                 const dateDiff = ((today - lastUpdate) / (1000 * 3600 * 24))
-                console.log("Last updated: " + dateDiff + " days ago.")
                 if (dateDiff >= 1.00 || (resData.priceSeries.length <= 0)){
                     console.log(resData.name + ' needs an update')
-                    setDataRefresh(true)
                     Promise.all([postAsset(name)]).then(async () => {
                         const resData = await getTrendEdge([name], settings)
-                        setDataRefresh(false)
-                        return setAssetData(resData['data'][0])
+                        setAssetData(resData['data'][0])
+                        return setLoading(false)
                     })
                 }
-                setAssetData(resData)
+                else{
+                    setAssetData(resData)
+                    setLoading(false)
+                }
           })
         }
         catch(er){
@@ -61,11 +62,11 @@ const AssetPage = () => {
     >
         <Paper className='p-3 m-0' style={{backgroundColor:"#4682B4"}}>
             <Row className="align-items-center justify-content-center text-center">
-                <Typography variant="h4" className='text-light'>{assetData ? assetData.longName : 'Loading'}</Typography>
+                <Typography variant="h4" className='text-light'>{assetData ? assetData.longName : 'Loading ⌛'}</Typography>
             </Row>
         </Paper>
 
-        {!dataRefresh ? 
+        {(loading === false) ? 
             <DialogContent className='p-0 m-0'>
             <ul className="list-group list-group-flush">
                 <li className="list-group-item m-0 p-3">

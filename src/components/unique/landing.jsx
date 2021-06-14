@@ -185,8 +185,8 @@ const LandingContent = (allAssetNames) => {
                                 <InfoList
                                     title={'Randomly Generated Price Action'}
                                     listContent={[
-                                        'The graph pictured represents randomly generated weekly price action.', 
-                                        'You may "recognize" a pattern that is similar to an asset in your watchlist.', 
+                                        'The graph pictured represents randomly generated price action.', 
+                                        'One may "recognize" a pattern that is similar to an asset in their watchlist.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
                                     footer={"Trend Edge provides trend statistics that iron out the short-term randomness of markets."}
