@@ -23,7 +23,7 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon,
           <Autocomplete
             freeSolo
             filterOptions={filterOptions}
-            inputID='tickerInput'
+            inputid='tickerInput'
             id='tickerInput'
             options={listData}
             style={{width:"50%"}}
@@ -34,21 +34,21 @@ const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon,
                 margin="normal"
                 variant="outlined"
                 onChange={handleChange}
-                inputID='tickerInput'
+                inputid='tickerInput'
                 label='Ticker'
                 required={true}
                 value={currentInput}
-                InputProps={{ ...params.InputProps, type: 'search' }}
+                InputProps={{ ...params.InputProps}}
               />
               )}
           /> :
           <InputField
-          onChange={handleChange}
-          inputID='tickerInput'
-          label='Ticker'
-          required={true}
-          value={currentInput}
-        />
+            onChange={handleChange}
+            inputid='tickerInput'
+            label='Ticker'
+            required={true}
+            value={currentInput}
+          />
       }
         <div className="input-group-append">
           <FunctionButton

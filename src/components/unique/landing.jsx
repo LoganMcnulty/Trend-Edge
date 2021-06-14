@@ -1,13 +1,11 @@
 // Out of House
 import React, { useState, useEffect } from 'react'
 import Row from 'react-bootstrap/Row'
-// import Col from 'react-bootstrap/Col'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
+// import {NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // In House
 import ServeToDash from '../common/serveToDash'
@@ -15,29 +13,31 @@ import LineGraph from '../common/lineGraph'
 import InfoList from '../common/infoList'
 import InfoModal from '../common/infoModal'
 import auth from '../../services/authService';
-import SearchTickerModal from './searchTickerModal'
+import SearchAutoFill from '../common/searchAutoFill'
 
-const LandingContent = () => {
+const LandingContent = (allAssetNames) => {
+    let history = useHistory();
     const [isActive, setIsActive] = useState(true);
     const [user, setUser] = useState(auth.getCurrentUser())
-    const [modal, setModal] = useState(false)
+    const [searchInput, setSearchInput] = useState('')
 
-
+    const autoFillAssetNames = allAssetNames['allAssetNames']
+    
     function toggle() {
       if (!isActive)setPseudoPriceData(randomPriceSeries())
       setIsActive(!isActive);
     }
     
     useEffect(() => {
-      let interval = null;
-      if (isActive) {
-        interval = setInterval(() => {
-          setPseudoPriceData(randomPriceSeries())
-        }, 3000);
-      } else if (!isActive) {
-        clearInterval(interval);
-      }
-      return () => clearInterval(interval);
+        let interval = null;
+        if (isActive) {
+            interval = setInterval(() => {
+            setPseudoPriceData(randomPriceSeries())
+            }, 3000);
+        } else if (!isActive) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
     }, [isActive]);
   
       
@@ -79,10 +79,24 @@ const LandingContent = () => {
         }
         return dataPoints
     }
+
+    const handleChange = ({ currentTarget: input }) => {setSearchInput(input.value)}
+
+
+    
+    const searchAsset = (e='') => {
+        if (e) e.preventDefault()
+        const search = searchInput.toUpperCase()
+        if (autoFillAssetNames.includes(search)) {
+            
+            return history.push(`/asset/${search}`);
+        }
+        console.log("false")
+    }
   
     const [pseudoPriceData, setPseudoPriceData] = useState(randomPriceSeries());
   
-    let data = [
+    const data = [
         {
             label: 'Px (t)',
             data: pseudoPriceData
@@ -107,11 +121,32 @@ const LandingContent = () => {
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="h4">Welcome 📈</Typography>
                 </Row>
-            </Paper>
+                {/* <div class="d-flex justify-content-around"> */}
+                    <form 
+                        onSubmit={e => searchAsset(e)}
+                    >
+                        <div className="d-flex justify-content-around align-items-center">
+                            <SearchAutoFill
+                                handleChange={handleChange}
+                                currentInput={searchInput}
+                                searchList={autoFillAssetNames}
+                            />
 
-            {/* <Paper className='p-3 m-0'>
-                <SearchTickerModal/>
-            </Paper> */}
+                            <Button 
+                                variant="contained" 
+                                style={{backgroundColor:'#fc5a3d', color:'white'}}
+                                onClick={searchAsset}
+                                className='w-50'
+                            >
+                                <>
+                                    Search
+                                    <span className="material-icons ml-1">&#xe8b6;</span>
+                                </>
+                            </Button>
+                        </div>
+                    </form>
+                {/* </div> */}
+            </Paper>
 
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>
@@ -163,7 +198,7 @@ const LandingContent = () => {
                             }
                     />
                 </Row>
-
+                
                 <div
                     style={{position:'absolute', left:'0', 
                     top: '50%'

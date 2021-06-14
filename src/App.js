@@ -21,16 +21,25 @@ import SectorOverview from './components/unique/sectorOverview'
 import About from './components/unique/about'
 import Dashboard from './components/unique/dashboard'
 import AdminDash from './components/unique/adminDash'
+import AssetPage from './components/unique/singleAsset'
+import { getAssetNames } from "./services/assetService";
 
+function withProps(Component, props) {
+  return function(matchProps) {
+    return <Component {...props} {...matchProps} />
+  }
+}
 
 class App extends Component {
   state = {
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log('App Mounted')
     const curRoute = this.props.location.pathname
-    this.setState({curRoute})
+    const {data} = await getAssetNames()
+    this.setState({curRoute, allAssetNames: data})
+    // this.setState({curRoute, allAssetNames: ['hotdog', 'hamburger', 'soda', 'popcorn']})
     }
 
     componentDidUpdate(prevProps) {
@@ -41,8 +50,9 @@ class App extends Component {
       }
     }
 
+
   render() {
-    const {curRoute} = this.state
+    const {curRoute, allAssetNames} = this.state
     return (
       <React.Fragment>
         <ToastContainer />
@@ -52,10 +62,13 @@ class App extends Component {
             <Route path="/Sign Up" component={SignUpForm} />
             <Route path="/Sign In" component={SignInForm} />
             <Route path="/Sign Out" component={SignOut} />
-            <Route path="/dash" component={LandingContent} />
+            <Route path='/dash' component={withProps(LandingContent, { allAssetNames })} />
+
+            <Route path='/asset/:name' component={AssetPage} />
+
             
             <ProtectedRoute path="/settings" component={UserSettings} />
-            <ProtectedRoute path="/watchlist" component={Watchlist} />
+            <ProtectedRoute path="/watchlist"  component={withProps(Watchlist, { allAssetNames })}/>
             <ProtectedRoute path="/admin" adminTrue={false} component={AdminDash} />
 
             <Route path="/SectorOverview" component={SectorOverview} />
