@@ -74,34 +74,37 @@ class Watchlist extends Component {
     this.form = React.createRef();
     }
 
-  async componentDidMount() {
+  componentDidMount() {
+    // if (!this.props['allAssetNames']) return
+    console.log("Mounting User to Watchlist...")
     try{
       const {status} = this.state
       status['busy'] = true
       this.setState({status, allAssetNames:this.props['allAssetNames']})
+      
       Promise.all([auth.getCurrentUser()])
       .then( async response => {
         const userID = response[0]._id
-        console.log('Mounting User to watchlist...')
         const {settings, watchlist} = await getUser(userID)
         this.setState({watchlist, settings, userID})
+
         if (watchlist.length === 0) {
             status['busy'] = false
-            this.setState({status})
-            return
+            return this.setState({status})
         }
-        Promise.all([getTrendEdge(watchlist, settings)]).then( res => 
-          {
-            const assetData = cleanData(res[0]['data'])
-            status['busy'] = false
-            this.setState({assetData, status})
-          })
+        const res = await getTrendEdge(watchlist, settings)
+        const assetData = cleanData(res['data'])
+        status['busy'] = false
+        return this.setState({status, assetData})
       })
     }
     catch(er){
       console.log('something went wrong')
     }
+    return
   }
+
+  
 
   validateTicker = (ticker) => {
     if (!ticker) return false
@@ -548,13 +551,6 @@ class Watchlist extends Component {
                       </div>
                     </li>
 
-                    {/* <li className="list-group-item m-0 mt-1 p-0">
-                      <LineGraph data={technicalModal.data} />
-                      <div className="d-flex flex-row justify-content-left allign-items-center p-0 m-0">
-                        <p className='text font-weight-bold mr-1'>Months Since IPO: </p>{Math.round(technicalModal.daysSinceIPO / 30.417)}
-                      </div>
-                    </li> */}
-                
                   </ul>
                 </DialogContent>
                 <DialogActions>
@@ -564,7 +560,6 @@ class Watchlist extends Component {
                 </DialogActions>
               </Dialog>
                   
-            {/* Fundamental Modal */}
               <Dialog
                 open={fundamentalModal.open}
                 onClose={this.handleClose}
@@ -593,6 +588,7 @@ class Watchlist extends Component {
 
             </div>
           </div>
+
         </ServeToDash>
       );
     }

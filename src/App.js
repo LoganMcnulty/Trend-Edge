@@ -38,16 +38,17 @@ class App extends Component {
     console.log('App Mounted')
     const curRoute = this.props.location.pathname
     const {data} = await getAssetNames()
-    this.setState({curRoute, allAssetNames: data})
-    // this.setState({curRoute, allAssetNames: ['hotdog', 'hamburger', 'soda', 'popcorn']})
+    return this.setState({curRoute, allAssetNames: data})
+    // return this.setState({curRoute, allAssetNames: ['hotdog', 'hamburger', 'soda', 'popcorn']})
     }
 
     componentDidUpdate(prevProps) {
       const prevRoute = prevProps.location.pathname
       const curRoute = this.props.location.pathname
       if (curRoute !== prevRoute) {
-        this.setState({curRoute})
+        return this.setState({curRoute})
       }
+      return
     }
 
 
