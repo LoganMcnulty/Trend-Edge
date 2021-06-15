@@ -10,6 +10,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import ServeToDash from '../common/serveToDash'
 import {getTrendEdge, postAsset} from '../../services/assetService';
 import Loading from "../common/loading/loading";
+import {getUser} from '../../services/userService'
+import auth from '../../services/authService'
 
 const settings = {
     'fastOverSlowWeight': 20,
@@ -22,11 +24,29 @@ const settings = {
     'slowWeight': 20
 }
 
-const AssetPage = () => {
+const AssetPage = (allAssetNames) => {
     const [assetData, setAssetData] = useState('')
     const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(false)
+    // const autoFillAssetNames = allAssetNames['allAssetNames']
+
     const { name } = useParams()
     useEffect(() => {
+        // console.log(autoFillAssetNames)
+        try{
+            Promise.all([auth.getCurrentUser()])
+            .then( async response => {
+                if (!response[0]) return
+                const _id = response[0]._id
+                console.log('Mounting User to Asset Page...')
+                const {watchlist} = await getUser(_id)
+                const user = {_id,watchlist}
+                console.log(user)
+                return setUser(user)
+            })
+        }
+        catch(err){return console.log("Error getting user, doesn't exist")}
+
         try{
             Promise.all([getTrendEdge([name], settings)])
             .then(async response => {
@@ -34,22 +54,29 @@ const AssetPage = () => {
                 const today = new Date().getTime()
                 const lastUpdate = new Date(resData['lastUpdated']).getTime()
                 const dateDiff = ((today - lastUpdate) / (1000 * 3600 * 24))
+
                 if (dateDiff >= 1.00 || (resData.priceSeries.length <= 0)){
+                    // const test = await postAsset(name)
+
+                    // return console.log(test)
+
                     console.log(resData.name + ' needs an update')
                     Promise.all([postAsset(name)]).then(async () => {
+                        console.log("Asset post complete")
                         const resData = await getTrendEdge([name], settings)
+                        console.log("New trend edge received")
                         setAssetData(resData['data'][0])
                         return setLoading(false)
                     })
                 }
                 else{
                     setAssetData(resData)
-                    setLoading(false)
+                    return setLoading(false)
                 }
           })
         }
         catch(er){
-          console.log('something went wrong')
+          return console.log('something went wrong')
         }
       }, [name]);
 
@@ -65,7 +92,6 @@ const AssetPage = () => {
                 <Typography variant="h4" className='text-light'>{assetData ? assetData.longName : 'Loading ⌛'}</Typography>
             </Row>
         </Paper>
-
         {(loading === false) ? 
             <DialogContent className='p-0 m-0'>
             <ul className="list-group list-group-flush">
@@ -116,6 +142,18 @@ const AssetPage = () => {
         :
         <Loading type={'bars'}/>
     }
+
+    {
+        user ?
+        <Paper className='p-3 m-0' style={{backgroundColor:"#4682B4"}}>
+            <Row className="align-items-center justify-content-center text-center">
+                <Typography variant="h6" className='text-light'>Add to Watchlist</Typography>
+            </Row>
+        </Paper>
+        :
+        'Sign Up'
+    }
+
 
     </ServeToDash>
     

@@ -3,9 +3,6 @@ import React from 'react'
 import TextField from '@material-ui/core/TextField';
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 
-// In house
-import InputField from '../common/inputField';
-
 const OPTIONS_LIMIT = 10;
 const defaultFilterOptions = createFilterOptions();
 
@@ -15,37 +12,28 @@ const filterOptions = (options, state) => {
 const SearchAutoFill = ({currentInput, searchList, handleChange}) => {
     return (
         <>
-            {searchList ? 
-                <Autocomplete
+            <Autocomplete
                 freeSolo
                 filterOptions={filterOptions}
                 // inputid='tickerInput'
                 // id='tickerInput'
-                options={searchList}
+                options={searchList ? searchList : [':)']}
                 style={{width:"100%"}}
                 className='px-3'
                 renderInput={(params) => (
                     <TextField
-                    {...params}
-                    margin="normal"
-                    variant="outlined"
-                    onChange={handleChange}
-                    inputid='tickerInput'
-                    label='Ticker'
-                    required={true}
-                    value={currentInput}
-                    InputProps={{ ...params.InputProps}}
+                        {...params}
+                        margin="normal"
+                        variant="outlined"
+                        onChange={handleChange}
+                        inputid='tickerInput'
+                        label='Ticker'
+                        required={true}
+                        value={currentInput}
+                        InputProps={{ ...params.InputProps}}
                     />
-                    )}
-                /> :
-                <InputField
-                    onChange={(e) => handleChange(e)}
-                    inputid='tickerInput'
-                    label='Ticker'
-                    required={true}
-                    value={currentInput}
-                />
-            }
+                )}
+            /> 
         </>
     );
 }
