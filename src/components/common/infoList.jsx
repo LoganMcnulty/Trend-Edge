@@ -2,10 +2,14 @@ import React from 'react';
 import {NavLink } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 
-const InfoList = ({title, listContent, footer='', linkTo='', linkTitle='', icon=''}) => {
+const InfoList = ({title='', listContent, footer='', linkTo='', linkTitle='', icon=''}) => {
     return ( 
         <ul className="list-group list-group-flush">
-            <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{title}</h4>
+            {title ?
+                <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{title}</h4>
+                : ''
+            }
+            
             {listContent.map(content => {
                 return(
                     <li className="list-group-item" key={listContent.indexOf(content)}>

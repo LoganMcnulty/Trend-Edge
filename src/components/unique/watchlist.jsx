@@ -15,20 +15,20 @@ import ServeToDash from '../common/serveToDash'
 import auth from '../../services/authService'
 import {getTrendEdge} from '../../services/assetService';
 import {getUser} from '../../services/userService'
-import TickerInputNew from './tickerInputNew';
 import {saveSettings} from '../../services/userService'
 import DataTable from '../common/dataTable'
 import Loading from "../common/loading/loading";
 import InfoModal from '../common/infoModal'
 import InfoList from '../common/infoList'
 import csvExample from '../images/csvExample.png'
+import SearchAutoFill from '../common/searchAutoFill'
 
 function cleanData(data){
   return data.map(asset => {
     const {fastSMA, slowSMA, priceSeries} = asset
     if (slowSMA && fastSMA) return asset
     if (priceSeries.length <= 0){
-      asset['name'] += ' ⌛'
+      asset['name'] += ' ⏳'
       return asset
     }
     else {
@@ -75,7 +75,6 @@ class Watchlist extends Component {
     }
 
   componentDidMount() {
-    // if (!this.props['allAssetNames']) return
     console.log("Mounting User to Watchlist...")
     try{
       const {status} = this.state
@@ -102,18 +101,6 @@ class Watchlist extends Component {
       console.log('something went wrong')
     }
     return
-  }
-
-  
-
-  validateTicker = (ticker) => {
-    if (!ticker) return false
-    const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    for (let string in ticker){
-      if (!alphabet.includes(ticker[string])) return false
-    }
-    if (ticker.length >5) return false
-    return true
   }
 
   listCompare = (newList, oldList) => {
@@ -178,28 +165,25 @@ class Watchlist extends Component {
 
     }
 
-  handleWLAdd = async (e) => {
+  handleWLAdd = async (ticker) => {
     console.log("Handling watchlist addition...")
-    e.preventDefault()
-    const {currentInput: newAsset, watchlist, status, userID:_id, settings} = this.state
-    if (watchlist.includes(newAsset.toUpperCase())) {
-      status['errors'] = `${newAsset} already exists in your watchlist`
+
+    const {watchlist, status, userID:_id, settings} = this.state
+    if (watchlist.includes(ticker.toUpperCase())) {
+      status['errors'] = `${ticker} already exists in your watchlist`
       this.setState({status})
       return
     }
     status['busy'] = true
     this.setState({status})
-
-    watchlist.push(newAsset)
-    document.getElementById('tickerInput').value =''
-
+    watchlist.push(ticker)
     try {
       await saveSettings(_id, watchlist, 'watchlistAdd')
     }
     catch (err) {
       status['busy'] = false
       status['errors'] = 'Could not find data for provided ticker'
-      this.setState({status, currentInput:''})
+      this.setState({status})
       return
     }
 
@@ -212,35 +196,6 @@ class Watchlist extends Component {
       })
     console.log('... complete')
   }
-
-  validateAssetIdentifier(id){
-    let inputFieldRef = document.getElementById('tickerInput')
-    let inputLength = inputFieldRef.value.length
-    const recentInput = id.charAt(id.length-1)
-    const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    const alphabetUpper = alphabet.map(letter => letter.toUpperCase())
-    if(recentInput === '') return ''
-    const {status, currentInput} = this.state
-    if(!alphabet.includes(recentInput) && !alphabetUpper.includes(recentInput)) {
-        status['errors'] = 'Only US equity/alphabet oriented tickers at this time ⚠️'
-        this.setState({status})
-        console.log(this.state.status.errors)
-        if (currentInput.length === 1) return inputFieldRef.value = ''
-        return inputFieldRef.value = currentInput
-    }
-    else{
-      status['errors'] = ''
-      this.setState({status})
-    }
-    if(inputLength > 5) return inputFieldRef.value =  currentInput
-    return id.toUpperCase()
-  }
-
-  handleChange = async ({ currentTarget: input }) => {
-    const currentInput = this.validateAssetIdentifier(input.value)
-    if(!currentInput) return
-    await this.setState({ currentInput });
-  };
 
   movingAvgs = (priceSeries, sma) => {
     const dataPoints = []
@@ -260,7 +215,7 @@ class Watchlist extends Component {
 
   handleSeeMore = (e, action='') => {
     const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
-    macdPosSlope, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd} = e
+    macdPosSlope, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd, fastSMALookback, slowSMALookback} = e
 
     if (action === 'technical'){
 
@@ -281,6 +236,9 @@ class Watchlist extends Component {
       technicalModal['volumeCurr'] = volumeCurr
       technicalModal['trendEdge'] = trendEdge
       technicalModal['macd'] = macd
+      technicalModal['fastSMALookback'] = fastSMALookback
+      technicalModal['slowSMALookback'] = slowSMALookback
+
     
       this.setState({technicalModal})
       console.log(this.state.technicalModal)
@@ -306,6 +264,17 @@ class Watchlist extends Component {
       }
     }
     else return
+  }
+
+  handleTickerSubmitNew = (input, status='') => {
+    if (status) return this.setState({status})
+    if (input) return this.handleWLAdd(input)
+  }
+
+  handleInputChange = e => {
+    const{status} = this.state
+    status['errors'] = false
+    this.setState({status})
   }
 
   handleDelete = async (e) => {
@@ -350,6 +319,10 @@ class Watchlist extends Component {
 
   render() {
     const {watchlist, currentInput, status, assetData, csvFile, modal, technicalModal, fundamentalModal, settings, allAssetNames} = this.state
+
+    const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
+      macdPosSlope, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd, fastSMALookback, slowSMALookback} = technicalModal
+
       return (
         <ServeToDash
           med={[8,4]}
@@ -362,15 +335,12 @@ class Watchlist extends Component {
                 <CardContent className='p-2'>
                   <div className="row">
                     <div className="col-sm-12">
-                      <form onSubmit={this.handleWLAdd}>
-                        <TickerInputNew
-                          status={status}
-                          handleChange={this.handleChange}
-                          handleSubmit={this.handleWLAdd}
-                          currentInput={currentInput}
-                          listData={allAssetNames}
-                        />
-                      </form>
+                      <SearchAutoFill
+                        handleSubmit={this.handleTickerSubmitNew}
+                        searchList={allAssetNames}
+                        status={status}
+                        handleChange={this.handleInputChange}
+                      />
                     </div>
                   </div>
 
@@ -485,17 +455,16 @@ class Watchlist extends Component {
                   buttonContent={
                     <>
                       <div className='row px-2'>
-                        Limitations ⚠️
+                        Legend ⚠️ ⏳
                       </div>
                     </>
                   }
                   content={
                     <>
                       <InfoList
-                          title={'Trend Edge is in Beta'}
                           listContent={[
-                            'Assets with less than ~1 yr of price history may not have correct Trend Edge stats.', 
-                            '⚠️ signifies this'
+                            '⏳ - Asset data is being updated in chunks. Check back in a few minutes.', 
+                            '⚠️ - Assets with less than ~1 yr of price history may not have correct Trend Edge stats.'
                           ]}
                       />
                     </>
@@ -521,33 +490,33 @@ class Watchlist extends Component {
               >
                 <DialogContent >
                   <ul className="list-group list-group-flush">
-                    <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{technicalModal.longName}</h4>
+                    <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{longName}</h4>
                     <li className="list-group-item m-0 p-0">
                       <div className="d-flex flex-row justify-content-center allign-items-center p-0 m-0">
-                        <p className='text font-weight-bold mr-1'>Trend Edge: </p>{technicalModal.trendEdge}% |
-                        <p className='text font-weight-bold mr-1 ml-2'>Price: </p>${technicalModal.priceCurr}
+                        <p className='text font-weight-bold mr-1'>Trend Edge: </p>{trendEdge}% |
+                        <p className='text font-weight-bold mr-1 ml-2'>Price: </p>${priceCurr}
                       </div>
 
-                      <div className={buildClass(technicalModal.fastPosSlope)}>
+                      <div className={buildClass(fastPosSlope)}>
                           <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
-                          {technicalModal.slowPosSlope ? technicalModal.slowPosSlope  === 1 ? `Trending Up at $${technicalModal.slowSMA}` : `Trending Dn at $${technicalModal.slowSMA}` : 'Unavailable'}
+                          {(fastPosSlope === 0) && (fastSMALookback && fastSMA) ? `Trending Dn at $${fastSMA}` : fastPosSlope  === 1 ?  `Trending Up at $${fastSMA}` : 'Unavailable'}
                       </div> 
 
-                      <div className={buildClass(technicalModal.slowPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>{technicalModal.slowPosSlope ? technicalModal.slowPosSlope  === 1 ? `Trending Up at $${technicalModal.slowSMA}` : `Trending Dn at $${technicalModal.slowSMA}` : 'Unavailable'}
+                      <div className={buildClass(slowPosSlope)}>
+                          <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>{(slowPosSlope === 0) && (slowSMALookback && slowSMA) ? `Trending Dn at $${slowSMA}` : slowPosSlope  === 1 ?  `Trending Up at $${slowSMA}` : 'Unavailable'}
                       </div>
 
-                      <div className={buildClass(technicalModal.macdPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>MACD: </p>{technicalModal.macd ? technicalModal.macdPosSlope  === 1 ? `Trending Up` : `Trending Dn` : 'Unavailable'}
+                      <div className={buildClass(macdPosSlope)}>
+                          <p className='text font-weight-bold mr-1'>MACD: </p>{macd ? macdPosSlope  === 1 ? `Trending Up` : `Trending Dn` : 'Unavailable'}
                       </div>
 
-                      <div className={buildClass(technicalModal.slowPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>ADX: </p>{technicalModal.adx ? technicalModal.slowPosSlope  === 1 ? `${technicalModal.adx}%` : `Not Applied` : 'Unavailable'}
+                      <div className={buildClass(slowPosSlope)}>
+                          <p className='text font-weight-bold mr-1'>ADX: </p>{adx ? slowPosSlope  === 1 ? `${adx}%` : `Not Applied` : 'Unavailable'}
                       </div>
 
                       <div className= "d-flex flex-row justify-content-center allign-items-center p-0 m-0 text-info">
-                          <p className='text font-weight-bold mr-1'>{technicalModal.volumeAvg ? `This Week's Volume is
-                              ${Math.round(technicalModal.volumeCurr / technicalModal.volumeAvg *100)}% of the 10 Week Average` : 'Volume data unavailable' }</p>
+                          <p className='text font-weight-bold mr-1'>{volumeAvg ? `This Week's Volume is
+                              ${Math.round(volumeCurr / volumeAvg *100)}% of the 10 Week Average` : 'Volume data unavailable' }</p>
                       </div>
                     </li>
 

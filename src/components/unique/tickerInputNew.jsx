@@ -15,56 +15,44 @@ const filterOptions = (options, state) => {
 };
 
 const TickerInputNew = ({currentInput, handleChange, handleSubmit, status, icon, listData=''}) => {
+  const handleInputChange = (event, value) => {
+    return handleChange(value)
+  }
     return (
       <>
-      <div className="form-group align-items-center  m-0 p-0">
-        <div className="input-group justify-content-center">
-        {listData ? 
-          <Autocomplete
-            freeSolo
-            filterOptions={filterOptions}
-            inputid='tickerInput'
-            id='tickerInput'
-            options={listData}
-            style={{width:"50%"}}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search input"
-                margin="normal"
-                variant="outlined"
-                onChange={handleChange}
-                inputid='tickerInput'
-                label='Ticker'
-                required={true}
-                value={currentInput}
-                InputProps={{ ...params.InputProps}}
-              />
-              )}
-          /> :
-          <InputField
-            onChange={handleChange}
-            inputid='tickerInput'
-            label='Ticker'
-            required={true}
-            value={currentInput}
-          />
-      }
-        <div className="input-group-append">
-          <FunctionButton
-            btnFunction = {handleSubmit}
-            status={status}
-            btnContent={
-              <span className="material-icons">&#xea20;</span>
-            }
-          />
+        <div className="form-group align-items-center  m-0 p-0">
+          <div className="input-group justify-content-center">
+            <Autocomplete
+              freeSolo
+              filterOptions={filterOptions}
+              options={listData ? listData : [':)']}
+              style={{width:"50%"}}
+              onInputChange={handleInputChange}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search input"
+                  margin="normal"
+                  variant="outlined"
+                  inputID='tickerInput'
+                  id='tickerInput'
+                  required={true}
+                  value={currentInput}
+                  InputProps={{ ...params.InputProps}}
+                />
+                )}
+            /> 
+          <div className="input-group-append">
+            <FunctionButton
+              btnFunction = {handleSubmit}
+              status={status}
+              btnContent={
+                <span className="material-icons">&#xea20;</span>
+              }
+            />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        
-      </div>
-
       </>
         
     );

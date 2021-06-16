@@ -29,6 +29,7 @@ const LandingContent = (allAssetNames) => {
     }
     
     useEffect(() => {
+        console.log("Landing Page Mounted")
         let interval = null;
         if (isActive) {
             interval = setInterval(() => {
@@ -80,18 +81,14 @@ const LandingContent = (allAssetNames) => {
         return dataPoints
     }
 
-    const handleChange = ({ currentTarget: input }) => {setSearchInput(input.value)}
+    const handleChange = e => setSearchInput(e)
 
-
-    
-    const searchAsset = (e='') => {
-        if (e) e.preventDefault()
-        const search = searchInput.toUpperCase()
+    const handleSubmit = ticker => {
+        const search = ticker.toUpperCase()
         if (autoFillAssetNames.includes(search)) {
-            
             return history.push(`/asset/${search}`);
         }
-        console.log("false")
+        console.log("Input not in list")
     }
   
     const [pseudoPriceData, setPseudoPriceData] = useState(randomPriceSeries());
@@ -121,32 +118,14 @@ const LandingContent = (allAssetNames) => {
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="h4">Welcome 📈</Typography>
                 </Row>
-                {/* <div class="d-flex justify-content-around"> */}
-                    <form 
-                        onSubmit={e => searchAsset(e)}
-                    >
-                        <div className="d-flex justify-content-around align-items-center">
-                            <SearchAutoFill
-                                handleChange={handleChange}
-                                currentInput={searchInput}
-                                searchList={autoFillAssetNames}
-                            />
-
-                            <Button 
-                                variant="contained" 
-                                style={{backgroundColor:'#fc5a3d', color:'white'}}
-                                onClick={searchAsset}
-                                className='w-50'
-                            >
-                                <>
-                                    Search
-                                    <span className="material-icons ml-1">&#xe8b6;</span>
-                                </>
-                            </Button>
-                        </div>
-                    </form>
-                {/* </div> */}
-            </Paper>
+                <div className="d-flex justify-content-around align-items-center">
+                    <SearchAutoFill
+                        handleSubmit={handleSubmit}
+                        searchList={autoFillAssetNames}
+                        handleChange={handleChange}
+                    />
+                </div>
+        </Paper>
 
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>

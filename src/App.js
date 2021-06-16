@@ -31,15 +31,16 @@ function withProps(Component, props) {
 }
 
 class App extends Component {
-  state = {
+  constructor() {
+    super();
+    this.state = { allAssetNames: [] };
   }
 
   async componentDidMount() {
     console.log('App Mounted')
-    const curRoute = this.props.location.pathname
+    const curRoute = await this.props.location.pathname
     const {data} = await getAssetNames()
     return this.setState({curRoute, allAssetNames: data})
-    // return this.setState({curRoute, allAssetNames: ['hotdog', 'hamburger', 'soda', 'popcorn']})
     }
 
     componentDidUpdate(prevProps) {
