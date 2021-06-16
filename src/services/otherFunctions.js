@@ -15,3 +15,11 @@ export const movingAvgs = (pseudoPriceData, sma) => {
     }
     return dataPoints
 }
+
+export const randomItemsFromArray = (numItems, array) => {
+    const randomItemsArray = []
+    for (let i = 0; i < numItems; i++){
+        randomItemsArray.push(array[Math.floor(Math.random()*array.length)])
+    }
+    return randomItemsArray
+}

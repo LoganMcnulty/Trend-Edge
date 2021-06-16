@@ -78,8 +78,7 @@ class PopulateDBcsv extends Component {
             longName: names[i],
             ipoDate: ipoDate[i],
             exchange: exchange[i],
-            assetType: assetType[i],
-            ipoDate: ipoDate[i],
+            assetType: assetType[i]
         }
         baseAssets.push(baseAsset)
       }

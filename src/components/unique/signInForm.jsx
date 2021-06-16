@@ -26,6 +26,10 @@ class SignInForm extends Form {
       .label("Password")
   };
 
+  componentDidMount(){
+    console.log("Sign in mounted")
+  }
+
   doSubmit = async () => {
     try {
       const {data} = this.state

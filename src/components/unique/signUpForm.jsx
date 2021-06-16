@@ -1,6 +1,7 @@
 // Out of House
 import React from "react";
 import Joi from "joi-browser";
+import {Redirect} from 'react-router-dom'
 
 // In House
 import Form from "../common/form";
@@ -29,14 +30,16 @@ class SignUpForm extends Form {
       .label("Username")
   };
 
+  componentDidMount(){
+    console.log("Registration form mounted")
+  }
+
   doSubmit = async () => {
     // Call the server
     try{
-      console.log(this.state)
-    
       const response = await userService.register(this.state.data)
       auth.loginWithJwt(response.headers["x-auth-token"])
-      window.location = '/'
+      window.location = '/watchlist'
     }
     catch(err){
       if (err.response && err.response.status === 400){
@@ -48,6 +51,7 @@ class SignUpForm extends Form {
   };
 
   render() {
+    if (auth.getCurrentUser()) return <Redirect to="/"/>
     return (
       <ServeToDash
         med={[8,4]}
