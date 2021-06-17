@@ -107,7 +107,7 @@ const LandingContent = (allAssetNames) => {
         }
     ]
   
-    return ( 
+    return (
         <ServeToDash
             med={[8,4]}
             large={[8,2]}
@@ -124,7 +124,7 @@ const LandingContent = (allAssetNames) => {
                         handleChange={handleChange}
                     />
                 </div>
-        </Paper>
+            </Paper>
 
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>
@@ -196,7 +196,18 @@ const LandingContent = (allAssetNames) => {
                     <div className = 'card-text'>t (weeks)</div>
                 </Row>
             </Paper>
+
+            <Paper className='p-3 mt-2'>
+                <Row className="align-items-center justify-content-center text-center">
+                    <Typography variant="h7" className='font-weight-bold'> - Trend Edge is in Beta - </Typography>
+                    <Typography variant="h7">Optimized for use on Mobile Phones</Typography>
+                    <Typography variant="h7">Try clearing cookies as updates/features are pushed frequently</Typography>
+
+                </Row>
+            </Paper>
+
         </ServeToDash>
+
 
      );
 }
