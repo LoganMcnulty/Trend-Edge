@@ -16,10 +16,9 @@ export function register(user){
 
 export async function saveSettings(_id, update, type, dataType=''){
     if (type === 'watchlistAdd'){
+        console.log("Sending Watchlist Update")
         var data = update
         if (!dataType) data = update[update.length -1]
-        console.log(data)
-        console.log('watchlist update: ' + data)
         await http.post(`/data/`, {data, type, dataType}).then(res => res)
     }
 

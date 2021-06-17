@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Slider, Input, Typography } from '@material-ui/core';
 
@@ -9,11 +9,13 @@ const useStyles = makeStyles({
   },
 });
 
-const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1, max=100}) => {
+const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1, max=100, clearKeySlider}) => {
   const classes = useStyles();
-  const [thisValue, setValue] = React.useState();
+  const [thisValue, setValue] = useState();
+  const [clearKey, setClearKey] = useState()
 
   useEffect(() => {
+    setClearKey(clearKeySlider)
     try {
       if(!thisValue)setValue(value)
     } catch (ex) { }
@@ -42,6 +44,7 @@ const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1,
         </Grid>
         <Grid item xs>
           <Slider
+          key={clearKey}
           min={min}
           max={max}
           value={thisValue ? thisValue : 10} 
@@ -50,6 +53,8 @@ const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1,
         </Grid>
         <Grid item>
           <Input
+            // key={clearKey}
+
               value={thisValue ? thisValue : 10}
               margin="dense"
               onChange={handleChange}

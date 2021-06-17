@@ -20,6 +20,7 @@ import auth from '../../../services/authService'
 import SliderInput from './sliderInput'
 import {saveSettings} from '../../../services/userService'
 import {getUser} from '../../../services/userService'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -58,18 +59,22 @@ const theme = createMuiTheme({
 });
 
 const UserSettings = () => {
+  let history = useHistory();
   const [key, setKey] = useState('AveragePeriod');
-  const [currentUserSettings, setcurrentUserSettings] = useState();
+  const [currentUserSettings, setCurrentUserSettings] = useState();
   const [user, setUser] = useState()
   const [smaError, setSMAError] = useState();
   const [weightError, setWeightError] = useState();
-  const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(false);
+  const [clearKeySlider, setClearKeySlider] = useState(1);
+
 
   const classes = useStyles();
 
   const handleSave = async () => {
     setLoading(true)
+    console.log(currentUserSettings)
     await saveSettings(user, currentUserSettings, 'settings')
     setLoading(false)
     setMessage("Saved Successfully")
@@ -83,15 +88,42 @@ const UserSettings = () => {
         setUser(userID)
         console.log('getting user settings')
         const {settings} = await getUser(userID)
-        setcurrentUserSettings(settings);
+        console.log(settings)
+        setCurrentUserSettings(settings);
       })
     }
     catch(er){
       console.log('something went wrong')
     }
-  }, []);
+  }, [user]);
 
+  const restoreDefaults = async () => {
+    console.log('Restore defaults')
+    const newUserSettings = currentUserSettings
+    const defaults = {
+      adxWeight:20,
+      fastOverSlowWeight:20,
+      fastSMA:10,
+      fastWeight:20,
+      lookback:5,
+      macdWeight:20,
+      slowSMA:40,
+      slowWeight:20
+    }
 
+    for (let key in defaults){
+      if (newUserSettings[key]) {newUserSettings[key] = defaults[key]}
+    }
+
+    console.log(newUserSettings)
+
+    setCurrentUserSettings(newUserSettings)
+    await handleSave()
+    alert("Settings Restored, Redirecting")
+    if (clearKeySlider === 1) setClearKeySlider(2)
+    setClearKeySlider(1)
+    return history.push(`/watchlist`)
+  }
 
   const validate = () => {
     const {fastSMA, slowSMA, fastWeight, slowWeight, fastOverSlowWeight, macdWeight, adxWeight} = currentUserSettings
@@ -115,7 +147,8 @@ const UserSettings = () => {
     const newUserSettings = currentUserSettings
     newUserSettings[field] = value
     setMessage("")
-    setcurrentUserSettings(newUserSettings);
+    console.log(newUserSettings)
+    setCurrentUserSettings(newUserSettings);
     validate()
   }
 
@@ -172,6 +205,7 @@ const UserSettings = () => {
                   icon={<span className="material-icons">&#xe922;</span>} 
                   fieldName='fastSMA' label='Fast SMA' 
                   updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
                 />
                 <SliderInput
                   min={10}
@@ -181,6 +215,8 @@ const UserSettings = () => {
                   fieldName='slowSMA' 
                   label='Slow SMA' 
                   updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                 />
               </Row>
               <Row className="align-items-center justify-content-around text-center">
@@ -192,6 +228,8 @@ const UserSettings = () => {
                   fieldName='lookback' 
                   label='Lookback' 
                   updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                 />
               </Row>
             </Tab>
@@ -204,6 +242,8 @@ const UserSettings = () => {
                   icon={<i className="fas fa-balance-scale"></i>} 
                   fieldName='fastWeight' label='Fast SMA' 
                   updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                 />
                 <SliderInput 
                   value={currentUserSettings ? currentUserSettings['slowWeight'] : null}
@@ -211,6 +251,8 @@ const UserSettings = () => {
                   fieldName='slowWeight' 
                   label='Slow SMA' 
                   updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                 />
               </Row>
 
@@ -221,6 +263,8 @@ const UserSettings = () => {
                     fieldName='fastOverSlowWeight' 
                     label='Fast Over Slow' 
                     updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                   />
                 <SliderInput
                     value={currentUserSettings ? currentUserSettings['macdWeight'] : null}
@@ -228,6 +272,8 @@ const UserSettings = () => {
                     fieldName='macdWeight' 
                     label='MACD' 
                     updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                   />
               </Row>
 
@@ -238,6 +284,8 @@ const UserSettings = () => {
                     fieldName='adxWeight' 
                     label='ADX' 
                     updateSettingsState={updateSettingsState}
+                  clearKeySlider = {clearKeySlider}
+
                   />
               </Row>
             </Tab>
@@ -263,6 +311,19 @@ const UserSettings = () => {
               
             </Col>
           </Row>
+
+          <Row className='justify-content-center text-center'>
+            <Col className='col-8 text-align-center mb-0 mt-3'>
+              <Button 
+                  variant="contained"
+                  style={{backgroundColor:'#5cb85c', color:'white'}}
+                  onClick={restoreDefaults}
+              >
+                Restore Defaults
+              </Button> 
+            </Col>
+          </Row>
+
       </Paper>
     </ServeToDash>
   )

@@ -104,12 +104,13 @@ class Watchlist extends Component {
   }
 
   listCompare = (newList, oldList) => {
+    const {allAssetNames} = this.state
     const finalList = oldList
     console.log("Length old list" + oldList.length)
     for(let i=0; i < newList.length; i++){
       let item = String(newList[i].toUpperCase()).trim()
       if (!oldList.includes(item)) {
-        if (this.validateTicker(item)) finalList.push(item)
+        if (allAssetNames.includes(item)) finalList.push(item)
       }
     }
     console.log("Length final list" + finalList.length)

@@ -71,7 +71,7 @@ const About = () => {
                 {/* Calculation explaination */}
                 <div className='col-lg-10'>
                   <p style={styles.paragraph}>
-                    Trend Edge is a multi-asset
+                    Trend Edge is a proprietary
                     {' '}  
                     <a
                       href='https://www.investopedia.com/terms/t/trend.asp'
@@ -82,8 +82,7 @@ const About = () => {
                       trend
                     </a>
                     {' '}  
-                      monitoring system that
-                    applies user-defined settings to pre-defined{' '}                       
+                      monitoring algorithm that uses pre-defined{' '}                       
                     <a
                       href='https://www.investopedia.com/terms/t/technicalindicator.asp#:~:text=Technical%20indicators%20are%20heuristic%20or,to%20predict%20future%20price%20movements.'
                       target='_blank'
@@ -92,8 +91,7 @@ const About = () => {
                     >
                       technical indicators 
                     </a>
-                    {' '}in order to derive a
-                    single trend score.
+                    {' '}in order to derive a single trend score.
                   </p>
                   <div className="row justify-content-center" style={{marginBottom:"2%"}}>
                     <div className="col-lg-10">
@@ -319,7 +317,7 @@ const About = () => {
                     ADX is a measure of the strength of a trend (up or down).{' '}
                   </p>
                   <p style={styles.paragraph}>
-                    Provided the above, the state of the medium to long term trend of an asset at t(0) can be summarized down to a single score.
+                    Provided the above, the state of the medium to long term trend of an asset at t(0) can be summarized in a single score (Trend Edge).
                   </p>
                 </div>
               </div>

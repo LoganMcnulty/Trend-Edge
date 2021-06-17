@@ -41,7 +41,6 @@ const LandingContent = (allAssetNames) => {
         return () => clearInterval(interval);
     }, [isActive]);
   
-      
     const randomPriceSeries = () => {
         const N = 80;
         let price = 100
