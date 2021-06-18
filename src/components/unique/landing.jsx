@@ -14,12 +14,27 @@ import InfoList from '../common/infoList'
 import InfoModal from '../common/infoModal'
 import auth from '../../services/authService';
 import SearchAutoFill from '../common/searchAutoFill'
+import AssetCard from '../common/assetCard'
+import {getWLAssetNames, getTrendEdge} from '../../services/assetService'
+
+const settings = {
+    'fastOverSlowWeight': 20,
+    'adxWeight': 20,
+    'fastSMA': 10,
+    'fastWeight': 20,
+    'lookback': 5,
+    'macdWeight': 20,
+    'slowSMA': 40,
+    'slowWeight': 20
+}
 
 const LandingContent = (allAssetNames) => {
     let history = useHistory();
     const [isActive, setIsActive] = useState(true);
     const [user, setUser] = useState(auth.getCurrentUser())
     const [searchInput, setSearchInput] = useState('')
+    const [isMounted, setIsMounted] = useState(true)
+    const [wlAssetData, setWLAssetData] = useState(null)
 
     const autoFillAssetNames = allAssetNames['allAssetNames']
     
@@ -27,9 +42,21 @@ const LandingContent = (allAssetNames) => {
       if (!isActive)setPseudoPriceData(randomPriceSeries())
       setIsActive(!isActive);
     }
+
+    const retrieveAssetData = async () => {
+        console.log('retrieving asset ')
+        const resOne = await getWLAssetNames()
+        const assetData = await getTrendEdge(resOne['data'], settings)
+        setWLAssetData(assetData['data'].slice(0, 20))
+        setIsMounted(false)
+    }
     
     useEffect(() => {
+        console.log(isMounted)
         console.log("Landing Page Mounted")
+
+        if (isMounted) retrieveAssetData()
+
         let interval = null;
         if (isActive) {
             interval = setInterval(() => {
@@ -38,7 +65,12 @@ const LandingContent = (allAssetNames) => {
         } else if (!isActive) {
             clearInterval(interval);
         }
-        return () => clearInterval(interval);
+
+        return () => {
+            clearInterval(interval)
+            setIsMounted(false)
+        }
+
     }, [isActive]);
   
     const randomPriceSeries = () => {
@@ -126,6 +158,18 @@ const LandingContent = (allAssetNames) => {
                 </div>
             </Paper>
 
+            {/* <Paper className='p-3 mt-2'>
+                <Row className="align-items-center justify-content-center text-center">
+                    <Typography variant="h4">Leaderboard</Typography>
+                </Row>
+                {wlAssetData ?
+                <Row className="align-items-center justify-content-center text-center">
+                    <AssetCard variant="h4" assetData={wlAssetData ? wlAssetData : []}>SMPL</AssetCard>
+                </Row>
+                : ''}
+
+            </Paper> */}
+
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>
                     <Button 
@@ -199,13 +243,13 @@ const LandingContent = (allAssetNames) => {
 
             <Paper className='p-3 mt-2'>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h7" className='font-weight-bold col-lg-12'> - Trend Edge is Currently in Beta - </Typography>
+                    <Typography variant="subtitle1" className='font-weight-bold col-lg-12'> - Trend Edge is Currently in Beta - </Typography>
                 </Row>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h7">Optimized for use on Mobile Phones</Typography>
+                    <Typography variant="subtitle2">Optimized for use on Mobile Phones</Typography>
                 </Row>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h7">Try clearing cookies as updates/features are pushed frequently</Typography>
+                    <Typography variant="subtitle2">Try clearing cookies as updates/features are pushed frequently</Typography>
                 </Row>
             </Paper>
 
