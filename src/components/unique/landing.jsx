@@ -164,10 +164,10 @@ const LandingContent = (allAssetNames) => {
                                     title={'Randomly Generated Price Action'}
                                     listContent={[
                                         'The graph pictured represents randomly generated price action.', 
-                                        'One may "recognize" a pattern that is similar to an asset in their watchlist.', 
+                                        'Even random patterns can look familiar.', 
                                         'Patterns appear in markets due to a variety of factors, including random chance.'
                                     ]}
-                                    footer={"Trend Edge provides trend statistics that iron out the short-term randomness of markets."}
+                                    footer={"Trend Edge provides trend statistics that iron out the randomness of markets."}
                                     linkTo = {user ? '' : '/Sign In'}
                                     linkTitle = {user ? '' : 'Access'}
                                     icon={<span className="material-icons ml-1">&#xe0da;</span>}
@@ -199,10 +199,13 @@ const LandingContent = (allAssetNames) => {
 
             <Paper className='p-3 mt-2'>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h7" className='font-weight-bold'> - Trend Edge is in Beta - </Typography>
+                    <Typography variant="h7" className='font-weight-bold col-lg-12'> - Trend Edge is Currently in Beta - </Typography>
+                </Row>
+                <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="h7">Optimized for use on Mobile Phones</Typography>
+                </Row>
+                <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="h7">Try clearing cookies as updates/features are pushed frequently</Typography>
-
                 </Row>
             </Paper>
 
