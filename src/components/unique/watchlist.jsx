@@ -39,68 +39,79 @@ function cleanData(data){
 }
 
 class Watchlist extends Component {
-  state = {
-    assetData:[],
-    allAssetNames:[],
-    columns:[
-      { title: 'Ticker', field: 'name' },
-      { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
-      { title: 'Price', field: 'priceCurr', type: 'numeric' }
-      ],
-    status:{
-      busy:false,
-      dataRetrieved:false,
-      errors:false,
-      csvErrors:false
-    },
-    userID:'',
-    watchlist: false,
-    settings: '',
-    currentInput: '',
-    csvFile: '',
-    modal: false,
-    fundamentalModal: {
-      open:false
-    },
-    technicalModal:{
-      open:false
-    }
-  }
+  _isMounted = false
 
   constructor(props) {
     super(props);
+    this.state = {
+      assetData:[],
+      allAssetNames:[],
+      columns:[
+        { title: 'Ticker', field: 'name' },
+        { title: 'TrendEdge', field: 'trendEdge', type: 'numeric' },
+        { title: 'Price', field: 'priceCurr', type: 'numeric' }
+        ],
+      status:{
+        busy:false,
+        dataRetrieved:false,
+        errors:false,
+        csvErrors:false
+      },
+      userID:'',
+      watchlist: false,
+      settings: '',
+      currentInput: '',
+      csvFile: '',
+      modal: false,
+      fundamentalModal: {
+        open:false
+      },
+      technicalModal:{
+        open:false
+      }
+    }
     this.handleSubmit = this.handleCSVSubmit.bind(this);
     this.fileInput = React.createRef();
     this.form = React.createRef();
     }
 
-  componentDidMount() {
-    console.log("Mounting User to Watchlist...")
-    try{
-      const {status} = this.state
-      status['busy'] = true
-      this.setState({status, allAssetNames:this.props['allAssetNames']})
-      
-      Promise.all([auth.getCurrentUser()])
-      .then( async response => {
-        const userID = response[0]._id
-        const {settings, watchlist} = await getUser(userID)
-        this.setState({watchlist, settings, userID})
+    componentDidMount() {
+      this._isMounted = true
+      console.log("Mounting User to Watchlist...")
 
-        if (watchlist.length === 0) {
+      const mountUser = async () => {
+        try{
+          const {status} = this.state
+          status['busy'] = true
+          if (this._isMounted) this.setState({status, allAssetNames:this.props['allAssetNames']})
+          
+          Promise.all([auth.getCurrentUser()])
+          .then( async response => {
+            const userID = response[0]._id
+            const {settings, watchlist} = await getUser(userID)
+            if (this._isMounted) this.setState({watchlist, settings, userID})
+    
+            if (watchlist.length === 0) {
+                status['busy'] = false
+                if (this._isMounted) this.setState({status})
+            }
+            const res = await getTrendEdge(watchlist, settings)
+            const assetData = cleanData(res['data'])
             status['busy'] = false
-            return this.setState({status})
+            if (this._isMounted) this.setState({status, assetData})
+
+          })
         }
-        const res = await getTrendEdge(watchlist, settings)
-        const assetData = cleanData(res['data'])
-        status['busy'] = false
-        return this.setState({status, assetData})
-      })
-    }
-    catch(er){
-      console.log('something went wrong')
-    }
-    return
+        catch(er){
+          console.log('something went wrong')
+        }
+      };
+
+     mountUser()
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   listCompare = (newList, oldList) => {

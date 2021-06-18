@@ -6,7 +6,7 @@ const FooterPage = () => {
   return (
     <div className={classes.footer}>
         <p className='p-0 m-0'>Copyright 2021</p>
-        <p  className='p-0 m-0'>Trend Edge</p>
+        <p  className='p-0 m-0'>Trend Edge App</p>
     </div>
   );
 }

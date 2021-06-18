@@ -43,14 +43,14 @@ class App extends Component {
     return this.setState({curRoute, allAssetNames: data})
     }
 
-    componentDidUpdate(prevProps) {
-      const prevRoute = prevProps.location.pathname
-      const curRoute = this.props.location.pathname
-      if (curRoute !== prevRoute) {
-        return this.setState({curRoute})
-      }
-      return
+  componentDidUpdate(prevProps) {
+    const prevRoute = prevProps.location.pathname
+    const curRoute = this.props.location.pathname
+    if (curRoute !== prevRoute) {
+      return this.setState({curRoute})
     }
+    return
+  }
 
 
   render() {
