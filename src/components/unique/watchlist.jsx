@@ -78,6 +78,7 @@ class Watchlist extends Component {
     componentDidMount() {
       this._isMounted = true
       console.log("Mounting User to Watchlist...")
+      
 
       const mountUser = async () => {
         try{

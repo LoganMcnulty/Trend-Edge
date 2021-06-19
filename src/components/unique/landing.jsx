@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-// import {NavLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 // In House
@@ -16,6 +15,9 @@ import auth from '../../services/authService';
 import SearchAutoFill from '../common/searchAutoFill'
 import AssetCard from '../common/assetCard'
 import {getWLAssetNames, getTrendEdge} from '../../services/assetService'
+import LeaderAccordion from './leaderAccordion'
+import Loading from "../common/loading/loading";
+import {getUser} from '../../services/userService'
 
 const settings = {
     'fastOverSlowWeight': 20,
@@ -31,7 +33,7 @@ const settings = {
 const LandingContent = (allAssetNames) => {
     let history = useHistory();
     const [isActive, setIsActive] = useState(true);
-    const [user, setUser] = useState(auth.getCurrentUser())
+    const [user, setUser] = useState()
     const [searchInput, setSearchInput] = useState('')
     const [isMounted, setIsMounted] = useState(true)
     const [wlAssetData, setWLAssetData] = useState(null)
@@ -44,15 +46,26 @@ const LandingContent = (allAssetNames) => {
     }
 
     const retrieveAssetData = async () => {
-        console.log('retrieving asset ')
         const resOne = await getWLAssetNames()
         const assetData = await getTrendEdge(resOne['data'], settings)
         setWLAssetData(assetData['data'].slice(0, 20))
+        try{
+            Promise.all([auth.getCurrentUser()])
+            .then( async response => {
+                if (!response[0]) return
+                const _id = response[0]._id
+                console.log('Mounting User to Landing Page...')
+                const {watchlist} = await getUser(_id)
+                const user = {_id,watchlist}
+                setUser(user)
+                console.log(user)
+            })
+        }
+        catch(err){return console.log("Error getting user, doesn't exist")}
         setIsMounted(false)
     }
     
     useEffect(() => {
-        console.log(isMounted)
         console.log("Landing Page Mounted")
 
         if (isMounted) retrieveAssetData()
@@ -158,17 +171,16 @@ const LandingContent = (allAssetNames) => {
                 </div>
             </Paper>
 
-            {/* <Paper className='p-3 mt-2'>
-                <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h4">Leaderboard</Typography>
-                </Row>
+            <Paper className='p-3 mt-2'>
                 {wlAssetData ?
                 <Row className="align-items-center justify-content-center text-center">
-                    <AssetCard variant="h4" assetData={wlAssetData ? wlAssetData : []}>SMPL</AssetCard>
+                    <LeaderAccordion
+                        topTwentyData={wlAssetData}
+                        user={user}
+                    />
                 </Row>
-                : ''}
-
-            </Paper> */}
+                : <Loading/>}
+            </Paper>
 
             <Paper className='px-5 py-2 mt-2'>
                 <Row className='justify-content-around mb-2'>
@@ -220,15 +232,7 @@ const LandingContent = (allAssetNames) => {
                             }
                     />
                 </Row>
-                
-                <div
-                    style={{position:'absolute', left:'0', 
-                    top: '50%'
-                }}
-                className='card-text ml-1'
-                >
-                    Px (t)
-                </div>
+            
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="h6" gutterBottom>$RNDM</Typography>
                 </Row>
