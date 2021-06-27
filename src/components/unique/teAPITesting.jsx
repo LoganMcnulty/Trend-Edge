@@ -39,6 +39,7 @@ class TEAPITesting extends Component {
 
     await getWLAssetNames().then(async res => {
       const identifiers = res.data
+      console.log(identifiers)
       const data = await getTrendEdge(identifiers, settings)
       status['busy'] = false
       this.setState({status})

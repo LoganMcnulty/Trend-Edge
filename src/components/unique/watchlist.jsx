@@ -78,8 +78,7 @@ class Watchlist extends Component {
     componentDidMount() {
       this._isMounted = true
       console.log("Mounting User to Watchlist...")
-      
-
+    
       const mountUser = async () => {
         try{
           const {status} = this.state
@@ -227,32 +226,27 @@ class Watchlist extends Component {
   } 
 
   handleSeeMore = (e, action='') => {
-    const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
-    macdPosSlope, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd, fastSMALookback, slowSMALookback} = e
+    const {adx, daysSinceIPO, volume, fastSMA, longName, priceCurr, name, slowSMA, trendEdge, macd, fastOverSlow, lastUpdated} = e
 
     if (action === 'technical'){
 
       const {technicalModal} = this.state
       technicalModal['open'] = true
+      technicalModal['name'] = name
       technicalModal['longName'] = longName
       technicalModal['priceCurr'] = priceCurr
-      technicalModal['fastPosSlope'] = fastPosSlope
-      technicalModal['slowPosSlope'] = slowPosSlope
-      technicalModal['fastOverSlow'] = fastOverSlow
       technicalModal['daysSinceIPO'] = daysSinceIPO
-      technicalModal['enoughData'] = enoughData
       technicalModal['fastSMA'] = fastSMA
       technicalModal['slowSMA'] = slowSMA
-      technicalModal['macdPosSlope'] = macdPosSlope
       technicalModal['adx'] = adx
-      technicalModal['volumeAvg'] = volumeAvg
-      technicalModal['volumeCurr'] = volumeCurr
+      technicalModal['volume'] = volume
       technicalModal['trendEdge'] = trendEdge
       technicalModal['macd'] = macd
-      technicalModal['fastSMALookback'] = fastSMALookback
-      technicalModal['slowSMALookback'] = slowSMALookback
+      technicalModal['fastOverSlow'] = fastOverSlow
+      technicalModal['lastUpdated'] = lastUpdated
 
-    
+
+
       this.setState({technicalModal})
       console.log(this.state.technicalModal)
     }
@@ -333,8 +327,7 @@ class Watchlist extends Component {
   render() {
     const {watchlist, currentInput, status, assetData, csvFile, modal, technicalModal, fundamentalModal, settings, allAssetNames} = this.state
 
-    const {adx, daysSinceIPO, enoughData, fastOverSlow, fastPosSlope, fastSMA, longName,
-      macdPosSlope, priceCurr, slowPosSlope, slowSMA, volumeAvg, volumeCurr, trendEdge, macd, fastSMALookback, slowSMALookback} = technicalModal
+    const {longName, trendEdge, priceCurr, open, fastSMA, slowSMA, macd, volume, lastUpdated, adx} = technicalModal
 
       return (
         <ServeToDash
@@ -495,7 +488,7 @@ class Watchlist extends Component {
 
             {/* Technical Modal */}
               <Dialog
-                open={technicalModal.open}
+                open={open}
                 onClose={this.handleClose}
                 scroll={'paper'}
                 aria-labelledby="scroll-dialog-title"
@@ -505,32 +498,56 @@ class Watchlist extends Component {
                   <ul className="list-group list-group-flush">
                     <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{longName}</h4>
                     <li className="list-group-item m-0 p-0">
+
                       <div className="d-flex flex-row justify-content-center allign-items-center p-0 m-0">
-                        <p className='text font-weight-bold mr-1'>Trend Edge: </p>{trendEdge}% |
-                        <p className='text font-weight-bold mr-1 ml-2'>Price: </p>${priceCurr}
+                        <p className='text font-weight-bold mr-1'>Trend Edge: </p>
+                          {trendEdge}% |
+                        <p className='text font-weight-bold mr-1 ml-2'>Price: </p>
+                          ${priceCurr}
                       </div>
 
-                      <div className={buildClass(fastPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
-                          {(fastPosSlope === 0) && (fastSMALookback && fastSMA) ? `Trending Dn at $${fastSMA}` : fastPosSlope  === 1 ?  `Trending Up at $${fastSMA}` : 'Unavailable'}
+                      <div className={buildClass(fastSMA ? fastSMA.posSlope === 0 ? 0 : 1 : false)}>
+
+                        <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
+                          {fastSMA && fastSMA.value ? fastSMA.posSlope === 0  ? `Trending Dn at $${fastSMA.value}` : fastSMA.posSlope  === 1 ?  `Trending Up at $${fastSMA.value}` : 'Unavailable': 'Unavailable'}
                       </div> 
 
-                      <div className={buildClass(slowPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>{(slowPosSlope === 0) && (slowSMALookback && slowSMA) ? `Trending Dn at $${slowSMA}` : slowPosSlope  === 1 ?  `Trending Up at $${slowSMA}` : 'Unavailable'}
+                      <div className={buildClass(slowSMA ? slowSMA.posSlope === 0 ? 0 : 1 : false)}>
+                        <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>
+                          {slowSMA && slowSMA.value ? slowSMA.posSlope === 0  ? `Trending Dn at $${slowSMA.value}` : slowSMA.posSlope  === 1 ?  `Trending Up at $${slowSMA.value}` : 'Unavailable': 'Unavailable'}
+                      </div> 
+
+                      <div className={buildClass(macd ? macd.posSlope === 0 ? 0 : 1 : false)}>
+                        <p className='text font-weight-bold mr-1'>MACD: </p>
+                        {macd && macd.value ? macd.posSlope  === 1 ? `Trending Up at ${macd.value}` : macd.posSlope  === 0 ? `Trending Dn  at ${macd.value}` : 'Unavailable': 'Unavailable'}
                       </div>
 
-                      <div className={buildClass(macdPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>MACD: </p>{macd ? macdPosSlope  === 1 ? `Trending Up` : `Trending Dn` : 'Unavailable'}
+                      <div className={buildClass(slowSMA ? slowSMA.posSlope === 0 ? 0 : 1 : false)}>
+                          <p className='text font-weight-bold mr-1'>ADX: </p>{adx && slowSMA.posSlope  === 1 ? `${adx}%` : `Not Applied`}
                       </div>
 
-                      <div className={buildClass(slowPosSlope)}>
-                          <p className='text font-weight-bold mr-1'>ADX: </p>{adx ? slowPosSlope  === 1 ? `${adx}%` : `Not Applied` : 'Unavailable'}
-                      </div>
+                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-dark">
+                            <p className='text font-weight-bold mr-1'> - Volume Data - </p>
+                        </div>
 
-                      <div className= "d-flex flex-row justify-content-center allign-items-center p-0 m-0 text-info">
-                          <p className='text font-weight-bold mr-1'>{volumeAvg ? `This Week's Volume is
-                              ${Math.round(volumeCurr / volumeAvg *100)}% of the 10 Week Average` : 'Volume data unavailable' }</p>
-                      </div>
+                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-info">
+                            <p className='text font-weight-bold mr-1'>{volume ? volume.currValue && volume.fastAverageValue ? `Current Wk: ${(volume.currOverAverage * 100).toFixed(2)}% of the ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable': 'Vol. data unavailable' }</p>
+                        </div>
+                        
+                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-info">
+                          <p className='text font-weight-bold mr-1'>{
+                              volume ? volume.fastAverageLookbackValue && volume.fastAverageValue ? 
+                                  volume.fastAverageLookbackValue < volume.fastAverageValue ? 
+                                      `Trending up relative to ${settings.lookback} wks ago` :
+                                      `Trending down relative to ${settings.lookback} wks ago` :
+                                      'Vol. trend data unavailable':
+                                      'Vol. trend data unavailable'
+                          }</p>
+                        </div>
+                        
+                        <div className= "row justify-content-end p-0 m-0 text-dark" style={{fontSize:'10px'}}>
+                            <p className='font-weight-bold p-0 m-0 mr-1' style={{fontSize:'12px'}}>Last Updated: </p> {new Date(lastUpdated).toLocaleDateString('en-US')}
+                        </div>
                     </li>
 
                   </ul>
@@ -578,8 +595,9 @@ class Watchlist extends Component {
 
 const buildClass = (code) => {
   let base = "d-flex flex-row justify-content-center allign-items-center p-0 m-0"
+  if(code===0) return base += ' text-danger'
   if (code===1) return base += ' text-success'
-  return base += ' text-danger'
+  return base += ' text-secondary'
 }
  
 export default Watchlist;

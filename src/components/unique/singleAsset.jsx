@@ -79,6 +79,7 @@ const AssetPage = (allAssetNames) => {
                         }
                     }
                     else{
+                        console.log(resData)
                         setAssetData(resData)
                         return setLoading(false)
                     }
@@ -139,29 +140,40 @@ const AssetPage = (allAssetNames) => {
                             <p className='text font-weight-bold mr-1 ml-2'>Price: </p>${assetData.priceCurr}
                         </div>
 
-                        <div className={buildClass(assetData.fastPosSlope)}>
+                        <div className={buildClass(assetData.fastSMA.posSlope)}>
                             <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
-                            {(assetData.fastPosSlope === 0) && (assetData.fastSMALookback && assetData.fastSMA) ? `Trending Dn at $${assetData.fastSMA}` : assetData.fastPosSlope  === 1 ?  `Trending Up at $${assetData.fastSMA}` : 'Unavailable'}
+                            {(assetData.fastSMA.value && assetData.fastSMA.posSlope === 0) ? `Trending Dn at $${assetData.fastSMA.value}` : assetData.fastSMA.posSlope  === 1 ?  `Trending Up at $${assetData.fastSMA.value}` : 'Unavailable'}
                         </div> 
 
-                        <div className={buildClass(assetData.slowPosSlope)}>
+                        <div className={buildClass(assetData.slowSMA.posSlope)}>
                             <p className='text font-weight-bold mr-1'>{settings.slowSMA} Wk SMA: </p>
-                            {(assetData.slowPosSlope === 0) && (assetData.slowSMALookback && assetData.slowSMA) ? `Trending Dn at $${assetData.slowSMA}` : assetData.slowPosSlope  === 1 ?  `Trending Up at $${assetData.slowSMA}` : 'Unavailable'}
+                            {(assetData.slowSMA.value && assetData.fastSMA.posSlope === 0) ? `Trending Dn at $${assetData.slowSMA.value}` : assetData.slowSMA.posSlope  === 1 ?  `Trending Up at $${assetData.slowSMA.value}` : 'Unavailable'}
+                        </div> 
+
+                        <div className={buildClass(assetData.macd.posSlope)}>
+                            <p className='text font-weight-bold mr-1'>MACD: </p>{assetData.macd.value && assetData.macd.posSlope  === 1 ? `Trending Up at ${assetData.macd.value}` : assetData.macd.posSlope  === 0 ? `Trending Dn  at ${assetData.macd.value}` : 'Unavailable'}
                         </div>
 
-                        <div className={buildClass(assetData.macdPosSlope)}>
-                            <p className='text font-weight-bold mr-1'>MACD: </p>{assetData.macd ? assetData.macdPosSlope  === 1 ? `Trending Up` : `Trending Dn` : 'Unavailable'}
+                        <div className={buildClass(assetData.slowSMA.posSlope)}>
+                            <p className='text font-weight-bold mr-1'>ADX: </p>{assetData.adx && assetData.slowSMA.posSlope  === 1 ? `${assetData.adx}%` : `Not Applied`}
                         </div>
 
-                        <div className={buildClass(assetData.slowPosSlope)}>
-                            <p className='text font-weight-bold mr-1'>ADX: </p>{assetData.adx ? assetData.slowPosSlope  === 1 ? `${assetData.adx}%` : `Not Applied` : 'Unavailable'}
+                        <div className= "d-flex flex-row  p-0 m-0 text-info">
+                            <p className='text font-weight-bold mr-1'>Current Wk's Volume: </p>
+                                {assetData.volume.currValue && assetData.volume.fastAverageValue ? `${(assetData.volume.currOverAverage * 100).toFixed(2)}% of ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable' }
                         </div>
-
-                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-info">
-                            <p className='text font-weight-bold mr-1'>{assetData.volumeAvg ? `This Week's Volume is
-                                ${Math.round(assetData.volumeCurr / assetData.volumeAvg *100)}% of the 10 Week Average` : 'Volume data unavailable' }</p>
+                        
+                        <div className= "d-flex flex-row  p-0 m-0 text-info">
+                            <p className='text font-weight-bold mr-1'>Volume Trend:</p>
+                                {
+                                assetData.volume.fastAverageLookbackValue && assetData.volume.fastAverageValue ? 
+                                    assetData.volume.fastAverageLookbackValue < assetData.volume.fastAverageValue ? 
+                                    `Up relative to ${settings.lookback} wks ago` :
+                                    `Down relative to ${settings.lookback} wks ago` :
+                                    'Vol. trend data unavailable'
+                            }
                         </div>
-
+                        <br></br>
                         <div className= "row justify-content-end p-0 m-0 text-dark" style={{fontSize:'10px'}}>
                             <p className='font-weight-bold p-0 mr-1' style={{fontSize:'12px'}}>Last Updated: </p> {new Date(assetData['lastUpdated']).toLocaleDateString('en-US')}
                         </div>
@@ -260,6 +272,7 @@ export default AssetPage;
 
 const buildClass = (code) => {
     let base = "d-flex flex-row justify-content-center allign-items-center p-0 m-0"
+    if(code===0) return base += ' text-danger'
     if (code===1) return base += ' text-success'
-    return base += ' text-danger'
+    return base += ' text-secondary'
   }

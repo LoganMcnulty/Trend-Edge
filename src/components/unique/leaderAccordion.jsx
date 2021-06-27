@@ -24,20 +24,16 @@ export default function LeaderAccordion({topTwentyData, user}) {
 
     useEffect(() => {
         setThisUser(user)
-        console.log(topTwentyData)
-        console.log(user)
     }, [user]);
 
     const listItems = topTwentyData.map((d) => {
-        return (
-            <>
-                <li className="list-group-item" key={d._id}>
-                    <NavLink className="h7 p-0 text-success font-weight-bold" to={"/asset/" + d.name}>
-                        <u>${d.name}</u>
-                    </NavLink> | {'Trend Edge ' + d.trendEdge}
-                </li>
-            </>
-            )
+      return (
+          <li key={d._id} className="list-group-item" >
+              <NavLink className="h7 p-0 text-success font-weight-bold" to={"/asset/" + d.name}>
+                  <u>${d.name}</u>
+              </NavLink> | {'Trend Edge ' + d.trendEdge}
+          </li>
+          )
     })
 
   return (
@@ -48,7 +44,7 @@ export default function LeaderAccordion({topTwentyData, user}) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Top 20 Watched Stocks</Typography>
+          <Typography className={classes.heading}>Top 20 Trend Edge Scores in User Watchlists</Typography>
         </AccordionSummary>
         {!user ?
             <div className="row text-center">
@@ -83,7 +79,7 @@ export default function LeaderAccordion({topTwentyData, user}) {
           aria-controls="panel3a-content"
           id="panel3a-header"
         >
-          <Typography className={classes.heading}>Coming Soon</Typography>
+          <Typography className={classes.heading}>More Coming Soon</Typography>
         </AccordionSummary>
       </Accordion>
     </div>
