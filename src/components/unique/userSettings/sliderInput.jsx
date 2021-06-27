@@ -19,7 +19,7 @@ const SliderInput = ({icon, fieldName, label, updateSettingsState, value, min=1,
     try {
       if(!thisValue)setValue(value)
     } catch (ex) { }
-  })
+  },[clearKeySlider, thisValue, value])
 
   const handleChange = (event, newValue) => {
     let eventValue = event.target.value

@@ -13,7 +13,7 @@ import InfoList from '../common/infoList'
 import InfoModal from '../common/infoModal'
 import auth from '../../services/authService';
 import SearchAutoFill from '../common/searchAutoFill'
-import AssetCard from '../common/assetCard'
+// import AssetCard from '../common/assetCard'
 import {getWLAssetNames, getTrendEdge} from '../../services/assetService'
 import LeaderAccordion from './leaderAccordion'
 import Loading from "../common/loading/loading";
@@ -58,7 +58,6 @@ const LandingContent = (allAssetNames) => {
                 const {watchlist} = await getUser(_id)
                 const user = {_id,watchlist}
                 setUser(user)
-                console.log(user)
             })
         }
         catch(err){return console.log("Error getting user, doesn't exist")}
@@ -84,7 +83,7 @@ const LandingContent = (allAssetNames) => {
             setIsMounted(false)
         }
 
-    }, [isActive]);
+    }, [isActive, isMounted]);
   
     const randomPriceSeries = () => {
         const N = 80;
