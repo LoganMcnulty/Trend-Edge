@@ -5,10 +5,9 @@ fastWeight = .2
 slowWeight = .2
 fastOverSlowWeight = .2
 macdWeight = .2
-adxWeight = .2
-slice=250
+adxWeight = .2
 
-assetList = ['COIN', 'RBLX', 'SNOW', 'ESTC','TSLA']
+assetList = ['COIN', 'RBLX', 'SNOW', 'ESTC']
 
 db.getCollection('assetdatas').aggregate([
  {"$match": {
@@ -24,72 +23,60 @@ db.getCollection('assetdatas').aggregate([
         "exchange":"$exchange",
         "performanceData":{"$slice":["$performanceData", 200]},
         "lastUpdated": "$lastUpdated",
-        "macdSeries":{"$map":{
-              "input": {"$slice":["$performanceData", slice]},
-              "as": "perf",
-              "in": { 
-                  "$switch": {
-                  "branches":[{
-                    "case":{"$ne":["$$perf.macd" , null]}, "then": 
-                      "$$perf.macd"
-                    }
-                      ],
-                  "default":false
-                }}
-           }},
-        "dateSeries":{"$map":{
-              "input": {"$slice":["$performanceData", slice]},
-              "as": "perf",
-              "in": { 
-                  "$switch": {
-                  "branches":[{
-                    "case":{"$ne":["$$perf.date" , null]}, "then": 
-                      "$$perf.date"
-                    }
-                      ],
-                  "default":false
-                }}
-           }},
-        "adxSeries":{"$map":{
-              "input": {"$slice":["$performanceData", slice]},
-              "as": "perf",
-              "in": { 
-                  "$switch": {
-                  "branches":[{
-                    "case":{"$ne":["$$perf.adx" , null]}, "then": 
-                      "$$perf.adx"
-                    }
-                      ],
-                  "default":false
-                }}
-           }},
-        "priceSeries":{"$map":{
-              "input": {"$slice":["$performanceData", slice]},
-              "as": "perf",
-              "in": { 
-                  "$switch": {
-                  "branches":[{
-                    "case":{"$ne":["$$perf.price" , null]}, "then": 
-                      "$$perf.price"
-                    }
-                      ],
-                  "default":false
-                }}
-           }},
-        "volumeSeries":{"$map":{
-              "input": {"$slice":["$performanceData", slice]},
-              "as": "perf",
-              "in": { 
-                  "$switch": {
-                  "branches":[{
-                    "case":{"$ne":["$$perf.volume" , null]}, "then": 
-                      "$$perf.volume"
-                    }
-                      ],
-                  "default":false
-                }}
-           }},
-      }},
+      }},
+//  {"$addFields":{
+//     "macdSeries":{"$map":{
+//               "input": "$performanceData",
+//               "as": "perf",
+//               "in": { 
+//                   "$switch": {
+//                   "branches":[{
+//                     "case":{"$ne":["$$perf.macd" , null]}, "then": 
+//                       "$$perf.macd"
+//                     }
+//                       ],
+//                   "default":false
+//                 }}
+//            }},
+//         "adxSeries": {
+//           "$filter": {
+//            "input": {
+//             "$map": {
+//                 "input": "$performanceData",
+//                 "as": "el",
+//                 "in": "$$el.adx"
+//             }},
+//            "as": "num",
+//            "cond": {"$ne":["$$num" , null]}
+//         }},
+//         "priceSeries":{"$map":{
+//               "input": "$performanceData",
+//               "as": "perf",
+//               "in": { 
+//                   "$switch": {
+//                   "branches":[{
+//                     "case":{"$ne":["$$perf.price" , null]}, "then": 
+//                       "$$perf.price"
+//                     }
+//                       ],
+//                   "default":false
+//                 }}
+//            }},
+//         "volumeSeries":{"$map":{
+//               "input": "$performanceData",
+//               "as": "perf",
+//               "in": { 
+//                   "$switch": {
+//                   "branches":[{
+//                     "case":{"$ne":["$$perf.volume" , null]}, "then": 
+//                       "$$perf.volume"
+//                     }
+//                       ],
+//                   "default":false
+//                 }}
+//            }},  
+//      
+//  }},
 //     { "$addFields":{ 
 //         "fastSMA":
 //            {"$map":{

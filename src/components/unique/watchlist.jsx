@@ -506,7 +506,7 @@ class Watchlist extends Component {
                           ${priceCurr}
                       </div>
 
-                      <div className={buildClass(fastSMA ? fastSMA.posSlope === 0 ? 0 : 1 : false)}>
+                      <div className={buildClass(fastSMA ? fastSMA.posSlope === 0 ? 0 : fastSMA.posSlope === 1 ? 1 : false: false)}>
 
                         <p className='text font-weight-bold mr-1'>{settings.fastSMA} Wk SMA: </p>
                           {fastSMA && fastSMA.value ? fastSMA.posSlope === 0  ? `Trending Dn at $${fastSMA.value}` : fastSMA.posSlope  === 1 ?  `Trending Up at $${fastSMA.value}` : 'Unavailable': 'Unavailable'}
@@ -527,22 +527,23 @@ class Watchlist extends Component {
                       </div>
 
                         <div className= "d-flex flex-row justify-content-center p-0 m-0 text-dark">
-                            <p className='text font-weight-bold mr-1'> - Volume Data - </p>
+                            <h5 className='text font-weight-bold mr-1'> - Volume Data - </h5>
                         </div>
 
-                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-info">
-                            <p className='text font-weight-bold mr-1'>{volume ? volume.currValue && volume.fastAverageValue ? `Current Wk: ${(volume.currOverAverage * 100).toFixed(2)}% of the ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable': 'Vol. data unavailable' }</p>
+                        <div className= "row justify-content-center text-center p-0 m-0">
+                          <p className='text font-weight-bold mr-1'>Current Wk: </p>
+                            {volume ? volume.currValue && volume.fastAverageValue ? ` ${(volume.currOverAverage * 100).toFixed(2)}% of the ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable': 'Vol. data unavailable' }
                         </div>
                         
-                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-info">
-                          <p className='text font-weight-bold mr-1'>{
-                              volume ? volume.fastAverageLookbackValue && volume.fastAverageValue ? 
-                                  volume.fastAverageLookbackValue < volume.fastAverageValue ? 
-                                      `Trending up relative to ${settings.lookback} wks ago` :
-                                      `Trending down relative to ${settings.lookback} wks ago` :
-                                      'Vol. trend data unavailable':
-                                      'Vol. trend data unavailable'
-                          }</p>
+                        <div className= "row justify-content-center text-center p-0 m-0">
+                            <p className='text font-weight-bold mr-1'>Trend:</p>
+                            {
+                            volume && volume.fastAverageLookbackValue && volume.fastAverageValue ? 
+                                volume.fastAverageLookbackValue < volume.fastAverageValue ? 
+                                `Up relative to ${settings.lookback} wks ago` :
+                                `Down relative to ${settings.lookback} wks ago` :
+                                'Vol. trend data unavailable'
+                            }
                         </div>
                         
                         <div className= "row justify-content-end p-0 m-0 text-dark" style={{fontSize:'10px'}}>
