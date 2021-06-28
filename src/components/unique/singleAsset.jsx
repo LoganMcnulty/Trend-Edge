@@ -7,14 +7,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 import {Redirect} from 'react-router-dom'
 import {NavLink } from "react-router-dom";
+import Row from 'react-bootstrap/Row'
 
 // In House
 import ServeToDash from '../common/serveToDash'
-import {getTrendEdge, postAsset} from '../../services/assetService';
+import {getTrendEdge, postAsset, getTrendEdgeHistorical} from '../../services/assetService';
 import Loading from "../common/loading/loading";
 import {getUser} from '../../services/userService'
 import auth from '../../services/authService'
 import {saveSettings} from '../../services/userService'
+import LineGraph from '../common/lineGraph'
 
 
 const settings = {
@@ -30,6 +32,7 @@ const settings = {
 
 const AssetPage = (allAssetNames) => {
     const [assetData, setAssetData] = useState('')
+    const [trendEdgeHistorical, settrendEdgeHistorical] = useState(false)
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(false)
     const [inWatchlist, setInWatchlist] = useState(false)
@@ -51,7 +54,6 @@ const AssetPage = (allAssetNames) => {
             })
         }
         catch(err){return console.log("Error getting user, doesn't exist")}
-
         try{
             Promise.all([getTrendEdge([name], settings)])
             .then(async response => {
@@ -69,7 +71,11 @@ const AssetPage = (allAssetNames) => {
                                 const resData = await getTrendEdge([name], settings)
                                 console.log("New trend edge received")
                                 setAssetData(resData['data'][0])
-                                return setLoading(false)
+                                setLoading(false)
+                                const histData = await getTrendEdgeHistorical([name], settings)
+                                console.log('Historical data retrieved')
+                                settrendEdgeHistorical(handleHistoricalData(histData))
+                                return 
                             })
                         }
                         catch(err){
@@ -79,12 +85,17 @@ const AssetPage = (allAssetNames) => {
                         }
                     }
                     else{
-                        console.log(resData)
                         setAssetData(resData)
-                        return setLoading(false)
+                        setLoading(false)
+                        const histData = await getTrendEdgeHistorical([name], settings)
+                        console.log('Historical data retrieved')
+                        settrendEdgeHistorical(handleHistoricalData(histData))
+                        console.log(assetData)
+                        return 
                     }
                 }
                 catch(err){
+                    console.log(err)
                     setAssetData('bad')
                     console.log("Likely invalid URL ")
                     return <Redirect to="/"/>
@@ -94,7 +105,23 @@ const AssetPage = (allAssetNames) => {
         catch(er){
           return console.log('something went wrong')
         }
+        
     }, [name]);
+
+    const data = [
+        {
+            label: 'TrendEdge',
+            data: trendEdgeHistorical
+        },
+        // {
+        //     label: '10 wk SMA',
+        //     data: pseudoPriceData ? movingAvgs(pseudoPriceData, 10) : []
+        // },
+        // {
+        //     label: '40 wk SMA',
+        //     data: pseudoPriceData ? movingAvgs(pseudoPriceData, 40) : []
+        // }
+    ]
 
     const handleWatchlist = async () => {
         if(!inWatchlist) {
@@ -158,13 +185,17 @@ const AssetPage = (allAssetNames) => {
                             <p className='text font-weight-bold mr-1'>ADX: </p>{assetData.adx && assetData.slowSMA.posSlope  === 1 ? `${assetData.adx}%` : `Not Applied`}
                         </div>
 
-                        <div className= "d-flex flex-row  p-0 m-0 text-info">
-                            <p className='text font-weight-bold mr-1'>Current Wk's Volume: </p>
-                                {assetData.volume.currValue && assetData.volume.fastAverageValue ? `${(assetData.volume.currOverAverage * 100).toFixed(2)}% of ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable' }
+                        <div className= "d-flex flex-row justify-content-center p-0 m-0 text-dark">
+                            <h5 className='text font-weight-bold mr-1'> - Volume Data - </h5>
+                        </div>
+
+                        <div className= "row justify-content-center text-center  p-0 m-0">
+                        <p className='text font-weight-bold mr-1'>Current WK: </p>
+                            {assetData.volume ? assetData.volume.currValue && assetData.volume.fastAverageValue ? `${(assetData.volume.currOverAverage * 100).toFixed(2)}% of the ${settings.fastSMA} wk Avg.` : 'Vol. data unavailable': 'Vol. data unavailable' }
                         </div>
                         
-                        <div className= "d-flex flex-row  p-0 m-0 text-info">
-                            <p className='text font-weight-bold mr-1'>Volume Trend:</p>
+                        <div className= "row justify-content-center text-center  p-0 m-0">
+                            <p className='text font-weight-bold mr-1'>Trend:</p>
                                 {
                                 assetData.volume.fastAverageLookbackValue && assetData.volume.fastAverageValue ? 
                                     assetData.volume.fastAverageLookbackValue < assetData.volume.fastAverageValue ? 
@@ -173,7 +204,9 @@ const AssetPage = (allAssetNames) => {
                                     'Vol. trend data unavailable'
                             }
                         </div>
+
                         <br></br>
+
                         <div className= "row justify-content-end p-0 m-0 text-dark" style={{fontSize:'10px'}}>
                             <p className='font-weight-bold p-0 mr-1' style={{fontSize:'12px'}}>Last Updated: </p> {new Date(assetData['lastUpdated']).toLocaleDateString('en-US')}
                         </div>
@@ -263,6 +296,27 @@ const AssetPage = (allAssetNames) => {
             <Loading type={'bars'}/>
         }
 
+        <Paper className='px-5 py-2 mt-2 mb-5'>
+            {trendEdgeHistorical ? trendEdgeHistorical.length > 10 ? 
+            <>
+                <Row className="align-items-center justify-content-center text-center">
+                    <Typography variant="h6">Trend Edge History</Typography>
+                </Row>
+                
+                <Row className="align-items-center justify-content-center text-center">
+                    <LineGraph data={data} typeArg={'time'}/>
+                </Row>
+                <Row className="align-items-center justify-content-center text-center">
+                    <div className = 'card-text'>Date</div>
+                </Row>
+            </>
+            :
+            <Row className="align-items-center justify-content-center text-center">
+                <Typography variant="h6">Trend Edge History Unavailable</Typography>
+            </Row>: 
+            <Loading type={'bars'}/>
+            }
+        </Paper>
     </ServeToDash>
     
     );
@@ -276,3 +330,27 @@ const buildClass = (code) => {
     if (code===1) return base += ' text-success'
     return base += ' text-secondary'
   }
+
+
+const handleHistoricalData = (histData) => {
+    try{
+        const data = histData['data'][0]['trendEdgeVector']
+        console.log(data)
+        var finalData = []
+        for (let i=0; i < data.length; i++){
+            if (data[i]['complete'] === true){
+                let date = new Date(data[i]['date'])
+                finalData.push([date, data[i]['value']])
+            }
+        }
+        finalData = finalData.slice(0, 104)
+        console.log(finalData)
+        return finalData
+    }
+    catch(err){
+        console.log('error')
+        return []
+    }
+  }
+
+
