@@ -32,7 +32,8 @@ const settings = {
 
 const AssetPage = (allAssetNames) => {
     const [assetData, setAssetData] = useState('')
-    const [trendEdgeHistorical, settrendEdgeHistorical] = useState(false)
+    const [trendEdgeHistorical, setTrendEdgeHistorical] = useState(false)
+    const [priceSeries, setPriceSeries] = useState(false)
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(false)
     const [inWatchlist, setInWatchlist] = useState(false)
@@ -74,7 +75,7 @@ const AssetPage = (allAssetNames) => {
                                 setLoading(false)
                                 const histData = await getTrendEdgeHistorical([name], settings)
                                 console.log('Historical data retrieved')
-                                settrendEdgeHistorical(handleHistoricalData(histData))
+                                setTrendEdgeHistorical(handleHistoricalData(histData))
                                 return 
                             })
                         }
@@ -89,8 +90,7 @@ const AssetPage = (allAssetNames) => {
                         setLoading(false)
                         const histData = await getTrendEdgeHistorical([name], settings)
                         console.log('Historical data retrieved')
-                        settrendEdgeHistorical(handleHistoricalData(histData))
-                        console.log(assetData)
+                        setTrendEdgeHistorical(handleHistoricalData(histData))
                         return 
                     }
                 }
@@ -108,20 +108,62 @@ const AssetPage = (allAssetNames) => {
         
     }, [name]);
 
+
+
     const data = [
         {
             label: 'TrendEdge',
             data: trendEdgeHistorical
         },
-        // {
-        //     label: '10 wk SMA',
-        //     data: pseudoPriceData ? movingAvgs(pseudoPriceData, 10) : []
-        // },
+        {
+            label: 'Price',
+            data: priceSeries ? priceSeries : []
+        },
         // {
         //     label: '40 wk SMA',
         //     data: pseudoPriceData ? movingAvgs(pseudoPriceData, 40) : []
         // }
     ]
+
+    const handleHistoricalData = (histData) => {
+        try{
+            const data = histData['data'][0]['trendEdgeVector']
+            const trendEdgeSeries = []
+            const priceSeries = []
+            const warnings = []
+            for (let i=0; i < data.length && i < 105; i++){
+                if (data[i]['complete'] === true){
+                    let date = new Date(data[i]['date'])
+                    if (i > 0 && data[i]['date'] > data[i-1]['date']) {
+                        warnings.push("Date out of order --> " + date + " / Index --> " + i)
+                    }
+                    else if (i > 0 && (diff_weeks(date,  new Date(data[i-1]['date'])) > 1)) {
+                        warnings.push("Date too far --> " + date + " / Index --> " + i)
+                    }
+                    else if (i > 0 && (diff_weeks(date,  new Date(data[i-1]['date'])) < -1)) {
+                        warnings.push("Date too far --> " + date + " / Index --> " + i)
+                    }
+                    else{
+                        trendEdgeSeries.push([date, data[i]['value']])
+                        priceSeries.push([date, data[i]['price']])
+                    }
+                }
+            }
+            if (warnings.length > 0) {
+                console.log("--- Historical Data Scrubbing ---\n") 
+                for (let warning in warnings) console.log(warnings[warning] + '\n')
+            }
+            setPriceSeries(priceSeries.slice(0, 104))
+            return trendEdgeSeries.slice(0, 104)
+            return trendEdgeSeries.slice(0, 104)
+
+        }
+        catch(err){
+            console.log('error')
+            setTrendEdgeHistorical([])
+            return []
+        }
+      }
 
     const handleWatchlist = async () => {
         if(!inWatchlist) {
@@ -300,14 +342,15 @@ const AssetPage = (allAssetNames) => {
             {trendEdgeHistorical ? trendEdgeHistorical.length > 10 ? 
             <>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h6">Trend Edge History</Typography>
+                    <Typography variant="h6">2 Yrs of Trend Edge</Typography>
                 </Row>
                 
                 <Row className="align-items-center justify-content-center text-center">
                     <LineGraph data={data} typeArg={'time'}/>
                 </Row>
-                <Row className="align-items-center justify-content-center text-center">
-                    <div className = 'card-text'>Date</div>
+
+                <Row className="align-items-center justify-content-center text-center mt-2">
+                    <p style={{fontSize:'14px'}}>Update coming soon to fix the scaling of trend edge (red) and price(blue)</p>
                 </Row>
             </>
             :
@@ -318,7 +361,6 @@ const AssetPage = (allAssetNames) => {
             }
         </Paper>
     </ServeToDash>
-    
     );
 }
  
@@ -331,26 +373,13 @@ const buildClass = (code) => {
     return base += ' text-secondary'
   }
 
-
-const handleHistoricalData = (histData) => {
-    try{
-        const data = histData['data'][0]['trendEdgeVector']
-        console.log(data)
-        var finalData = []
-        for (let i=0; i < data.length; i++){
-            if (data[i]['complete'] === true){
-                let date = new Date(data[i]['date'])
-                finalData.push([date, data[i]['value']])
-            }
-        }
-        finalData = finalData.slice(0, 104)
-        console.log(finalData)
-        return finalData
-    }
-    catch(err){
-        console.log('error')
-        return []
-    }
+  function diff_weeks(dt2, dt1) 
+  {
+   var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+   diff /= (60 * 60 * 24 * 7);
+   return Math.abs(Math.round(diff));
   }
+
+
 
 
