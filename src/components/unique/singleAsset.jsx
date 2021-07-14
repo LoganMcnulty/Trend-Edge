@@ -16,7 +16,8 @@ import Loading from "../common/loading/loading";
 import {getUser} from '../../services/userService'
 import auth from '../../services/authService'
 import {saveSettings} from '../../services/userService'
-import LineGraph from '../common/lineGraph'
+import MultiAxisGraph from '../common/graphs/multiAxisGraph'
+import MultiAxisExample from '../common/graphs/multiAxisExample'
 
 
 const settings = {
@@ -119,10 +120,6 @@ const AssetPage = (allAssetNames) => {
             label: 'Price',
             data: priceSeries ? priceSeries : []
         },
-        // {
-        //     label: '40 wk SMA',
-        //     data: pseudoPriceData ? movingAvgs(pseudoPriceData, 40) : []
-        // }
     ]
 
     const handleHistoricalData = (histData) => {
@@ -342,15 +339,11 @@ const AssetPage = (allAssetNames) => {
             {trendEdgeHistorical ? trendEdgeHistorical.length > 10 ? 
             <>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h6">2 Yrs of Trend Edge</Typography>
+                    <Typography variant="h6">2 Year</Typography>
                 </Row>
                 
                 <Row className="align-items-center justify-content-center text-center">
-                    <LineGraph data={data} typeArg={'time'}/>
-                </Row>
-
-                <Row className="align-items-center justify-content-center text-center mt-2">
-                    <p style={{fontSize:'14px'}}>Update coming soon to fix the scaling of trend edge (red) and price(blue)</p>
+                    <MultiAxisGraph graphData={data}/>
                 </Row>
             </>
             :

@@ -58,7 +58,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <ToastContainer />
-        <Dashboard curRoute={curRoute}/>
+        <Dashboard curRoute={curRoute} allAssetNames={allAssetNames}/>
         <Container fluid style={{margin:0, padding:0}}>
           <Switch>
             <Route path="/Sign Up" component={SignUpForm} />

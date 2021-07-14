@@ -4,9 +4,9 @@ import mediumZoom from 'medium-zoom'
 import Paper from '@material-ui/core/Paper'
 
 // In House
-import Iwm from './img/IWM.png'
 import ServeToDash from '../common/serveToDash'
 import ImageZoom from './imageZoom'
+import Iwm from './img/IWM.png'
 
 const styles = {
   header: {
@@ -71,7 +71,7 @@ const About = () => {
                 {/* Calculation explaination */}
                 <div className='col-lg-10'>
                   <p style={styles.paragraph}>
-                    Trend Edge is a proprietary
+                    Trend Edge is a proprietary asset price
                     {' '}  
                     <a
                       href='https://www.investopedia.com/terms/t/trend.asp'
@@ -91,8 +91,17 @@ const About = () => {
                     >
                       technical indicators 
                     </a>
-                    {' '}in order to derive a single trend score.
+                    {' '}to derive a{' '} 
+                    <a
+                      href='https://TrendEdge.app/asset/ARKK'
+                      target='_blank'
+                      style={styles.link}
+                      rel="noreferrer"
+                    >
+                     vector of trend-scores
+                    </a>{' '}through time.
                   </p>
+
                   <div className="row justify-content-center" style={{marginBottom:"2%"}}>
                     <div className="col-lg-10">
                       <ul className="list-group">
@@ -317,7 +326,7 @@ const About = () => {
                     ADX is a measure of the strength of a trend (up or down).{' '}
                   </p>
                   <p style={styles.paragraph}>
-                    Provided the above, the state of the medium to long term trend of an asset at t(0) can be summarized in a single score (Trend Edge).
+                    Provided the above, the state of medium to long term trends can be inferred via the analysis of trend scores (Trend Edge) through time.
                   </p>
                 </div>
               </div>
