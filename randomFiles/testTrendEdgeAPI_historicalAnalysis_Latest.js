@@ -1,17 +1,17 @@
-fastSMA = 10
-slowSMA = 40
-lookback = 5
-fastWeight = .2
-slowWeight = .2
-fastOverSlowWeight = .2
-macdWeight = .2
-adxWeight = .2
-slice = 250
-
-assetList=['CRSR','MDB','ESTC','SNOW','RBLX','COIN', 'MLHR']
-
-db.getCollection('assetdatas').aggregate([
- {"$match": {
+fastSMA = 10
+slowSMA = 40
+lookback = 5
+fastWeight = .2
+slowWeight = .2
+fastOverSlowWeight = .2
+macdWeight = .2
+adxWeight = .2
+slice = 250
+
+assetList=['CRSR','MDB','ESTC','SNOW','RBLX','COIN', 'MLHR']
+
+db.getCollection('assetdatas').aggregate([
+  {"$match": {
       "name": { "$in": assetList },
       "performanceData": {"$exists":true, "$ne": [], "$ne": null},
       }},
@@ -180,9 +180,14 @@ db.getCollection('assetdatas').aggregate([
                                {"$switch": {
                                   "branches":[{
                                     "case":
-                                      {"$gt":[{"$arrayElemAt":["$slowSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
-                                      {"$arrayElemAt":["$slowSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}
-                                      ]}, "then": 
+                                      {"$and":[
+                                        {"$gt":[{"$arrayElemAt":["$slowSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
+                                        {"$arrayElemAt":["$slowSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]},
+                                        ]},
+                                        {"$ne":[{"$arrayElemAt":["$adxSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                                        {"$ifNull":[{"$arrayElemAt":["$adxSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                                      ]}, 
+                                      "then": 
                                       { "$multiply": [ {"$arrayElemAt":["$adxSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, slowWeight] }
                                     }
                                       ],
@@ -244,7 +249,8 @@ db.getCollection('assetdatas').aggregate([
     {"$project":{
       "_id":1,
       "name":1,
+      "priceSeries":1,
       "trendEdgeVector":1,
   }},
-{"$sort":{"name":-1}}
+{"$sort":{"name":-1}}
 ])
