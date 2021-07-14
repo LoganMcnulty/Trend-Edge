@@ -184,7 +184,7 @@ const AssetPage = (allAssetNames) => {
         large={[8,2]}
         small={[12,0]}
     >
-        <Paper className='p-3 m-0' style={{backgroundColor:"#4682B4"}}>
+        <Paper className='p-3 m-0' style={{backgroundColor:"#192734"}}>
             {assetData ? 
                 <div className="row align-items-center justify-content-center text-center"><Typography variant="h4" className='text-light'>${name.toUpperCase()}</Typography></div>
                 : ''
@@ -255,7 +255,7 @@ const AssetPage = (allAssetNames) => {
                 </DialogContent>
                 {
                     user ?
-                    <Paper className='p-3 m-0' style={{backgroundColor:"#4682B4"}}>
+                    <Paper className='p-3 m-0' style={{backgroundColor:"#192734"}}>
                         <div className="row align-items-center justify-content-center">
                             {
                                 user ? 
@@ -295,7 +295,7 @@ const AssetPage = (allAssetNames) => {
                         </div>
                     </Paper>
                     :
-                    <Paper className='p-3 m-0' style={{backgroundColor:"#4682B4"}}>
+                    <Paper className='p-3 m-0' style={{backgroundColor:"#192734"}}>
                         <div className="row align-items-center justify-content-center">
                             {
                                 <>
@@ -335,7 +335,7 @@ const AssetPage = (allAssetNames) => {
             <Loading type={'bars'}/>
         }
 
-        <Paper className='px-5 py-2 mt-2 mb-5'
+        <Paper className='px-5 py-2 mt-4 mb-5'
             style={{backgroundColor:'#192734',}}
         >
             {trendEdgeHistorical ? trendEdgeHistorical.length > 10 ? 

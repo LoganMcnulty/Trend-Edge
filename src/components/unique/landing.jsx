@@ -246,13 +246,10 @@ const LandingContent = (allAssetNames) => {
 
             <Paper className='p-3 mt-2'>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="subtitle1" className='font-weight-bold col-lg-12'> - Trend Edge is Currently in Beta - </Typography>
+                    <Typography variant="subtitle1" className='font-weight-bold col-lg-12'> - Trend Edge is in Beta 🛠️ - </Typography>
                 </Row>
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="subtitle2">Optimized for use on Mobile Phones</Typography>
-                </Row>
-                <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="subtitle2">Try clearing cookies as updates/features are pushed frequently</Typography>
                 </Row>
             </Paper>
 
