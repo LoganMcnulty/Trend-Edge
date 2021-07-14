@@ -172,76 +172,85 @@ const LandingContent = (allAssetNames) => {
                 </div>
             </div>
 
-            <Paper className='p-3 mt-4'>
-                {wlAssetData ?
-                <Row className="align-items-center justify-content-center text-center">
-                    <LeaderAccordion
-                        topTwentyData={wlAssetData}
-                        user={user}
-                    />
-                </Row>
-                : <Loading/>}
-            </Paper>
-
-            <div className="card mt-4" style={{border:'none', backgroundColor:'#192734'}}>
-                <div className="card-header text-center text-light justify-content-around flex" style={{border:'none', backgroundColor:'#192734'}}>
-                    <Button 
-                        variant="contained" 
-                        style={{backgroundColor:'#fc5a3d', color:'white'}}
-                        className={`${isActive ? 'active' : 'inactive'}`}
-                        onClick={toggle}
-                    >
-                        <div  className='row px-2'>
-                            {isActive ? 
-                            <>
-                                Pause
-                                <span className="material-icons ml-1">&#xe034;</span>
-                            </>
-                            :
-                            <>
-                                Play
-                                <span className="material-icons ml-1">&#xe037;</span>
-                            </>
-                            }
-                        </div> 
-                    </Button>
-                    <InfoModal 
-                        buttonContent={
-                            <>
-                                <div className='row px-2'>
-                                    About
-                                    <span className="material-icons ml-1">&#xeb40;</span>
-                                </div>
-                            </>
-                        }
-                        title={'Randomly Generated Price Action'}
-                        content={
-                            <>
-                                <InfoList
-                                    title={'Randomly Generated Price Action'}
-                                    listContent={[
-                                        'The graph pictured represents randomly generated price action.', 
-                                        'Even random patterns can look familiar.', 
-                                        'Patterns appear in markets due to a variety of factors, including random chance.'
-                                    ]}
-                                    footer={"Trend Edge provides trend statistics that iron out the randomness of markets."}
-                                    linkTo = {user ? '' : '/Sign In'}
-                                    linkTitle = {user ? '' : 'Access'}
-                                    icon={<span className="material-icons ml-1">&#xe0da;</span>}
-                                />
-                            </>
-                            }
-                    />
+            <div className="row">
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                    <Paper className='p-3 mt-4'>
+                        {wlAssetData ?
+                        <Row className="align-items-center justify-content-center text-center">
+                            <LeaderAccordion
+                                topTwentyData={wlAssetData}
+                                user={user}
+                            />
+                        </Row>
+                        : <Loading/>}
+                    </Paper>
                 </div>
-                <div className="card-body text-center">
-                    <Row className="align-items-center justify-content-center text-center">
-                        <LineGraph data={data}/>
-                    </Row>
-                    <Row className="align-items-center justify-content-center text-center">
-                        <div className = 'card-text text-light'>t (weeks)</div>
-                    </Row>
+                <div className="col-sm-12 col-md-12 col-lg-6">
+                    <div className="card mt-4" style={{border:'none', backgroundColor:'#192734'}}>
+                    <div className="card-header text-center text-light justify-content-around flex" style={{border:'none', backgroundColor:'#192734'}}>
+                        <Button 
+                            variant="contained" 
+                            style={{backgroundColor:'#fc5a3d', color:'white'}}
+                            className={`${isActive ? 'active' : 'inactive'}`}
+                            onClick={toggle}
+                        >
+                            <div  className='row px-2'>
+                                {isActive ? 
+                                <>
+                                    Pause
+                                    <span className="material-icons ml-1">&#xe034;</span>
+                                </>
+                                :
+                                <>
+                                    Play
+                                    <span className="material-icons ml-1">&#xe037;</span>
+                                </>
+                                }
+                            </div> 
+                        </Button>
+                        <InfoModal 
+                            buttonContent={
+                                <>
+                                    <div className='row px-2'>
+                                        About
+                                        <span className="material-icons ml-1">&#xeb40;</span>
+                                    </div>
+                                </>
+                            }
+                            title={'Randomly Generated Price Action'}
+                            content={
+                                <>
+                                    <InfoList
+                                        title={'Randomly Generated Price Action'}
+                                        listContent={[
+                                            'The graph pictured represents randomly generated price action.', 
+                                            'Even random patterns can look familiar.', 
+                                            'Patterns appear in markets due to a variety of factors, including random chance.'
+                                        ]}
+                                        footer={"Trend Edge provides trend statistics that iron out the randomness of markets."}
+                                        linkTo = {user ? '' : '/Sign In'}
+                                        linkTitle = {user ? '' : 'Access'}
+                                        icon={<span className="material-icons ml-1">&#xe0da;</span>}
+                                    />
+                                </>
+                                }
+                        />
+                    </div>
+                    <div className="card-body text-center">
+                        <Row className="align-items-center justify-content-center text-center">
+                            <LineGraph data={data}/>
+                        </Row>
+                        <Row className="align-items-center justify-content-center text-center">
+                            <div className = 'card-text text-light'>t (weeks)</div>
+                        </Row>
+                    </div>
+                </div>
                 </div>
             </div>
+
+
+
+
 
             <Paper className='p-3 my-4'>
                 <Row className="align-items-center justify-content-center text-center">

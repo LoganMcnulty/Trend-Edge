@@ -18,13 +18,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LeaderAccordion({topTwentyData, user}) {
+export default function LeaderAccordion({topTwentyData}) {
     const classes = useStyles();
-    const [thisUser, setThisUser] = useState()
-
-    useEffect(() => {
-        setThisUser(user)
-    }, [user]);
 
     const listItems = topTwentyData.map((d) => {
       return (
@@ -48,11 +43,6 @@ export default function LeaderAccordion({topTwentyData, user}) {
         >
           <Typography className={classes.heading}>Top 20 Trend Edge Scores in User Watchlists</Typography>
         </AccordionSummary>
-        {!user ?
-            <div className="row text-center">
-               <div className="col">Sign in to add to your watchlist</div>
-           </div>
-        : ''}
           <ul className="list-group w-100">
               {listItems}
           </ul>
