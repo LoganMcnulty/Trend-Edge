@@ -248,10 +248,6 @@ const LandingContent = (allAssetNames) => {
                 </div>
             </div>
 
-
-
-
-
             <Paper className='p-3 my-4'>
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="subtitle1" className='font-weight-bold col-lg-12'> - Trend Edge is in Beta 🛠️ - </Typography>
@@ -259,11 +255,11 @@ const LandingContent = (allAssetNames) => {
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="subtitle2">Optimized for use on Mobile Phones</Typography>
                 </Row>
+                <Row className="align-items-center justify-content-center text-center">
+                    <Typography variant="subtitle2">Clear cookies for frequent updates</Typography>
+                </Row>
             </Paper>
-
         </ServeToDash>
-
-
      );
 }
  

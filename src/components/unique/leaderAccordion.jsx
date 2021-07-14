@@ -41,7 +41,7 @@ export default function LeaderAccordion({topTwentyData}) {
           style={{backgroundColor:'#4682B4'}}
           className='text-light'
         >
-          <Typography className={classes.heading}>Top 20 Trend Edge Scores in User Watchlists</Typography>
+          <Typography className={classes.heading}>Top 20 Trends in User Watchlists</Typography>
         </AccordionSummary>
           <ul className="list-group w-100">
               {listItems}
