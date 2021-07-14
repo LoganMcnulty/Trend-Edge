@@ -335,11 +335,16 @@ const AssetPage = (allAssetNames) => {
             <Loading type={'bars'}/>
         }
 
-        <Paper className='px-5 py-2 mt-2 mb-5'>
+        <Paper className='px-5 py-2 mt-2 mb-5'
+            style={{backgroundColor:'#192734',}}
+        >
             {trendEdgeHistorical ? trendEdgeHistorical.length > 10 ? 
             <>
                 <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h6">2 Year</Typography>
+                    {assetData ? 
+                        <div className="row align-items-center justify-content-center text-center"><Typography variant="h5" className='text-light'>${name.toUpperCase()} 2-Year</Typography></div>
+                        : ''
+                    }
                 </Row>
                 
                 <Row className="align-items-center justify-content-center text-center">
@@ -350,7 +355,7 @@ const AssetPage = (allAssetNames) => {
             <Row className="align-items-center justify-content-center text-center">
                 <Typography variant="h6">Trend Edge History Unavailable</Typography>
             </Row>: 
-            <Loading type={'bars'}/>
+                <Loading type={'bars'}  bgColor={'#192734'}/>
             }
         </Paper>
     </ServeToDash>

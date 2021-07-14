@@ -2,12 +2,15 @@ import React from 'react';
 import ReactLoading from "react-loading";
 import { Section, Title, Article} from "./generic";
 
-const Loading = ({title='', type}) => {
+const Loading = ({title='', type, bgColor=''}) => {
+    const bgColorFinal = bgColor ? bgColor : '#4682B4'
     return ( 
-        <Section className='p-2' style={{backgroundColor:'#4682B4'}}>
+        <Section className='p-2'
+            style={{backgroundColor:bgColorFinal}}
+        >
             {title ? <Title>{title}</Title> : ''}
             <Article key={type}>
-                <ReactLoading type={type} color="#fff" className='p-0' />
+                <ReactLoading type={type} color="#fff" backgroundColor={bgColorFinal} className='p-0' />
             </Article>
         </Section>
      );

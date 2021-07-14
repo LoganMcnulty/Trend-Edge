@@ -1,18 +1,19 @@
 import React from "react";
 import { Chart } from "react-charts";
 
-
+import Grid from '@material-ui/core/Grid';
 import useDemoConfig from "./useDemoConfig";
 import "./styles.css";
 import useWindowDimensions from './../windowDimensions';
+// import Box from 'components/Box'
 
 const MultiAxisGraph = ({graphData}) => {
-  
-    Date.prototype.addDays = function(days) {
-      var date = new Date(this.valueOf());
-      date.setDate(date.getDate() + days)
-      date.setHours(0,0,0,0);
-      return date;
+  let data
+  Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days)
+    date.setHours(0,0,0,0);
+    return date;
   }
 
   const teObjectData = graphData[0]['data'].map((d, i) => {
@@ -24,6 +25,7 @@ const MultiAxisGraph = ({graphData}) => {
     }
   }
   )
+
   const priceObjectData = graphData[0]['data'].map((d, i) => {
     var date = new Date(d[0]);
     return {
@@ -33,16 +35,22 @@ const MultiAxisGraph = ({graphData}) => {
     }
   }
   )
-  const finalData = [{label:'Trend Edge', data:teObjectData}, { label:'Price', data:priceObjectData}]
-  console.log(finalData)
 
-  let { data, randomizeData } = useDemoConfig({
-    series: 10,
-  });
+  const testObjectData = graphData[0]['data'].map((d, i) => {
+    var date = new Date(d[0]);
+    return {
+      primary: date.addDays(1),
+      radius:null,
+      secondary: graphData[1]['data'][i][1]*.5
+    }
+  }
+  )
 
-  console.log(data)
-  data = finalData
-
+  data = [
+    {data:teObjectData}, 
+    {data:priceObjectData},
+  ]
+  
   data = React.useMemo(
     () =>
       data.map((d, i) =>
@@ -84,6 +92,7 @@ const MultiAxisGraph = ({graphData}) => {
         type: "linear",
         id: "Price",
         min: 0,
+        // hardMax: Math.round(priceObjectData[0]['secondary'] * 1.1),
         position: "right",
         format: (d) => `$${d}`,
       },
@@ -91,19 +100,18 @@ const MultiAxisGraph = ({graphData}) => {
     []
   );
 
-  const {height, width} = useWindowDimensions()
+  const {height} = useWindowDimensions()
 
   return (
     <>
-      <div
+      <Grid item xs
         style={{
-            width: `${width-50}px`,
-            height: `${height/3}px`,
-            padding: '0'
-        }}
+          height: `${height/3}px`,
+          borderRadius: '5px',
+      }}
       >
-        <Chart data={data} series={series} axes={axes} tooltip/>
-      </div>
+        <Chart data={data} series={series} axes={axes} tooltip dark/>
+      </Grid>
     </>
   );
 }
