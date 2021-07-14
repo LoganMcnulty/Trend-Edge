@@ -26,10 +26,11 @@ const LineGraph = ({data, typeArg=''}) => {
         style={{
             width: `${width-50}px`,
             height: `${height/3}px`,
-            padding: '0'
+            padding: '0',
+            backgroundColor:"#192734"
         }}
       >
-        <Chart className='w-80' data={data.reverse()} axes={axes}/>
+        <Chart className='w-80' data={data.reverse()} axes={axes} tooltip dark/>
       </div> 
   );
 }

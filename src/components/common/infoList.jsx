@@ -25,7 +25,7 @@ const InfoList = ({title='', listContent, footer='', linkTo='', linkTitle='', ic
             {
                 footer ?
                 <>
-                <h5 className="card-footer text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#fc5a3d"}}>{footer}</h5> 
+                <h5 className="card-footer text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#192734"}}>{footer}</h5> 
                     {
                         linkTo && linkTitle && icon ?
                         <div className="row justify-content-center">

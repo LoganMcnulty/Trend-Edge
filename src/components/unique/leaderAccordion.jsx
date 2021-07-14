@@ -28,21 +28,23 @@ export default function LeaderAccordion({topTwentyData, user}) {
 
     const listItems = topTwentyData.map((d) => {
       return (
-          <li key={d._id} className="list-group-item" >
+          <li key={d._id} className="list-group-item text-light" style={{backgroundColor:'#192734'}}>
               <NavLink className="h7 p-0 text-success font-weight-bold" to={"/asset/" + d.name}>
                   <u>${d.name}</u>
-              </NavLink> | {'Trend Edge ' + d.trendEdge}
+              </NavLink> | {d.trendEdge}
           </li>
           )
     })
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          style={{backgroundColor:'#4682B4'}}
+          className='text-light'
         >
           <Typography className={classes.heading}>Top 20 Trend Edge Scores in User Watchlists</Typography>
         </AccordionSummary>
@@ -51,12 +53,9 @@ export default function LeaderAccordion({topTwentyData, user}) {
                <div className="col">Sign in to add to your watchlist</div>
            </div>
         : ''}
- 
-        <AccordionDetails>
-            <ul className="list-group w-100">
-                {listItems}
-            </ul>
-        </AccordionDetails>
+          <ul className="list-group w-100">
+              {listItems}
+          </ul>
       </Accordion>
       {/* <Accordion>
         <AccordionSummary

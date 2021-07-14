@@ -1,10 +1,12 @@
 // Out of House
 import React, { useState, useEffect } from 'react'
 import Row from 'react-bootstrap/Row'
+import Card from '@material-ui/core/Card'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useHistory } from "react-router-dom";
+import CardHeader from '@material-ui/core/CardHeader';
 
 // In House
 import ServeToDash from '../common/serveToDash'
@@ -157,20 +159,20 @@ const LandingContent = (allAssetNames) => {
             large={[8,2]}
             small={[12,0]}
         >
-            <Paper className='p-3 m-0'>
-                <Row className="align-items-center justify-content-center text-center">
+            <div className="card" style={{border:'none'}}>
+                <div className="card-header text-center text-light" style={{backgroundColor:'#192734'}}>
                     <Typography variant="h4">Welcome 📈</Typography>
-                </Row>
-                <div className="d-flex justify-content-around align-items-center">
+                </div>
+                <div v="card-body">
                     <SearchAutoFill
                         handleSubmit={handleSubmit}
                         searchList={autoFillAssetNames}
                         handleChange={handleChange}
                     />
                 </div>
-            </Paper>
+            </div>
 
-            <Paper className='p-3 mt-2'>
+            <Paper className='p-3 mt-4'>
                 {wlAssetData ?
                 <Row className="align-items-center justify-content-center text-center">
                     <LeaderAccordion
@@ -181,8 +183,8 @@ const LandingContent = (allAssetNames) => {
                 : <Loading/>}
             </Paper>
 
-            <Paper className='px-5 py-2 mt-2'>
-                <Row className='justify-content-around mb-2'>
+            <div className="card mt-4" style={{border:'none', backgroundColor:'#192734'}}>
+                <div className="card-header text-center text-light justify-content-around flex" style={{border:'none', backgroundColor:'#192734'}}>
                     <Button 
                         variant="contained" 
                         style={{backgroundColor:'#fc5a3d', color:'white'}}
@@ -230,21 +232,18 @@ const LandingContent = (allAssetNames) => {
                             </>
                             }
                     />
-                </Row>
-            
-                <Row className="align-items-center justify-content-center text-center">
-                    <Typography variant="h6" gutterBottom>$RNDM</Typography>
-                </Row>
-                
-                <Row className="align-items-center justify-content-center text-center">
-                    <LineGraph data={data}/>
-                </Row>
-                <Row className="align-items-center justify-content-center text-center">
-                    <div className = 'card-text'>t (weeks)</div>
-                </Row>
-            </Paper>
+                </div>
+                <div className="card-body text-center">
+                    <Row className="align-items-center justify-content-center text-center">
+                        <LineGraph data={data}/>
+                    </Row>
+                    <Row className="align-items-center justify-content-center text-center">
+                        <div className = 'card-text text-light'>t (weeks)</div>
+                    </Row>
+                </div>
+            </div>
 
-            <Paper className='p-3 mt-2'>
+            <Paper className='p-3 my-4'>
                 <Row className="align-items-center justify-content-center text-center">
                     <Typography variant="subtitle1" className='font-weight-bold col-lg-12'> - Trend Edge is in Beta 🛠️ - </Typography>
                 </Row>
