@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         right:0,
         fontSize:'8px',
         width: '100%',
-        backgroundColor: 'none',
+        background: 'none',
         color: 'lightgray',
         marginRight:'10px',
         textAlign:'right'

@@ -6,11 +6,11 @@ const Loading = ({title='', type, bgColor=''}) => {
     const bgColorFinal = bgColor ? bgColor : '#4682B4'
     return ( 
         <Section className='p-2'
-            style={{backgroundColor:bgColorFinal}}
+            style={{background:bgColorFinal}}
         >
             {title ? <Title>{title}</Title> : ''}
             <Article key={type}>
-                <ReactLoading type={type} color="#fff" backgroundColor={bgColorFinal} className='p-0' />
+                <ReactLoading type={type} color="#fff" background={bgColorFinal} className='p-0' />
             </Article>
         </Section>
      );

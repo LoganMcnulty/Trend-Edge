@@ -88,7 +88,7 @@ const SearchAutoFill = ({searchList, handleSubmit, status, handleChange}) => {
                         {!status ? 
                             <Button 
                                 variant="contained"
-                                style={{backgroundColor:'#5cb85c', color:'white'}}
+                                style={{background:'#5cb85c', color:'white'}}
                                 onClick={submitThis}
                                 className='w-100'
                             >

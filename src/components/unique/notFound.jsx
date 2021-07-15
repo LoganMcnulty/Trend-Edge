@@ -10,7 +10,7 @@ const NotFound = () => {
       </div>
 
       <NavLink to="/dash" className='row justify-content-center m'>
-        <button type='button' className="btn btn-primary w-50 p-0" style={{backgroundColor:'#fc5a3d', border:'none'}}>
+        <button type='button' className="btn btn-primary w-50 p-0" style={{background:'#fc5a3d', border:'none'}}>
           <span className='material-icons' style={{fontSize:'300%'}}>&#xe88a;</span>
         </button>
       </NavLink>

@@ -21,7 +21,7 @@ import SectorOverview from './components/unique/sectorOverview'
 import About from './components/unique/about'
 import Dashboard from './components/unique/dashboard'
 import AdminDash from './components/unique/adminDash'
-import AssetPage from './components/unique/singleAsset'
+import AssetPage from './components/unique/singleAsset copy'
 import { getAssetNames } from "./services/assetService";
 
 function withProps(Component, props) {

@@ -16,7 +16,7 @@ const LineGraph = ({data, typeArg=''}) => {
     },
     { type: 'linear', position: 'left' },
     ],
-    []
+    [type]
   )
 
   const {height, width} = useWindowDimensions()
@@ -27,7 +27,7 @@ const LineGraph = ({data, typeArg=''}) => {
             width: `${width-50}px`,
             height: `${height/3}px`,
             padding: '0',
-            backgroundColor:"#192734"
+            background:"#192734"
         }}
       >
         <Chart className='w-80' data={data.reverse()} axes={axes} tooltip dark/>

@@ -1,12 +1,10 @@
 // Out of House
 import React, { useState, useEffect } from 'react'
 import Row from 'react-bootstrap/Row'
-import Card from '@material-ui/core/Card'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useHistory } from "react-router-dom";
-import CardHeader from '@material-ui/core/CardHeader';
 
 // In House
 import ServeToDash from '../common/serveToDash'
@@ -160,7 +158,7 @@ const LandingContent = (allAssetNames) => {
             small={[12,0]}
         >
             <div className="card" style={{border:'none'}}>
-                <div className="card-header text-center text-light" style={{backgroundColor:'#192734'}}>
+                <div className="card-header text-center text-light" style={{background:'#192734'}}>
                     <Typography variant="h4">Welcome 📈</Typography>
                 </div>
                 <div v="card-body">
@@ -186,11 +184,11 @@ const LandingContent = (allAssetNames) => {
                     </Paper>
                 </div>
                 <div className="col-sm-12 col-md-12 col-lg-6">
-                    <div className="card mt-4" style={{border:'none', backgroundColor:'#192734'}}>
-                    <div className="card-header text-center text-light justify-content-around flex" style={{border:'none', backgroundColor:'#192734'}}>
+                    <div className="card mt-4" style={{border:'none', background:'#192734'}}>
+                    <div className="card-header text-center text-light justify-content-around flex" style={{border:'none', background:'#192734'}}>
                         <Button 
                             variant="contained" 
-                            style={{backgroundColor:'#fc5a3d', color:'white'}}
+                            style={{background:'#fc5a3d', color:'white'}}
                             className={`${isActive ? 'active' : 'inactive'}`}
                             onClick={toggle}
                         >

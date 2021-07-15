@@ -399,7 +399,7 @@ class Watchlist extends Component {
                           <Button 
                             variant="contained"
                             size='small'
-                            style={{backgroundColor:'#4682B4', color:'white'}}
+                            style={{background:'#4682B4', color:'white'}}
                             onClick={(e) => this.handleCSVSubmit(e)}
                             >
                               <span className="material-icons m-0 p-0">&#xe2c6;</span>
@@ -420,7 +420,7 @@ class Watchlist extends Component {
                               </div>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                                <Button onClick={this.handleClose} style={{background:"white"}}>
                                   <span className="material-icons ml-1">&#xe5cd;</span>
                                 </Button>
                             </DialogActions>
@@ -479,7 +479,7 @@ class Watchlist extends Component {
               <Button 
                 variant="contained"
                 size='small'
-                style={{backgroundColor:'red', color:'white'}}
+                style={{background:'red', color:'white'}}
                 onClick={() => this.clearWatchlist()}
                 >
                   Clear Watchlist
@@ -496,7 +496,7 @@ class Watchlist extends Component {
               >
                 <DialogContent >
                   <ul className="list-group list-group-flush">
-                    <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{longName}</h4>
+                    <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{background:"#4682B4"}}>{longName}</h4>
                     <li className="list-group-item m-0 p-0">
 
                       <div className="d-flex flex-row justify-content-center allign-items-center p-0 m-0">
@@ -554,7 +554,7 @@ class Watchlist extends Component {
                   </ul>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                    <Button onClick={this.handleClose} style={{background:"white"}}>
                       <span className="material-icons ml-1">&#xe5cd;</span>
                     </Button>
                 </DialogActions>
@@ -569,7 +569,7 @@ class Watchlist extends Component {
               >
                   <DialogContent >
                     <ul className="list-group list-group-flush">
-                      <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{fundamentalModal.longName}</h4>
+                      <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{v:"#4682B4"}}>{fundamentalModal.longName}</h4>
                       <li className="list-group-item">
                         <div className="d-flex flex-row justify-content-around align-items-center">
                             <h6 className="text text-dark">
@@ -580,7 +580,7 @@ class Watchlist extends Component {
                     </ul>
                     </DialogContent>
                   <DialogActions>
-                      <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                      <Button onClick={this.handleClose} style={{background:"white"}}>
                         <span className="material-icons ml-1">&#xe5cd;</span>
                       </Button>
                   </DialogActions>

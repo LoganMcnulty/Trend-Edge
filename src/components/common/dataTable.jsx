@@ -26,7 +26,7 @@ const DataTable = ({title, columns, data, handleDelete='', handleSeeMore=''}) =>
                 title={title}
                 options={{
                     headerStyle: {
-                        backgroundColor: '#4682B4',
+                        background: '#4682B4',
                         color: '#FFF'
                       },
                     actionsColumnIndex: -1,

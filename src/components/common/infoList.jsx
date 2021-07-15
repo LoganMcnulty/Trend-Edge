@@ -6,7 +6,7 @@ const InfoList = ({title='', listContent, footer='', linkTo='', linkTitle='', ic
     return ( 
         <ul className="list-group list-group-flush">
             {title ?
-                <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#4682B4"}}>{title}</h4>
+                <h4 className="card-title text-center text-light w-80 p-3 rounded" style={{background:"#4682B4"}}>{title}</h4>
                 : ''
             }
             
@@ -25,14 +25,14 @@ const InfoList = ({title='', listContent, footer='', linkTo='', linkTitle='', ic
             {
                 footer ?
                 <>
-                <h5 className="card-footer text-center text-light w-80 p-3 rounded" style={{backgroundColor:"#192734"}}>{footer}</h5> 
+                <h5 className="card-footer text-center text-light w-80 p-3 rounded" style={{background:"#192734"}}>{footer}</h5> 
                     {
                         linkTo && linkTitle && icon ?
                         <div className="row justify-content-center">
                             <NavLink to={linkTo}  style={{ textDecoration: 'none' }}>
                                 <Button 
                                     variant="contained" 
-                                    style={{backgroundColor:'#fc5a3d', color:'white'}}
+                                    style={{background:'#fc5a3d', color:'white'}}
                                 >
                                     <div className='row px-2'>
                                         {linkTitle}
