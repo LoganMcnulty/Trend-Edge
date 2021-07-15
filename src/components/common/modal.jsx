@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     overflow:'auto',
     display:'block',
     width: '75%',
-    backgroundColor: theme.palette.background.paper,
+    background: theme.palette.background.paper,
     border: '2px solid #4682B4',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -61,7 +61,7 @@ export default function SimpleModal({buttonContent, modalBody}) {
             variant="contained" 
             // color="primary"
             startIcon='close'
-            style={{backgroundColor:'#4682B4', color:'white'}}
+            style={{background:'#4682B4', color:'white'}}
             onClick={handleOpen}
         >
             {buttonContent}

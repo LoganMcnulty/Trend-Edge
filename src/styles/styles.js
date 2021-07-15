@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
       display: 'flex',
     },
     appBar: {
-      backgroundColor: '#4682B4',
+      background: '#4682B4',
       //#ab3900 <-- complimentary red color or #ab001d
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {

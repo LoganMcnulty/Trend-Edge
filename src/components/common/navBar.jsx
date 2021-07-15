@@ -27,13 +27,13 @@ const NavBar = ({userLogged, handleDrawerOpen, open, userPath}) => {
                             userLogged ? `👋 ${userLogged.name}` :
                             userPath === '/Sign In' ? 
                             ''
-                              // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
+                              // <Button variant="contained" style={{background:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
                             : 
                               <NavLink className="h7 p-0 text-white" to="/Sign In">
-                                {/* <button className="btn" style={{backgroundColor:'#fc5a3d', border:'none', color:'white'}}>Access</button> */}
+                                {/* <button className="btn" style={{background:'#fc5a3d', border:'none', color:'white'}}>Access</button> */}
                                 <Button 
                                     variant="contained" 
-                                    style={{backgroundColor:'#fc5a3d', border:'none', color:'white'}}
+                                    style={{background:'#fc5a3d', border:'none', color:'white'}}
                                 >
                                     Accessss
                                 </Button>
@@ -105,7 +105,7 @@ const useStyles = makeStyles(theme => ({
       display: 'flex',
     },
     appBar: {
-      backgroundColor: '#4682B4',
+      background: '#4682B4',
       //#ab3900 <-- complimentary red color or #ab001d
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {

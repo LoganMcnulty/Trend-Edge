@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
-    backgroundColor: '#4682B4',
+    background: '#4682B4',
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
@@ -100,13 +100,13 @@ const Dashboard = (props) => {
                 userLogged ? `👋 ${userLogged.name}` :
                 curRoute === '/Sign In' ? 
                 ''
-                  // <Button variant="contained" style={{backgroundColor:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
+                  // <Button variant="contained" style={{background:'#fc5a3d'}}><NavLink className="h7 p-0 text-white" to="/Sign Up"> Sign Up</NavLink></Button>
                 :
                   <NavLink to='/Sign In' style={{ textDecoration: 'none' }}>
                     <Button
                       variant="contained"
                       className='active'
-                      style={{backgroundColor:'#fc5a3d', color:'white'}}
+                      style={{background:'#fc5a3d', color:'white'}}
                     >
                       Access
                       <span className="material-icons ml-1">&#xe0da;</span>

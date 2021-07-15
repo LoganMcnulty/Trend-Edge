@@ -11,7 +11,7 @@ slice = 250
 assetList=['CRSR','MDB','ESTC','SNOW','RBLX','COIN', 'MLHR']
 
 db.getCollection('assetdatas').aggregate([
-  {"$match": {
+     {"$match": {
       "name": { "$in": assetList },
       "performanceData": {"$exists":true, "$ne": [], "$ne": null},
       }},
@@ -19,6 +19,20 @@ db.getCollection('assetdatas').aggregate([
         "_id":1,
         "name":"$name",
         "lastUpdated": "$lastUpdated",
+//           "performanceData":"$performanceData",
+        "volumeSeries":{"$map":{
+              "input": {"$slice":["$performanceData", slice]},
+              "as": "perf",
+              "in": { 
+                  "$switch": {
+                  "branches":[{
+                    "case":{"$ne":["$$perf.volume" , null]}, "then": 
+                      "$$perf.volume"
+                    }
+                      ],
+                  "default":false
+                }}
+           }},
         "macdSeries":{"$map":{
               "input": {"$slice":["$performanceData", slice]},
               "as": "perf",
@@ -91,6 +105,24 @@ db.getCollection('assetdatas').aggregate([
                   "default":false
                 }}
            }},
+        "volumeSMA":
+           {"$map":{
+              "input": "$volumeSeries",
+              "as": "volume",
+              "in": { 
+                  "$switch": {
+                  "branches":[{
+                    "case":{"$and":[
+                        {"$gte":[{"$subtract":[{"$size": "$volumeSeries"},{"$indexOfArray": [ "$volumeSeries", "$$volume" ]}]} , fastSMA]}
+                        ]}
+                      , 
+                      "then": 
+                      {"$round":[{"$avg":{"$slice": [ "$volumeSeries", {"$indexOfArray": [ "$volumeSeries", "$$volume" ]}, parseFloat(fastSMA) ]}}, 4]}
+                    }
+                      ],
+                  "default":false
+                }}
+           }},
         "slowSMA":
            {"$map":{
               "input": "$priceSeries",
@@ -126,11 +158,20 @@ db.getCollection('assetdatas').aggregate([
                     {"$ne":[{"$arrayElemAt":["$macdSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
                     {"$ne":[{"$arrayElemAt":["$macdSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
                     
+                    {"$ne":[{"$arrayElemAt":["$volumeSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                    {"$ne":[{"$arrayElemAt":["$volumeSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+                    
+                    {"$ne":[{"$arrayElemAt":["$volumeSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                    {"$ne":[{"$arrayElemAt":["$volumeSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+                    
                     {"$ne":[{"$arrayElemAt":["$adxSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
                     ]}, "then":
                     {
                         "complete":true,
                         "date":{"$arrayElemAt":["$dateSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                        "price":{"$arrayElemAt":["$priceSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                        "volumeCurr":{"$arrayElemAt":["$volumeSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                        "volumeAvg":{"$arrayElemAt":["$volumeSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
                         "value":  {"$round" :[
                             { "$sum": [
                                {"$switch": {
@@ -198,58 +239,68 @@ db.getCollection('assetdatas').aggregate([
                         },
                         },
                   ],
-              "default": 
-                {"$switch": {
-                      "branches":[{
-                        "case":{"$and":[
-                        {"$ne":["$$fastIndex",false]},
-                        {"$ne":[{"$arrayElemAt":["$fastSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
-                        {"$ne":[{"$arrayElemAt":["$macdSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
-                        {"$ne":[{"$arrayElemAt":["$macdSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
-                        ]}, "then": 
-                              {"complete":"macd_Fast",
-                                  "date":{"$arrayElemAt":["$dateSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
-                                  "value":{"$round" :[
-                                    { "$sum": [
-                                       {"$switch": {
-                                          "branches":[{
-                                            "case":
-                                              {"$gt":["$$fastIndex" , {"$arrayElemAt":["$fastSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}, lookback]}]}]}, "then": 
-                                              { "$multiply": [ 1, fastWeight] }
-                                            }
-                                              ],
-                                          "default":0
-                                        }},
-                                      {"$switch": {
-                                          "branches":[{
-                                            "case":
-                                              {"$gt":[
-                                                  {"$arrayElemAt":["$macdSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
-                                                  {"$arrayElemAt":["$macdSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}
-                                              ]}, "then": 
-                                              { "$multiply": [ 1, macdWeight] }
-                                            }
-                                              ],
-                                          "default":0
-                                        }},
-                                        ]
-                                }, 2]}
+                "default": 
+                  {"$switch": {
+                        "branches":[{
+                          "case":{"$and":[
+                          {"$ne":["$$fastIndex",false]},
+                          {"$ne":[{"$arrayElemAt":["$fastSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+                          {"$ne":[{"$arrayElemAt":["$macdSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                          {"$ne":[{"$arrayElemAt":["$macdSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+                          
+                            {"$ne":[{"$arrayElemAt":["$volumeSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                            {"$ne":[{"$arrayElemAt":["$volumeSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+                            
+                            {"$ne":[{"$arrayElemAt":["$volumeSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, false]},
+                            {"$ne":[{"$arrayElemAt":["$volumeSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}, false]},
+
+                          
+                          ]}, "then": 
+                                {"complete":"macd_Fast",
+                                    "date":{"$arrayElemAt":["$dateSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                                    "price":{"$arrayElemAt":["$priceSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                                    "volumeCurr":{"$arrayElemAt":["$volumeSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                                    "volumeAvg":{"$arrayElemAt":["$volumeSMA", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]},
+                                    "value":{"$round" :[
+                                      { "$sum": [
+                                        {"$switch": {
+                                            "branches":[{
+                                              "case":
+                                                {"$gt":["$$fastIndex" , {"$arrayElemAt":["$fastSMA", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}, lookback]}]}]}, "then": 
+                                                { "$multiply": [ 1, fastWeight] }
+                                              }
+                                                ],
+                                            "default":0
+                                          }},
+                                        {"$switch": {
+                                            "branches":[{
+                                              "case":
+                                                {"$gt":[
+                                                    {"$arrayElemAt":["$macdSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
+                                                    {"$arrayElemAt":["$macdSeries", {"$add":[{"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]},lookback]}]}
+                                                ]}, "then": 
+                                                { "$multiply": [ 1, macdWeight] }
+                                              }
+                                                ],
+                                            "default":0
+                                          }},
+                                          ]
+                                  }, 2]}
+                                }
                               }
+                            ],
+                        "default":{
+                            "complete":false,
+                            "date":{"$arrayElemAt":["$dateSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
+                            "value":false
                             }
-                          ],
-                      "default":{
-                          "complete":false,
-                          "date":{"$arrayElemAt":["$dateSeries", {"$indexOfArray":[ "$fastSMA", "$$fastIndex" ]}]}, 
-                          "value":false
-                          }
-                    }},         
-                }},
+                      }},         
+                  }},
           }},
 }},
     {"$project":{
       "_id":1,
       "name":1,
-      "priceSeries":1,
       "trendEdgeVector":1,
   }},
 {"$sort":{"name":-1}}

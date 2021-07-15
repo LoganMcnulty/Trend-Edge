@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
+// import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { NavLink } from "react-router-dom";
@@ -23,7 +23,7 @@ export default function LeaderAccordion({topTwentyData}) {
 
     const listItems = topTwentyData.map((d) => {
       return (
-          <li key={d._id} className="list-group-item text-light" style={{backgroundColor:'#192734'}}>
+          <li key={d._id} className="list-group-item text-light" style={{background:'#192734'}}>
               <NavLink className="h7 p-0 text-success font-weight-bold" to={"/asset/" + d.name}>
                   <u>${d.name}</u>
               </NavLink> | {d.trendEdge}
@@ -38,7 +38,7 @@ export default function LeaderAccordion({topTwentyData}) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          style={{backgroundColor:'#4682B4'}}
+          style={{background:'#4682B4'}}
           className='text-light'
         >
           <Typography className={classes.heading}>Top 20 Trends in User Watchlists</Typography>

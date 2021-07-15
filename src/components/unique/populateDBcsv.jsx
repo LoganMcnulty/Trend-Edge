@@ -182,7 +182,7 @@ class PopulateDBcsv extends Component {
                 <Button 
                 variant="contained"
                 size='small'
-                style={{backgroundColor:'#4682B4', color:'white'}}
+                style={{background:'#4682B4', color:'white'}}
                 onClick={(e) => this.handleCSVSubmit(e)}
                 >
                     <span className="material-icons m-0 p-0">&#xe2c6;</span>
@@ -203,7 +203,7 @@ class PopulateDBcsv extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} style={{backgroundColor:"white"}}>
+                    <Button onClick={this.handleClose} style={{background:"white"}}>
                         <span className="material-icons ml-1">&#xe5cd;</span>
                     </Button>
                 </DialogActions>

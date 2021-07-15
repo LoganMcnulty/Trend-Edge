@@ -26,7 +26,7 @@ const StyledButton = withStyles({
   root: {
     background: '#4682B4',
     '&:hover': {
-      backgroundColor: '#3F75A2'
+      background: '#3F75A2'
     },
     color:'white'
   },

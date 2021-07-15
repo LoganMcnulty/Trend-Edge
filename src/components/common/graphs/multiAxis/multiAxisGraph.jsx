@@ -2,13 +2,11 @@ import React from "react";
 import { Chart } from "react-charts";
 
 import Grid from '@material-ui/core/Grid';
-import useDemoConfig from "./useDemoConfig";
 import "./styles.css";
-import useWindowDimensions from './../windowDimensions';
-// import Box from 'components/Box'
+import useWindowDimensions from './../../windowDimensions';
 
 const MultiAxisGraph = ({graphData}) => {
-  
+  let data
     Date.prototype.addDays = function(days) {
       var date = new Date(this.valueOf());
       date.setDate(date.getDate() + days)
@@ -35,13 +33,6 @@ const MultiAxisGraph = ({graphData}) => {
   }
   )
   const finalData = [{label:'Trend Edge', data:teObjectData}, { label:'Price', data:priceObjectData}]
-  console.log(finalData)
-
-  let { data, randomizeData } = useDemoConfig({
-    series: 10,
-  });
-
-  console.log(data)
   data = finalData
 
   data = React.useMemo(
@@ -98,7 +89,7 @@ const MultiAxisGraph = ({graphData}) => {
     <>
       <Grid item xs
         style={{
-          width: `${width-50}px`,
+          width: `${width}px`,
           height: `${height/3}px`,
           borderRadius: '5px',
       }}

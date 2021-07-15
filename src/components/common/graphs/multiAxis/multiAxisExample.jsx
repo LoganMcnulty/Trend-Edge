@@ -4,7 +4,7 @@ import { Chart } from "react-charts";
 import useDemoConfig from "./useDemoConfig";
 import ResizableBox from "./ResizableBox";
 import "./styles.css";
-import useWindowDimensions from './../windowDimensions';
+import useWindowDimensions from '../../../windowDimensions';
 const MultiAxisExample = () => {
 
   let { data, randomizeData } = useDemoConfig({

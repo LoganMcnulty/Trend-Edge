@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-    // style={{backgroundColor: '#4682B4', border: '4px solid #6c757d'}}
+    // style={{background: '#4682B4', border: '4px solid #6c757d'}}
   },
 }));
 
@@ -316,7 +316,7 @@ const UserSettings = () => {
             <Col className='col-8 text-align-center mb-0 mt-3'>
               <Button 
                   variant="contained"
-                  style={{backgroundColor:'#5cb85c', color:'white'}}
+                  style={{background:'#5cb85c', color:'white'}}
                   onClick={restoreDefaults}
               >
                 Restore Defaults

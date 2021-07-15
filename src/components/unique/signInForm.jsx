@@ -68,7 +68,7 @@ class SignInForm extends Form {
             <div className="row">
               <div className="col">
                 <NavLink className="h7 p-0 text-white" to="/Sign Up">
-                  <button className="btn btn-primary btn-block" style={{backgroundColor:'#fc5a3d', border:'none'}}>Sign Up</button>
+                  <button className="btn btn-primary btn-block" style={{background:'#fc5a3d', border:'none'}}>Sign Up</button>
                 </NavLink>
               </div>
             </div>

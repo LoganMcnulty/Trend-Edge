@@ -36,7 +36,7 @@ export default function InfoModal({buttonContent='', content, iconButton=''}) {
           <Button 
             variant="contained" 
             onClick={handleClickOpen('paper')}
-            style={{backgroundColor:'#4682B4', color:'white'}}
+            style={{background:'#4682B4', color:'white'}}
           >
             {buttonContent}
           </Button>
@@ -54,7 +54,7 @@ export default function InfoModal({buttonContent='', content, iconButton=''}) {
           {content}
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose} style={{backgroundColor:"white"}}>
+            <Button onClick={handleClose} style={{background:"white"}}>
               <span className="material-icons ml-1 text-dark">&#xe5c9;</span>
             </Button>
         </DialogActions>
